@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/adobe/helix-markdown-support/compare/v1.0.0...v1.1.0) (2020-10-31)
+
+
+### Features
+
+* **md:** add utils to suppress code blocks and sanitize headings ([77d759d](https://github.com/adobe/helix-markdown-support/commit/77d759d7a7e05ebe95db9db2d7bce67e1e59ccbe))
+
 # 1.0.0 (2020-10-31)
 
 
