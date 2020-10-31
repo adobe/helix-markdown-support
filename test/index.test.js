@@ -17,8 +17,16 @@
 const assert = require('assert');
 const index = require('../src/index.js');
 
+const MODS = [
+  'remarkMatter',
+  'robustTables',
+  'breaksAsSpaces',
+  'sanitizeHeading',
+  'suppressSpaceCode',
+];
+
 describe('Index Tests', () => {
-  for (const mod of ['remarkMatter', 'robustTables', 'breaksAsSpaces']) {
+  for (const mod of MODS) {
     it(`index exports ${mod}`, () => {
       assert.ok(mod in index);
     });
