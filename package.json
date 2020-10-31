@@ -2,7 +2,6 @@
   "name": "@adobe/helix-markdown-support",
   "version": "0.0.1",
   "description": "Helix Markdown Support",
-  "main": "src/index.js",
   "scripts": {
     "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha",
     "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
@@ -21,7 +20,15 @@
     "url": "https://github.com/adobe/helix-markdown-support/issues"
   },
   "homepage": "https://github.com/adobe/helix-markdown-support#readme",
-  "dependencies": {},
+  "dependencies": {
+    "hast-util-to-html": "7.1.1",
+    "js-yaml": "3.14.0",
+    "mdast-util-to-hast": "10.0.0",
+    "unist-util-visit": "2.0.3"
+  },
+  "peerDependencies": {
+    "unified": "9.x"
+  },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.3",
     "@semantic-release/changelog": "5.0.1",
@@ -34,12 +41,19 @@
     "eslint": "7.10.0",
     "eslint-plugin-header": "3.1.0",
     "eslint-plugin-import": "2.22.0",
+    "fs-extra": "9.0.1",
     "jsdoc-to-markdown": "6.0.1",
     "junit-report-builder": "2.1.0",
     "lint-staged": "10.4.0",
+    "mdast-builder": "1.1.1",
     "mocha": "7.2.0",
     "nyc": "15.1.0",
-    "semantic-release": "17.1.2"
+    "remark-gfm": "1.0.0",
+    "remark-parse": "9.0.0",
+    "remark-stringify": "9.0.0",
+    "semantic-release": "17.1.2",
+    "unified": "9.2.0",
+    "unist-util-inspect": "6.0.0"
   },
   "lint-staged": {
     "*.js": "eslint"
