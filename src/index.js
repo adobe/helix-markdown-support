@@ -13,9 +13,13 @@
 const remarkMatter = require('./remark-matter');
 const robustTables = require('./mdast-robust-tables.js');
 const breaksAsSpaces = require('./remark-breaks-as-spaces.js');
+const sanitizeHeading = require('./mdast-sanitize-heading.js');
+const suppressSpaceCode = require('./mdast-suppress-spacecode.js');
 
 module.exports = {
   remarkMatter,
   robustTables,
   breaksAsSpaces,
+  sanitizeHeading,
+  suppressSpaceCode,
 };

@@ -14,9 +14,6 @@
 
 'use strict';
 
-const fse = require('fs-extra');
-const path = require('path');
-const assert = require('assert');
 const {
   root,
   paragraph,
@@ -29,32 +26,12 @@ const {
   brk,
   code,
 } = require('mdast-builder');
-const stringify = require('remark-stringify');
-const unified = require('unified');
 const gfm = require('remark-gfm');
 
 const softBreaks = require('../src/remark-breaks-as-spaces.js');
 const robustTables = require('../src/mdast-robust-tables.js');
 
-async function assertMD(mdast, fixture) {
-  const expected = await fse.readFile(path.resolve(__dirname, 'fixtures', fixture), 'utf-8');
-  const actual = unified()
-    .use(stringify, {
-      strong: '*',
-      emphasis: '_',
-      bullet: '-',
-      fence: '`',
-      fences: true,
-      incrementListMarker: true,
-      rule: '-',
-      ruleRepetition: 3,
-      ruleSpaces: false,
-    })
-    .use(softBreaks)
-    .use(gfm)
-    .stringify(mdast);
-  assert.equal(actual, expected);
-}
+const { assertMD } = require('./utils.js');
 
 describe('mdast-robust-table Tests', () => {
   it('Simple table remains markdown', async () => {
@@ -74,7 +51,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'simple-table.md');
+    await assertMD(mdast, 'simple-table.md', [gfm, softBreaks]);
   });
 
   it('table cell with multiple lines converts to html', async () => {
@@ -98,7 +75,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-lines.md');
+    await assertMD(mdast, 'table-with-lines.md', [gfm, softBreaks]);
   });
 
   it('table cell with inline code breaks converts to html', async () => {
@@ -120,7 +97,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-code.md');
+    await assertMD(mdast, 'table-with-code.md', [gfm, softBreaks]);
   });
 
   it('table cell with single paragraph converts correctly', async () => {
@@ -145,6 +122,6 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-paragraph.md');
+    await assertMD(mdast, 'table-with-paragraph.md', [gfm, softBreaks]);
   });
 });

@@ -23,18 +23,21 @@ const {
 } = require('mdast-builder');
 const { assertMD } = require('./utils.js');
 
-const softBreaks = require('../src/remark-breaks-as-spaces.js');
+const spaceCode = require('../src/mdast-suppress-spacecode.js');
 
-describe('breaks-as-spaces Tests', () => {
-  it('Uses spaces as softbreaks', async () => {
+describe('suppress-spacecode Tests', () => {
+  it('Converts text with 4 leading spaces to html', async () => {
     const mdast = root([
-      heading(2, text('Simple Text')),
+      heading(2, text('Ensure no code Blocks')),
       paragraph([
-        text('Hello,'),
+        text('Hello.'),
         brk,
-        text('world!'),
+        text('    This is not code!'),
+        brk,
+        text('    Really.'),
       ]),
     ]);
-    await assertMD(mdast, 'simple-text.md', [softBreaks]);
+    spaceCode(mdast);
+    await assertMD(mdast, 'spacecode.md');
   });
 });

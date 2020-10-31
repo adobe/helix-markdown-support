@@ -19,22 +19,38 @@ const {
   paragraph,
   text,
   heading,
-  brk,
+  image,
 } = require('mdast-builder');
 const { assertMD } = require('./utils.js');
 
-const softBreaks = require('../src/remark-breaks-as-spaces.js');
+const sanitizeHeading = require('../src/mdast-sanitize-heading.js');
 
-describe('breaks-as-spaces Tests', () => {
-  it('Uses spaces as softbreaks', async () => {
+describe('sanitize-heading Tests', () => {
+  it('Moves images in heading to next paragraph.', async () => {
     const mdast = root([
-      heading(2, text('Simple Text')),
+      heading(2, [
+        text('This contains an image: '),
+        image('https://dummyimage.com/300', 'Dummy Image'),
+        text('.'),
+      ]),
       paragraph([
-        text('Hello,'),
-        brk,
-        text('world!'),
+        text('Hello, world.'),
       ]),
     ]);
-    await assertMD(mdast, 'simple-text.md', [softBreaks]);
+    sanitizeHeading(mdast);
+    await assertMD(mdast, 'sanitized-heading.md');
+  });
+
+  it('Removes empty headings.', async () => {
+    const mdast = root([
+      heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image'),
+      ]),
+      paragraph([
+        text('Hello, world.'),
+      ]),
+    ]);
+    sanitizeHeading(mdast);
+    await assertMD(mdast, 'sanitized-heading-removed.md');
   });
 });
