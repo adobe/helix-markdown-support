@@ -1,3 +1,10 @@
+# 1.0.0 (2020-10-31)
+
+
+### Features
+
+* **md:** add initial set of utilities ([86e1293](https://github.com/adobe/helix-markdown-support/commit/86e1293dea43d624ba9f0679d1dcd3e0569e6816))
+
 ## [1.4.5](https://github.com/adobe/helix-library/compare/v1.4.4...v1.4.5) (2020-10-02)
 
 
