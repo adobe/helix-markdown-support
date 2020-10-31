@@ -14,9 +14,6 @@
 
 'use strict';
 
-const fse = require('fs-extra');
-const path = require('path');
-const assert = require('assert');
 const {
   root,
   paragraph,
@@ -24,28 +21,9 @@ const {
   heading,
   brk,
 } = require('mdast-builder');
-const stringify = require('remark-stringify');
-const unified = require('unified');
+const { assertMD } = require('./utils.js');
 
 const spaceCode = require('../src/mdast-suppress-spacecode.js');
-
-async function assertMD(mdast, fixture) {
-  const expected = await fse.readFile(path.resolve(__dirname, 'fixtures', fixture), 'utf-8');
-  const actual = unified()
-    .use(stringify, {
-      strong: '*',
-      emphasis: '_',
-      bullet: '-',
-      fence: '`',
-      fences: true,
-      incrementListMarker: true,
-      rule: '-',
-      ruleRepetition: 3,
-      ruleSpaces: false,
-    })
-    .stringify(mdast);
-  assert.equal(actual, expected);
-}
 
 describe('suppress-spacecode Tests', () => {
   it('Converts text with 4 leading spaces to html', async () => {
