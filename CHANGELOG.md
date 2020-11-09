@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/adobe/helix-markdown-support/compare/v1.1.0...v1.1.1) (2020-11-09)
+
+
+### Bug Fixes
+
+* add missing main file ([7113236](https://github.com/adobe/helix-markdown-support/commit/7113236512cd4579ddea3a5f8a6cf8fb0a1f5eea))
+
 # [1.1.0](https://github.com/adobe/helix-markdown-support/compare/v1.0.0...v1.1.0) (2020-10-31)
 
 
