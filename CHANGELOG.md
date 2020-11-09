@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/adobe/helix-markdown-support/compare/v1.1.1...v1.2.0) (2020-11-09)
+
+
+### Features
+
+* option to add yaml dump as value ([#3](https://github.com/adobe/helix-markdown-support/issues/3)) ([43dda95](https://github.com/adobe/helix-markdown-support/commit/43dda950d566c091691e29f5e1a3a656e8e08174))
+
 ## [1.1.1](https://github.com/adobe/helix-markdown-support/compare/v1.1.0...v1.1.1) (2020-11-09)
 
 
