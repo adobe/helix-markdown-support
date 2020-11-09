@@ -20,6 +20,7 @@
     "url": "https://github.com/adobe/helix-markdown-support/issues"
   },
   "homepage": "https://github.com/adobe/helix-markdown-support#readme",
+  "main": "src/index.js",
   "dependencies": {
     "hast-util-to-html": "7.1.1",
     "js-yaml": "3.14.0",
