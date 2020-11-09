@@ -16,12 +16,20 @@ function open(token) {
   this.buffer();
 }
 
-function close(token) {
-  const data = this.resume();
-  const node = this.exit(token);
-  // todo: avoid double parsing
-  node.payload = jsYaml.safeLoad(data);
-  node.value = jsYaml.safeDump(node.payload);
+function createClose(options) {
+  function close(token) {
+    const data = this.resume();
+    const node = this.exit(token);
+    // todo: avoid double parsing
+    node.payload = jsYaml.safeLoad(data);
+    if (options.yamlDump) {
+      node.value = jsYaml.safeDump(node.payload);
+    } else {
+      delete node.value;
+    }
+  }
+
+  return close;
 }
 
 function value(token) {
@@ -30,13 +38,13 @@ function value(token) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function fromMarkdown(options) {
+function fromMarkdown(options = {}) {
   return {
     enter: {
       yaml: open,
     },
     exit: {
-      yaml: close,
+      yaml: createClose(options),
       yamlValue: value,
     },
   };

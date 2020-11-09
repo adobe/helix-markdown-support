@@ -24,9 +24,9 @@ const {
 } = require('mdast-builder');
 const remarkMatter = require('../src/remark-matter');
 
-const yaml = (payload) => ({
+const yaml = (payload, yamlDump) => ({
   type: 'yaml',
-  value: jsYaml.dump(payload),
+  value: yamlDump ? jsYaml.dump(payload) : undefined,
   payload,
 });
 
@@ -65,7 +65,7 @@ function removePositions(tree) {
 
 let errors = [];
 
-const procMd = (md, noErrorHandler) => {
+const procMd = (md, noErrorHandler, yamlDump) => {
   const source = multiline(md).replace(/@/g, ' ');
   // console.log(source);
 
@@ -78,7 +78,9 @@ const procMd = (md, noErrorHandler) => {
   removePositions(orig);
 
   // parse with frontmatter plugin
-  const settings = {};
+  const settings = {
+    yamlDump,
+  };
   if (!noErrorHandler) {
     settings.errorHandler = (e) => {
       // console.error(e.toString(true));
@@ -98,8 +100,8 @@ const procMd = (md, noErrorHandler) => {
   };
 };
 
-const assertCorrect = (md, expected) => {
-  const { proc } = procMd(md);
+const assertCorrect = (md, expected, yamlDump) => {
+  const { proc } = procMd(md, false, yamlDump);
   const actual = inspect(proc);
   assert.strictEqual(actual, inspect(expected));
 };
@@ -443,6 +445,13 @@ describe('remark-matter from markdown', () => {
       ---
     `,
   root(yaml({ foo: 42 }))));
+
+  it('Ok: Entire doc is frontmatter (with yaml dump value)', () => assertCorrect(`
+      ---
+      foo: 42
+      ---
+    `,
+  root(yaml({ foo: 42 }, true)), true));
 
   it('Ok: Entire doc is frontmatter w trailing space after open fence', () => assertCorrect(`
     ---@@@
