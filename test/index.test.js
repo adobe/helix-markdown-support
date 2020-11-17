@@ -23,6 +23,7 @@ const MODS = [
   'breaksAsSpaces',
   'sanitizeHeading',
   'suppressSpaceCode',
+  'sanitizeFormats',
 ];
 
 describe('Index Tests', () => {
