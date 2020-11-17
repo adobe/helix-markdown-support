@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/adobe/helix-markdown-support/compare/v1.2.0...v1.3.0) (2020-11-17)
+
+
+### Features
+
+* **md:** add sanitize-formats utility ([#4](https://github.com/adobe/helix-markdown-support/issues/4)) ([0653b7d](https://github.com/adobe/helix-markdown-support/commit/0653b7d2358a9a474fa17afddad7380e4a5c1366))
+
 # [1.2.0](https://github.com/adobe/helix-markdown-support/compare/v1.1.1...v1.2.0) (2020-11-09)
 
 
