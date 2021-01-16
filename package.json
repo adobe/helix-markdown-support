@@ -25,6 +25,8 @@
     "hast-util-to-html": "7.1.2",
     "js-yaml": "3.14.0",
     "mdast-util-to-hast": "10.0.1",
+    "remark-directive": "1.0.1",
+    "unist-builder": "2.0.3",
     "unist-util-visit": "2.0.3"
   },
   "peerDependencies": {
