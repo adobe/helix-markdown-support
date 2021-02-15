@@ -24,13 +24,8 @@ function suppressSpaceCode(tree) {
     if (child.type === 'text'
       && (index === 0 || children[index - 1].type === 'break')
       && child.value.startsWith('    ')) {
-      children.splice(index, 0, {
-        type: 'html',
-        value: '&nbsp;',
-      });
       // eslint-disable-next-line no-param-reassign
-      child.value = child.value.substring(1);
-      return index + 2;
+      child.value = child.value.replace(/^\s+/, ' ');
     }
     return visit.CONTINUE;
   });
