@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/adobe/helix-markdown-support/compare/v1.3.0...v1.3.1) (2021-02-15)
+
+
+### Bug Fixes
+
+* **code:** don't use nbsp ([e0b91b5](https://github.com/adobe/helix-markdown-support/commit/e0b91b54544b5715f26aa5f685b06b8bc5434a9f))
+* **deps:** update external fixes ([#8](https://github.com/adobe/helix-markdown-support/issues/8)) ([d661115](https://github.com/adobe/helix-markdown-support/commit/d6611152ed3833c3df712f9f725d8d69eeb31c0d))
+
 # [1.3.0](https://github.com/adobe/helix-markdown-support/compare/v1.2.0...v1.3.0) (2020-11-17)
 
 
