@@ -32,9 +32,9 @@ describe('suppress-spacecode Tests', () => {
       paragraph([
         text('Hello.'),
         brk,
-        text('    This is not code!'),
+        text('    This is not          code!'),
         brk,
-        text('    Really.'),
+        text('              Really.'),
       ]),
     ]);
     spaceCode(mdast);
