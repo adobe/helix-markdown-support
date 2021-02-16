@@ -24,6 +24,7 @@ const MODS = [
   'sanitizeHeading',
   'suppressSpaceCode',
   'sanitizeFormats',
+  'fixCodeFlow',
 ];
 
 describe('Index Tests', () => {
