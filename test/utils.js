@@ -21,6 +21,7 @@ const stringify = require('remark-stringify');
 const unified = require('unified');
 
 async function assertMD(mdast, fixture, plugins = []) {
+  // console.log(require('unist-util-inspect')(mdast));
   const expected = await fse.readFile(path.resolve(__dirname, 'fixtures', fixture), 'utf-8');
   let processor = unified()
     .use(stringify, {

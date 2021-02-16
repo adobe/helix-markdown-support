@@ -244,7 +244,7 @@ describe('remark-matter from markdown', () => {
     Foo
     hello: 42
     ---
-  `, ['YAMLException: end of the stream or a document separator is expected']));
+  `, ['YAMLException: end of the stream or a document separator is expected (2:6)']));
 
   it('Reject: reject more invalid yaml (no error handler)', () => assertNop(`
     ---
