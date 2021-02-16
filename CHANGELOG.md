@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/adobe/helix-markdown-support/compare/v1.3.1...v1.4.0) (2021-02-16)
+
+
+### Features
+
+* **md:** add code flow correction ([bb7e990](https://github.com/adobe/helix-markdown-support/commit/bb7e9903de677c8ea1d42929a6882b56000c511b))
+
 ## [1.3.1](https://github.com/adobe/helix-markdown-support/compare/v1.3.0...v1.3.1) (2021-02-15)
 
 
