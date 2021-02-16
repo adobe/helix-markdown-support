@@ -21,9 +21,9 @@ function createClose(options) {
     const data = this.resume();
     const node = this.exit(token);
     // todo: avoid double parsing
-    node.payload = jsYaml.safeLoad(data);
+    node.payload = jsYaml.load(data);
     if (options.yamlDump) {
-      node.value = jsYaml.safeDump(node.payload);
+      node.value = jsYaml.dump(node.payload);
     } else {
       delete node.value;
     }

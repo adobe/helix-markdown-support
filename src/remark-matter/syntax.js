@@ -19,7 +19,7 @@ const CODE_DASH = '-'.charCodeAt(0);
 function validYaml(str, errorHandler) {
   // console.log('validate yaml', str);
   try {
-    const payload = jsYaml.safeLoad(str);
+    const payload = jsYaml.load(str);
 
     // ensure we only accept YAML objects
     let payloadType = type(payload);
