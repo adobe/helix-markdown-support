@@ -25,7 +25,7 @@
     "hast-util-to-html": "7.1.2",
     "js-yaml": "4.1.0",
     "mdast-util-to-hast": "10.2.0",
-    "unist-util-visit": "2.0.3"
+    "unist-util-visit": "3.0.0"
   },
   "peerDependencies": {
     "unified": "9.x"
