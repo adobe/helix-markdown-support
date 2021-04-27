@@ -19,8 +19,13 @@ const {
   paragraph,
   text,
   heading,
+  strong,
   brk,
+  table,
+  tableRow,
+  tableCell,
 } = require('mdast-builder');
+const gfm = require('remark-gfm');
 const { assertMD } = require('./utils.js');
 
 const softBreaks = require('../src/remark-breaks-as-spaces.js');
@@ -36,5 +41,29 @@ describe('breaks-as-spaces Tests', () => {
       ]),
     ]);
     await assertMD(mdast, 'simple-text.md', [softBreaks]);
+  });
+
+  it('table cell with breaks dont create new lines', async () => {
+    const mdast = root([
+      heading(2, text('Table with paragraph')),
+      table(null, [
+        tableRow([
+          tableCell(text('a')),
+          tableCell(text('b')),
+          tableCell(text('c')),
+        ]),
+        tableRow([
+          tableCell(paragraph([
+            text('hello, '),
+            strong(text('world!')),
+            brk,
+            text('how are you?'),
+          ])),
+          tableCell(text('2')),
+          tableCell(text('3')),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'simple-table-with-breaks.md', [gfm, softBreaks]);
   });
 });

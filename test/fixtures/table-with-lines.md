@@ -1,5 +1,14 @@
 ## Table with lines
 
-| a               | b | c |
-| --------------- | - | - |
-| line 1   line 2 | 2 | 3 |
+<table>
+  <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+  </tr>
+  <tr>
+    <td>line 1<br> line 2</td>
+    <td>2</td>
+    <td>3</td>
+  </tr>
+</table>
