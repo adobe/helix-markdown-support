@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/adobe/helix-markdown-support/compare/v1.4.0...v1.5.0) (2021-05-11)
+
+
+### Features
+
+* **mdast:** add more sanitizing functions ([#31](https://github.com/adobe/helix-markdown-support/issues/31)) ([39bc415](https://github.com/adobe/helix-markdown-support/commit/39bc415fb03446ff9342c8716df69e7758963f32))
+
 # [1.4.0](https://github.com/adobe/helix-markdown-support/compare/v1.3.1...v1.4.0) (2021-02-16)
 
 
