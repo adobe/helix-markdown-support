@@ -45,8 +45,15 @@ function robustTables(tree) {
           align += ' valign="bottom"';
         }
         html += `    <td${align}>`;
+
+        // if cell contains only 1 single paragraph, unwrap it
+        let { children } = cell;
+        if (children && children.length === 1 && children[0].type === 'paragraph') {
+          children = children[0].children;
+        }
+
         /* istanbul ignore next */
-        (cell.children || []).forEach((child) => {
+        (children || []).forEach((child) => {
           const cellHtml = hast2html(md2hast(child));
           if (child.type === 'code') {
             // code needs special treatment, otherwise the newlines disappear.

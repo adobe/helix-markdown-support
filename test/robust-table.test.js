@@ -136,6 +136,32 @@ describe('mdast-robust-table Tests', () => {
     await assertMD(mdast, 'table-with-paragraph.md', [gfm, softBreaks]);
   });
 
+  it('table cell with multiple paragraph converts correctly', async () => {
+    const mdast = root([
+      heading(2, text('Table with multiple paragraph')),
+      table(null, [
+        tableRow([
+          tableCell(text('a')),
+          tableCell(text('b')),
+          tableCell(text('c')),
+        ]),
+        tableRow([
+          tableCell([
+            paragraph([text('hello')]),
+            paragraph([text('world')]),
+          ]),
+          tableCell([
+            heading(2, text('title')),
+            paragraph([text('world')]),
+          ]),
+          tableCell(text('3')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm, softBreaks]);
+  });
+
   it('table alignments converts correctly', async () => {
     const mdast = root([
       heading(2, text('Table with alignments')),

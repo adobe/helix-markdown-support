@@ -7,7 +7,7 @@
     <td>c</td>
   </tr>
   <tr>
-    <td><p>hello, <strong>world!</strong><br> how are you?</p></td>
+    <td>hello, <strong>world!</strong><br> how are you?</td>
     <td>2</td>
     <td>3</td>
   </tr>
