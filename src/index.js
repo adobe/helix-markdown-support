@@ -17,6 +17,8 @@ const sanitizeHeading = require('./mdast-sanitize-heading.js');
 const suppressSpaceCode = require('./mdast-suppress-spacecode.js');
 const sanitizeFormats = require('./mdast-sanitize-formats.js');
 const fixCodeFlow = require('./mdast-fix-code-flow.js');
+const sanitizeLinks = require('./mdast-sanitize-links.js');
+const sanitizeText = require('./mdast-sanitize-text.js');
 
 module.exports = {
   remarkMatter,
@@ -26,4 +28,6 @@ module.exports = {
   suppressSpaceCode,
   sanitizeFormats,
   fixCodeFlow,
+  sanitizeLinks,
+  sanitizeText,
 };
