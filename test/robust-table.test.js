@@ -25,6 +25,7 @@ const {
   strong,
   brk,
   code,
+  image,
 } = require('mdast-builder');
 const gfm = require('remark-gfm');
 
@@ -109,6 +110,28 @@ describe('mdast-robust-table Tests', () => {
     ]);
     robustTables(mdast);
     await assertMD(mdast, 'table-with-code.md', [gfm, softBreaks]);
+  });
+
+  it('table cell with inline images converts to html', async () => {
+    const mdast = root([
+      heading(2, text('Table with images')),
+      table(null, [
+        tableRow([
+          tableCell(text('a')),
+          tableCell(text('b')),
+          tableCell(text('c')),
+          tableCell(text('d')),
+        ]),
+        tableRow([
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', 'title')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', 'title', 'alt')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', undefined, 'alt')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-images.md', [gfm, softBreaks]);
   });
 
   it('table cell with single paragraph converts correctly', async () => {
