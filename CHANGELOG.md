@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/adobe/helix-markdown-support/compare/v1.5.0...v2.0.0) (2021-06-09)
+
+
+### Features
+
+* **table:** convert all tables to HTML and convey cell alignment ([#27](https://github.com/adobe/helix-markdown-support/issues/27)) ([154bfe4](https://github.com/adobe/helix-markdown-support/commit/154bfe46e0416272fa08122e447ab4aea2cafc58)), closes [#26](https://github.com/adobe/helix-markdown-support/issues/26)
+
+
+### BREAKING CHANGES
+
+* **table:** simple md tables no longer remain markdown
+
 # [1.5.0](https://github.com/adobe/helix-markdown-support/compare/v1.4.0...v1.5.0) (2021-05-11)
 
 
