@@ -19,12 +19,13 @@ const {
   paragraph,
   table,
   tableRow,
-  tableCell,
+  tableCell: originalCell,
   text,
   heading,
   strong,
   brk,
   code,
+  image,
 } = require('mdast-builder');
 const gfm = require('remark-gfm');
 
@@ -32,6 +33,17 @@ const softBreaks = require('../src/remark-breaks-as-spaces.js');
 const robustTables = require('../src/mdast-robust-tables.js');
 
 const { assertMD } = require('./utils.js');
+
+function tableCell(children, align, verticalAlign) {
+  const node = originalCell(children);
+  if (align) {
+    node.align = align;
+  }
+  if (verticalAlign) {
+    node.valign = verticalAlign;
+  }
+  return node;
+}
 
 describe('mdast-robust-table Tests', () => {
   it('Simple table remains markdown', async () => {
@@ -100,6 +112,28 @@ describe('mdast-robust-table Tests', () => {
     await assertMD(mdast, 'table-with-code.md', [gfm, softBreaks]);
   });
 
+  it('table cell with inline images converts to html', async () => {
+    const mdast = root([
+      heading(2, text('Table with images')),
+      table(null, [
+        tableRow([
+          tableCell(text('a')),
+          tableCell(text('b')),
+          tableCell(text('c')),
+          tableCell(text('d')),
+        ]),
+        tableRow([
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', 'title')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', 'title', 'alt')),
+          tableCell(image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7', undefined, 'alt')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-images.md', [gfm, softBreaks]);
+  });
+
   it('table cell with single paragraph converts correctly', async () => {
     const mdast = root([
       heading(2, text('Table with paragraph')),
@@ -123,5 +157,62 @@ describe('mdast-robust-table Tests', () => {
     ]);
     robustTables(mdast);
     await assertMD(mdast, 'table-with-paragraph.md', [gfm, softBreaks]);
+  });
+
+  it('table cell with multiple paragraph converts correctly', async () => {
+    const mdast = root([
+      heading(2, text('Table with multiple paragraph')),
+      table(null, [
+        tableRow([
+          tableCell(text('a')),
+          tableCell(text('b')),
+          tableCell(text('c')),
+        ]),
+        tableRow([
+          tableCell([
+            paragraph([text('hello')]),
+            paragraph([text('world')]),
+          ]),
+          tableCell([
+            heading(2, text('title')),
+            paragraph([text('world')]),
+          ]),
+          tableCell(text('3')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm, softBreaks]);
+  });
+
+  it('table alignments converts correctly', async () => {
+    const mdast = root([
+      heading(2, text('Table with alignments')),
+      table(null, [
+        tableRow([
+          tableCell(text('top left'), 'left', 'top'),
+          tableCell(text('top center'), 'center', 'top'),
+          tableCell(text('top right'), 'right', 'top'),
+          tableCell(text('top justify'), 'both', 'top'),
+          tableCell([text('1'), brk, text('2'), brk, text('3')]),
+        ]),
+        tableRow([
+          tableCell(text('middle left'), 'left', 'middle'),
+          tableCell(text('middle center'), 'center', 'middle'),
+          tableCell(text('middle right'), 'right', 'middle'),
+          tableCell(text('middle justify'), 'both', 'middle'),
+          tableCell([text('1'), brk, text('2'), brk, text('3')]),
+        ]),
+        tableRow([
+          tableCell(text('bottom left'), 'left', 'bottom'),
+          tableCell(text('bottom center'), 'center', 'bottom'),
+          tableCell(text('bottom right'), 'right', 'bottom'),
+          tableCell(text('bottom justify'), 'both', 'bottom'),
+          tableCell([text('1'), brk, text('2'), brk, text('3')]),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-align.md', [gfm, softBreaks]);
   });
 });

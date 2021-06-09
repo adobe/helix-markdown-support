@@ -15,36 +15,61 @@ const hast2html = require('hast-util-to-html');
 const visit = require('unist-util-visit');
 
 /**
- * Converts table cell content to HTML if it cannot be represented nicely as markdown.
+ * Converts tables to HTML
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
 function robustTables(tree) {
   visit(tree, (node) => {
-    if (node.type !== 'tableCell') {
+    if (node.type !== 'table') {
       return visit.CONTINUE;
     }
+    let html = '<table>\n';
     /* istanbul ignore next */
-    const { children = [] } = node;
-    if (children.length > 1 || (children.length === 1 && children[0].type !== 'paragraph')) {
-      // ...then convert the problematic children to html nodes
-      node.children.forEach((child) => {
-        const html = hast2html(md2hast(child));
-        switch (child.type) {
-          case 'code': {
-            // code needs special treatment, otherwise the newlines disappear.
-            child.value = html.replace(/\r?\n/g, '<br>');
-            break;
-          }
-          default: {
-            // convert the rest to html
-            child.value = html.replace(/\r?\n/g, ' ');
-          }
+    (node.children || []).forEach((row) => {
+      html += '  <tr>\n';
+      /* istanbul ignore next */
+      (row.children || []).forEach((cell) => {
+        let align = '';
+        if (cell.align === 'right') {
+          align = ' align="right"';
+        } else if (cell.align === 'center') {
+          align = ' align="center"';
+        } else if (cell.align === 'both') {
+          align = ' align="justify"';
         }
-        child.type = 'html';
+        if (cell.valign === 'middle') {
+          align += ' valign="middle"';
+        } else if (cell.valign === 'bottom') {
+          align += ' valign="bottom"';
+        }
+        html += `    <td${align}>`;
+
+        // if cell contains only 1 single paragraph, unwrap it
+        let { children } = cell;
+        if (children && children.length === 1 && children[0].type === 'paragraph') {
+          children = children[0].children;
+        }
+
+        /* istanbul ignore next */
+        (children || []).forEach((child) => {
+          const cellHtml = hast2html(md2hast(child));
+          if (child.type === 'code') {
+            // code needs special treatment, otherwise the newlines disappear.
+            html += cellHtml.replace(/\r?\n/g, '<br>');
+          } else {
+            html += cellHtml.replace(/\r?\n/g, ' ');
+          }
+        });
+        html += '</td>\n';
       });
-    }
+      html += '  </tr>\n';
+    });
+    html += '</table>';
+    node.type = 'html';
+    node.value = html;
+    delete node.children;
     return visit.CONTINUE;
   });
   return tree;

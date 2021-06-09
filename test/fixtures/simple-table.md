@@ -1,5 +1,14 @@
 ## Simple Table
 
-| a | b | c |
-| - | - | - |
-| 1 | 2 | 3 |
+<table>
+  <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+  </tr>
+</table>
