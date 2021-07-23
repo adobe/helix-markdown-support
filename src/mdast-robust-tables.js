@@ -54,12 +54,16 @@ function robustTables(tree) {
 
         /* istanbul ignore next */
         (children || []).forEach((child) => {
-          const cellHtml = hast2html(md2hast(child));
-          if (child.type === 'code') {
-            // code needs special treatment, otherwise the newlines disappear.
-            html += cellHtml.replace(/\r?\n/g, '<br>');
+          if (child.type === 'html') {
+            html += child.value;
           } else {
-            html += cellHtml.replace(/\r?\n/g, ' ');
+            const cellHtml = hast2html(md2hast(child));
+            if (child.type === 'code') {
+              // code needs special treatment, otherwise the newlines disappear.
+              html += cellHtml.replace(/\r?\n/g, '<br>');
+            } else {
+              html += cellHtml.replace(/\r?\n/g, ' ');
+            }
           }
         });
         html += '</td>\n';
