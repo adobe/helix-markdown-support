@@ -26,6 +26,7 @@ const {
   brk,
   code,
   image,
+  html,
 } = require('mdast-builder');
 const gfm = require('remark-gfm');
 
@@ -214,5 +215,31 @@ describe('mdast-robust-table Tests', () => {
     ]);
     robustTables(mdast);
     await assertMD(mdast, 'table-with-align.md', [gfm, softBreaks]);
+  });
+
+  it('Table with html items should not produce error', async () => {
+    const mdast = root([
+      heading(2, text('Table with HTML in cells')),
+      table(null, [
+        tableRow([
+          tableCell(paragraph([
+            text('This is the 4'),
+            html('<sup>'),
+            text('th'),
+            html('</sup>'),
+            text(' time'),
+          ])),
+        ]),
+        tableRow([
+          tableCell(paragraph([
+            html('<u>'),
+            text('https://www.example.com'),
+            html('</u>'),
+          ])),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-html.md', [gfm, softBreaks]);
   });
 });
