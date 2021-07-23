@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-markdown-support",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Helix Markdown Support",
   "scripts": {
     "test": " nyc mocha",

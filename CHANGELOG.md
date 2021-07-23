@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/adobe/helix-markdown-support/compare/v2.0.0...v2.0.1) (2021-07-23)
+
+
+### Bug Fixes
+
+* allow html in table cells ([9afe468](https://github.com/adobe/helix-markdown-support/commit/9afe468057101b28d17ae218f45666e1ec9829c6))
+
 # [2.0.0](https://github.com/adobe/helix-markdown-support/compare/v1.5.0...v2.0.0) (2021-06-09)
 
 
