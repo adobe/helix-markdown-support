@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const visit = require('unist-util-visit');
+import { visit } from 'unist-util-visit';
 
 /**
  * Sanitizes text:
@@ -22,7 +22,7 @@ const visit = require('unist-util-visit');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function sanitizeText(tree) {
+export default function sanitizeText(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
     const { children = [] } = node;
@@ -111,5 +111,3 @@ function sanitizeText(tree) {
   });
   return tree;
 }
-
-module.exports = sanitizeText;

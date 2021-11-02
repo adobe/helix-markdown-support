@@ -11,18 +11,15 @@
  */
 
 /* eslint-env mocha */
+import assert from 'assert';
+import { readFile } from 'fs/promises';
+import stringify from 'remark-stringify';
+import { unified } from 'unified';
 
-'use strict';
-
-const fse = require('fs-extra');
-const path = require('path');
-const assert = require('assert');
-const stringify = require('remark-stringify');
-const unified = require('unified');
-
-async function assertMD(mdast, fixture, plugins = []) {
+// eslint-disable-next-line import/prefer-default-export
+export async function assertMD(mdast, fixture, plugins = []) {
   // console.log(require('unist-util-inspect')(mdast));
-  const expected = await fse.readFile(path.resolve(__dirname, 'fixtures', fixture), 'utf-8');
+  const expected = await readFile(new URL(`./fixtures/${fixture}`, import.meta.url), 'utf-8');
   let processor = unified()
     .use(stringify, {
       strong: '*',
@@ -39,7 +36,3 @@ async function assertMD(mdast, fixture, plugins = []) {
   const actual = processor.stringify(mdast);
   assert.equal(actual, expected);
 }
-
-module.exports = {
-  assertMD,
-};

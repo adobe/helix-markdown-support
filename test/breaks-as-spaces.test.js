@@ -12,23 +12,22 @@
 
 /* eslint-env mocha */
 
-'use strict';
-
-const {
-  root,
-  paragraph,
-  text,
-  heading,
-  strong,
+import {
   brk,
+  heading,
+  paragraph,
+  root,
+  strong,
   table,
-  tableRow,
   tableCell,
-} = require('mdast-builder');
-const gfm = require('remark-gfm');
-const { assertMD } = require('./utils.js');
+  tableRow,
+  text,
+} from 'mdast-builder';
 
-const softBreaks = require('../src/remark-breaks-as-spaces.js');
+import gfm from 'remark-gfm';
+import { assertMD } from './utils.js';
+
+import { breaksAsSpaces } from '../src/index.js';
 
 describe('breaks-as-spaces Tests', () => {
   it('Uses spaces as softbreaks', async () => {
@@ -40,7 +39,7 @@ describe('breaks-as-spaces Tests', () => {
         text('world!'),
       ]),
     ]);
-    await assertMD(mdast, 'simple-text.md', [softBreaks]);
+    await assertMD(mdast, 'simple-text.md', [breaksAsSpaces]);
   });
 
   it('table cell with breaks dont create new lines', async () => {
@@ -64,6 +63,6 @@ describe('breaks-as-spaces Tests', () => {
         ]),
       ]),
     ]);
-    await assertMD(mdast, 'simple-table-with-breaks.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'simple-table-with-breaks.md', [gfm, breaksAsSpaces]);
   });
 });

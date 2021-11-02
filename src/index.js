@@ -10,24 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-const remarkMatter = require('./remark-matter');
-const robustTables = require('./mdast-robust-tables.js');
-const breaksAsSpaces = require('./remark-breaks-as-spaces.js');
-const sanitizeHeading = require('./mdast-sanitize-heading.js');
-const suppressSpaceCode = require('./mdast-suppress-spacecode.js');
-const sanitizeFormats = require('./mdast-sanitize-formats.js');
-const fixCodeFlow = require('./mdast-fix-code-flow.js');
-const sanitizeLinks = require('./mdast-sanitize-links.js');
-const sanitizeText = require('./mdast-sanitize-text.js');
-
-module.exports = {
-  remarkMatter,
-  robustTables,
-  breaksAsSpaces,
-  sanitizeHeading,
-  suppressSpaceCode,
-  sanitizeFormats,
-  fixCodeFlow,
-  sanitizeLinks,
-  sanitizeText,
-};
+export { default as remarkMatter } from './remark-matter/index.js';
+export { default as robustTables } from './mdast-robust-tables.js';
+export { default as breaksAsSpaces } from './remark-breaks-as-spaces.js';
+export { default as sanitizeHeading } from './mdast-sanitize-heading.js';
+export { default as suppressSpaceCode } from './mdast-suppress-spacecode.js';
+export { default as sanitizeFormats } from './mdast-sanitize-formats.js';
+export { default as fixCodeFlow } from './mdast-fix-code-flow.js';
+export { default as sanitizeLinks } from './mdast-sanitize-links.js';
+export { default as sanitizeText } from './mdast-sanitize-text.js';

@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const jsYaml = require('js-yaml');
+import jsYaml from 'js-yaml';
 
 function open(token) {
   this.enter({ type: 'yaml', value: '', payload: {} }, token);
@@ -38,7 +38,7 @@ function value(token) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function fromMarkdown(options = {}) {
+export default function fromMarkdown(options = {}) {
   return {
     enter: {
       yaml: open,
@@ -49,5 +49,3 @@ function fromMarkdown(options = {}) {
     },
   };
 }
-
-module.exports = fromMarkdown;

@@ -11,24 +11,19 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const {
-  root,
-  paragraph,
-  text,
-  heading,
-  strong,
-  strike,
+import {
   emphasis,
-  inlineCode,
-  link,
-} = require('mdast-builder');
-const gfm = require('remark-gfm');
-const { assertMD } = require('./utils.js');
-
-const sanitizeLinks = require('../src/mdast-sanitize-links.js');
+  heading,
+  inlineCode, link,
+  paragraph,
+  root,
+  strike,
+  strong,
+  text,
+} from 'mdast-builder';
+import gfm from 'remark-gfm';
+import { assertMD } from './utils.js';
+import { sanitizeLinks } from '../src/index.js';
 
 describe('sanitize-links Tests', () => {
   it('unwraps formatting', async () => {

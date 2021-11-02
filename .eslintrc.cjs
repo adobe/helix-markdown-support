@@ -13,4 +13,15 @@
 module.exports = {
   root: true,
   extends: '@adobe/helix',
+  env: {
+    node: true,
+    es6: true,
+  },
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 2020,
+  },
+  rules: {
+    'import/extensions': 0,
+  },
 };

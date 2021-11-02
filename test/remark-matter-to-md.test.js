@@ -11,19 +11,10 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const jsYaml = require('js-yaml');
-const {
-  root,
-  text,
-  heading,
-} = require('mdast-builder');
-const { assertMD } = require('./utils.js');
-
-const softBreaks = require('../src/remark-breaks-as-spaces.js');
-const remarkMatter = require('../src/remark-matter');
+import jsYaml from 'js-yaml';
+import { heading, root, text } from 'mdast-builder';
+import { assertMD } from './utils.js';
+import { remarkMatter, breaksAsSpaces } from '../src/index.js';
 
 const yaml = (payload) => ({
   type: 'yaml',
@@ -41,6 +32,6 @@ describe('remark-matter to md', () => {
         answer: 42,
       }),
     ]);
-    await assertMD(mdast, 'simple-yaml.md', [remarkMatter, softBreaks]);
+    await assertMD(mdast, 'simple-yaml.md', [remarkMatter, breaksAsSpaces]);
   });
 });

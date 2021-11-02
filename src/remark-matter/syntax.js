@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-use-before-define */
-const jsYaml = require('js-yaml');
+import jsYaml from 'js-yaml';
 
 const type = (v) => ((v !== undefined && v !== null) ? v.constructor : v);
 
@@ -263,12 +263,10 @@ function parse(options) {
   }
 }
 
-function create(options = {}) {
+export default function create(options = {}) {
   return {
     flow: {
       [CODE_DASH]: [parse(options)],
     },
   };
 }
-
-module.exports = create;

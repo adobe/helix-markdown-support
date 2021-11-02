@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const visit = require('unist-util-visit');
+import { visit } from 'unist-util-visit';
 
 /**
  * Looks for text starting with 4 spaces. As this would render as code in some markdown,
@@ -18,7 +18,7 @@ const visit = require('unist-util-visit');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function suppressSpaceCode(tree) {
+export default function suppressSpaceCode(tree) {
   visit(tree, (child, index, parent) => {
     const { children } = parent || {};
     if (child.type === 'text'
@@ -31,5 +31,3 @@ function suppressSpaceCode(tree) {
   });
   return tree;
 }
-
-module.exports = suppressSpaceCode;

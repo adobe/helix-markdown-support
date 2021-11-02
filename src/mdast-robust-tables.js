@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-param-reassign */
-const md2hast = require('mdast-util-to-hast');
-const hast2html = require('hast-util-to-html');
-const visit = require('unist-util-visit');
+import { toHast as md2hast } from 'mdast-util-to-hast';
+import { toHtml as hast2html } from 'hast-util-to-html';
+import { visit } from 'unist-util-visit';
 
 /**
  * Converts tables to HTML
@@ -20,17 +20,15 @@ const visit = require('unist-util-visit');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function robustTables(tree) {
+export default function robustTables(tree) {
   visit(tree, (node) => {
     if (node.type !== 'table') {
       return visit.CONTINUE;
     }
     let html = '<table>\n';
-    /* istanbul ignore next */
-    (node.children || []).forEach((row) => {
+    (node.children /* c8 ignore next */ || []).forEach((row) => {
       html += '  <tr>\n';
-      /* istanbul ignore next */
-      (row.children || []).forEach((cell) => {
+      (row.children /* c8 ignore next */ || []).forEach((cell) => {
         let align = '';
         if (cell.align === 'right') {
           align = ' align="right"';
@@ -52,8 +50,7 @@ function robustTables(tree) {
           children = children[0].children;
         }
 
-        /* istanbul ignore next */
-        (children || []).forEach((child) => {
+        (children /* c8 ignore next */ || []).forEach((child) => {
           if (child.type === 'html') {
             html += child.value;
           } else {
@@ -78,5 +75,3 @@ function robustTables(tree) {
   });
   return tree;
 }
-
-module.exports = robustTables;
