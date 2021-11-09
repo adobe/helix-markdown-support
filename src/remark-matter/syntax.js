@@ -33,11 +33,9 @@ function validYaml(str, errorHandler) {
         if (Array.isArray(payload)) {
           payloadType = 'Array';
         }
-        errorHandler(
-          'Found ambiguous frontmatter block: Block contains valid yaml, but '
+        errorHandler('Found ambiguous frontmatter block: Block contains valid yaml, but '
           + `it's data type is "${payloadType}" instead of Object. `
-          + 'Make sure your yaml blocks contain only key-value pairs at the root level!', str,
-        );
+          + 'Make sure your yaml blocks contain only key-value pairs at the root level!', str);
       }
       return false;
     }
