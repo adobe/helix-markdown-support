@@ -206,19 +206,19 @@ describe('remark-matter from markdown', () => {
   it('Ignore: no frontmatter due to empty lines', () => assertNop(`
     # Multimedia Test
     ---
-    
+
     ![](https://hlx.blob.core.windows.net/external/20f9d6dff67514da262230822bda5f3b50ef28c6#image.png)
-    
+
     ---
-    
+
     PUBLISHED ON 28-04-2020
-    
+
     ---
-    
+
     ### SlideShare
 
     <https://www.slideshare.net/adobe/adobe-digital-insights-holiday-recap-2019>
-    
+
     ---
     Topics: Bar, Baz
     Products: Stock, Creative Cloud
@@ -227,7 +227,7 @@ describe('remark-matter from markdown', () => {
   it('Ignore: no frontmatter with embeds', () => assertNop(`
     ---
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ78BeYUV4gFee4bSxjN8u86aV853LGYZlwv1jAUMZFnPn5TnIZteDJwjGr2GNu--zgnpTY1E_KHXcF/pubhtml
-    
+
     Is foo {{foo}}?"
     ---
   `));
@@ -300,7 +300,7 @@ describe('remark-matter from markdown', () => {
 
   it('Ok: frontmatter with empty line before it', () => assertCorrect(`
       Foo
-      
+
       ---
       Bar: 42
       ---
@@ -352,28 +352,28 @@ describe('remark-matter from markdown', () => {
 
   it('Ignore: section with emoticons', () => assertNop(`
       ---
-      
+
       :normal:
-      
+
       ---
-      
+
       - [home](#)
       - [menu](#menu)
   `));
 
   it('Ignore: just sections', () => assertNop(`
       # Title
-      
+
       ---
-      
+
       Lorem ipsum 1
-      
+
       ---
-      
+
       Lorem ipsum 2
-      
+
       ---
-      
+
       Lorem ipsum 3
   `));
 
@@ -439,35 +439,45 @@ describe('remark-matter from markdown', () => {
     ---
   `));
 
-  it('Ok: Entire doc is frontmatter', () => assertCorrect(`
+  it('Ok: Entire doc is frontmatter', () => assertCorrect(
+    `
       ---
       foo: 42
       ---
     `,
-  root(yaml({ foo: 42 }))));
+    root(yaml({ foo: 42 })),
+  ));
 
-  it('Ok: Entire doc is frontmatter (with yaml dump value)', () => assertCorrect(`
+  it('Ok: Entire doc is frontmatter (with yaml dump value)', () => assertCorrect(
+    `
       ---
       foo: 42
       ---
     `,
-  root(yaml({ foo: 42 }, true)), true));
+    root(yaml({ foo: 42 }, true)),
+    true,
+  ));
 
-  it('Ok: Entire doc is frontmatter w trailing space after open fence', () => assertCorrect(`
+  it('Ok: Entire doc is frontmatter w trailing space after open fence', () => assertCorrect(
+    `
     ---@@@
     foo: 42
     ---
   `,
-  root(yaml({ foo: 42 }))));
+    root(yaml({ foo: 42 })),
+  ));
 
-  it('Ok: Entire doc is frontmatter w trailing space after close fence', () => assertCorrect(`
+  it('Ok: Entire doc is frontmatter w trailing space after close fence', () => assertCorrect(
+    `
     ---
     foo: 42
     ---@@@
   `,
-  root(yaml({ foo: 42 }))));
+    root(yaml({ foo: 42 })),
+  ));
 
-  it('Ok: Frontmatter; underline h2; frontmatter', () => assertCorrect(`
+  it('Ok: Frontmatter; underline h2; frontmatter', () => assertCorrect(
+    `
     ---
     foo: 42
     ---
@@ -479,11 +489,12 @@ describe('remark-matter from markdown', () => {
     my: 42
     ---
   `,
-  root([
-    yaml({ foo: 42 }),
-    heading(2, text('Hello')),
-    yaml({ my: 42 }),
-  ])));
+    root([
+      yaml({ foo: 42 }),
+      heading(2, text('Hello')),
+      yaml({ my: 42 }),
+    ]),
+  ));
 
   it('Ok: frontmatter; frontmatter', () => assertCorrect(`
     ---
@@ -498,7 +509,8 @@ describe('remark-matter from markdown', () => {
     yaml({ my: 42 }),
   ])));
 
-  it('Ok: frontmatter, <hr>, frontmatter', () => assertCorrect(`
+  it('Ok: frontmatter, <hr>, frontmatter', () => assertCorrect(
+    `
     ---
     {x: 23}
     ---
@@ -509,13 +521,15 @@ describe('remark-matter from markdown', () => {
     my: 42
     ---
   `,
-  root([
-    yaml({ x: 23 }),
-    thematicBreak(),
-    yaml({ my: 42 }),
-  ])));
+    root([
+      yaml({ x: 23 }),
+      thematicBreak(),
+      yaml({ my: 42 }),
+    ]),
+  ));
 
-  it('Ok: frontmatter, text, frontmatter', () => assertCorrect(`
+  it('Ok: frontmatter, text, frontmatter', () => assertCorrect(
+    `
     ---
     {x: 23}
     ---
@@ -526,13 +540,15 @@ describe('remark-matter from markdown', () => {
     my: 42
     ---
   `,
-  root([
-    yaml({ x: 23 }),
-    paragraph(text('Hurtz')),
-    yaml({ my: 42 }),
-  ])));
+    root([
+      yaml({ x: 23 }),
+      paragraph(text('Hurtz')),
+      yaml({ my: 42 }),
+    ]),
+  ));
 
-  it('Ok: frontmatter, <hr>, frontmatter, <hr>', () => assertCorrect(`
+  it('Ok: frontmatter, <hr>, frontmatter, <hr>', () => assertCorrect(
+    `
     ---
     {x: 23}
     ---
@@ -545,14 +561,16 @@ describe('remark-matter from markdown', () => {
 
     ---
   `,
-  root([
-    yaml({ x: 23 }),
-    thematicBreak(),
-    yaml({ my: 42 }),
-    thematicBreak(),
-  ])));
+    root([
+      yaml({ x: 23 }),
+      thematicBreak(),
+      yaml({ my: 42 }),
+      thematicBreak(),
+    ]),
+  ));
 
-  it('Ok: frontmatter, text, frontmatter, text, frontmatter, text, frontmatter, text', () => assertCorrect(`
+  it('Ok: frontmatter, text, frontmatter, text, frontmatter, text, frontmatter, text', () => assertCorrect(
+    `
     ---
     {x: 23}
     ---
@@ -578,14 +596,15 @@ describe('remark-matter from markdown', () => {
     Huck
 
   `,
-  root([
-    yaml({ x: 23 }),
-    paragraph(text('Hurtz')),
-    yaml({ my: 42 }),
-    paragraph(text('Bong')),
-    yaml({ nom: 'foo' }),
-    paragraph(text('Huck')),
-    yaml({ nom: 'foo' }),
-    paragraph(text('Huck')),
-  ])));
+    root([
+      yaml({ x: 23 }),
+      paragraph(text('Hurtz')),
+      yaml({ my: 42 }),
+      paragraph(text('Bong')),
+      yaml({ nom: 'foo' }),
+      paragraph(text('Huck')),
+      yaml({ nom: 'foo' }),
+      paragraph(text('Huck')),
+    ]),
+  ));
 });
