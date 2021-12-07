@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/adobe/helix-markdown-support/compare/v2.0.1...v3.0.0) (2021-12-07)
+
+
+### Features
+
+* convert to esm ([0b5e09b](https://github.com/adobe/helix-markdown-support/commit/0b5e09bac1e7e26128d7af8f25c85eadc82ff56c))
+
+
+### BREAKING CHANGES
+
+* only esm supported
+
 ## [2.0.1](https://github.com/adobe/helix-markdown-support/compare/v2.0.0...v2.0.1) (2021-07-23)
 
 
