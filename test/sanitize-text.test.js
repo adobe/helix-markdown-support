@@ -11,22 +11,20 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const {
-  root,
-  paragraph,
-  text,
-  heading,
-  strong,
+import {
   emphasis,
-  strike,
+  heading,
   image,
   inlineCode,
-} = require('mdast-builder');
-const gfm = require('remark-gfm');
-const { assertMD } = require('./utils.js');
+  paragraph,
+  root,
+  strike,
+  strong,
+  text,
+} from 'mdast-builder';
+import gfm from 'remark-gfm';
+import { assertMD } from './utils.js';
+import { sanitizeText } from '../src/index.js';
 
 const separator = () => ({
   type: 'thematicBreak',
@@ -35,9 +33,6 @@ const separator = () => ({
 const brk = () => ({
   type: 'break',
 });
-
-const sanitizeText = require('../src/mdast-sanitize-text.js');
-
 describe('sanitize-embeds Tests', () => {
   it('sanitize', async () => {
     const mdast = root([

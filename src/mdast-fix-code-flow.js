@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-param-reassign */
-const visit = require('unist-util-visit');
+import { visit } from 'unist-util-visit';
 
 /**
  * ensures that `code` is at a flow level. i.e. outside a paragraph
@@ -18,7 +18,7 @@ const visit = require('unist-util-visit');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function fixCodeFlow(tree) {
+export default function fixCodeFlow(tree) {
   visit(tree, (node, index, parent) => {
     if (node.type === 'paragraph' && node.children) {
       for (let i = 0; i < node.children.length; i += 1) {
@@ -54,5 +54,3 @@ function fixCodeFlow(tree) {
   });
   return tree;
 }
-
-module.exports = fixCodeFlow;

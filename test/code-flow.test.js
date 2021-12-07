@@ -11,19 +11,11 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const {
-  root,
-  paragraph,
-  code,
-  text,
-  heading,
-} = require('mdast-builder');
-const { assertMD } = require('./utils.js');
-
-const fixCodeFlow = require('../src/mdast-fix-code-flow.js');
+import {
+  code, heading, paragraph, root, text,
+} from 'mdast-builder';
+import { assertMD } from './utils.js';
+import { fixCodeFlow } from '../src/index.js';
 
 describe('fix-code=flow Tests', () => {
   it('Keeps code as paragraph sibling', async () => {

@@ -11,29 +11,20 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const {
-  root,
+import {
+  brk, code,
+  heading, html, image,
   paragraph,
+  root, strong,
   table,
+  tableCell as originalCell,
   tableRow,
-  tableCell: originalCell,
   text,
-  heading,
-  strong,
-  brk,
-  code,
-  image,
-  html,
-} = require('mdast-builder');
-const gfm = require('remark-gfm');
+} from 'mdast-builder';
+import gfm from 'remark-gfm';
 
-const softBreaks = require('../src/remark-breaks-as-spaces.js');
-const robustTables = require('../src/mdast-robust-tables.js');
-
-const { assertMD } = require('./utils.js');
+import { assertMD } from './utils.js';
+import { robustTables, breaksAsSpaces } from '../src/index.js';
 
 function tableCell(children, align, verticalAlign) {
   const node = originalCell(children);
@@ -64,7 +55,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'simple-table.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'simple-table.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with multiple lines converts to html', async () => {
@@ -88,7 +79,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-lines.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-lines.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with inline code breaks converts to html', async () => {
@@ -110,7 +101,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-code.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-code.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with inline images converts to html', async () => {
@@ -132,7 +123,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-images.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-images.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with single paragraph converts correctly', async () => {
@@ -157,7 +148,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-paragraph.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-paragraph.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with multiple paragraph converts correctly', async () => {
@@ -183,7 +174,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm, breaksAsSpaces]);
   });
 
   it('table alignments converts correctly', async () => {
@@ -214,7 +205,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-align.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-align.md', [gfm, breaksAsSpaces]);
   });
 
   it('Table with html items should not produce error', async () => {
@@ -240,6 +231,6 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-html.md', [gfm, softBreaks]);
+    await assertMD(mdast, 'table-with-html.md', [gfm, breaksAsSpaces]);
   });
 });

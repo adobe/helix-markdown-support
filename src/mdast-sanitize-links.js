@@ -9,8 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const visit = require('unist-util-visit');
-const find = require('unist-util-find');
+import { visit } from 'unist-util-visit';
+import find from 'unist-util-find';
 
 /**
  * Sanitizes links:
@@ -19,7 +19,7 @@ const find = require('unist-util-find');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function sanitizeLinks(tree) {
+export default function sanitizeLinks(tree) {
   visit(tree, (node, index, parent) => {
     const { children = [] } = node;
     if (node.type === 'link' && children.length === 1) {
@@ -65,5 +65,3 @@ function sanitizeLinks(tree) {
   });
   return tree;
 }
-
-module.exports = sanitizeLinks;

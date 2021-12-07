@@ -11,19 +11,11 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const {
-  root,
-  paragraph,
-  text,
-  heading,
-  image,
-} = require('mdast-builder');
-const { assertMD } = require('./utils.js');
-
-const sanitizeHeading = require('../src/mdast-sanitize-heading.js');
+import {
+  heading, image, paragraph, root, text,
+} from 'mdast-builder';
+import { assertMD } from './utils.js';
+import { sanitizeHeading } from '../src/index.js';
 
 describe('sanitize-heading Tests', () => {
   it('Moves images in heading to next paragraph.', async () => {

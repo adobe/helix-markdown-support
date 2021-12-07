@@ -9,9 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const fromMarkdown = require('./from-markdown.js');
-const toMarkdown = require('./to-markdown.js');
-const syntax = require('./syntax.js');
+import fromMarkdown from './from-markdown.js';
+import toMarkdown from './to-markdown.js';
+import syntax from './syntax.js';
 
 /**
  * Front- and mid-matter remark plugin.
@@ -83,11 +83,11 @@ const syntax = require('./syntax.js');
  * @param {object} options Plugin options
  * @param {Function} options.errorHandler Function that is invoked on yaml parsing errors.
  */
-function matterPlugin(options) {
+export default function matterPlugin(options) {
   const data = this.data();
 
   function add(field, value) {
-    /* istanbul ignore next */
+    /* c8 ignore next 2 */
     if (data[field]) {
       data[field].push(value);
     } else {
@@ -99,5 +99,3 @@ function matterPlugin(options) {
   add('fromMarkdownExtensions', fromMarkdown(options));
   add('toMarkdownExtensions', toMarkdown(options));
 }
-
-module.exports = matterPlugin;

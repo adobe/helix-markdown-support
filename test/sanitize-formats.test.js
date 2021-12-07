@@ -11,20 +11,11 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const assert = require('assert');
-const {
-  root,
-  paragraph,
-  text,
-  strong,
-  emphasis,
-  strike,
-} = require('mdast-builder');
-
-const sanitizeFormats = require('../src/mdast-sanitize-formats.js');
+import assert from 'assert';
+import {
+  emphasis, paragraph, root, strike, strong, text,
+} from 'mdast-builder';
+import { sanitizeFormats } from '../src/index.js';
 
 describe('sanitize-formats tests', () => {
   const specs = {

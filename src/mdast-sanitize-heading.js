@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const visit = require('unist-util-visit');
+import { visit } from 'unist-util-visit';
 
 /**
  * Sanitizes headings:
@@ -18,7 +18,7 @@ const visit = require('unist-util-visit');
  * @param {object} tree
  * @returns {object} The modified (original) tree.
  */
-function sanitizeHeading(tree) {
+export default function sanitizeHeading(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
     const { children = [] } = node;
@@ -46,5 +46,3 @@ function sanitizeHeading(tree) {
   });
   return tree;
 }
-
-module.exports = sanitizeHeading;

@@ -11,19 +11,13 @@
  */
 
 /* eslint-env mocha */
+import {
+  brk, heading, paragraph, root, text,
+} from 'mdast-builder';
 
-'use strict';
+import { assertMD } from './utils.js';
 
-const {
-  root,
-  paragraph,
-  text,
-  heading,
-  brk,
-} = require('mdast-builder');
-const { assertMD } = require('./utils.js');
-
-const spaceCode = require('../src/mdast-suppress-spacecode.js');
+import { suppressSpaceCode } from '../src/index.js';
 
 describe('suppress-spacecode Tests', () => {
   it('Converts text with 4 leading spaces to html', async () => {
@@ -37,7 +31,7 @@ describe('suppress-spacecode Tests', () => {
         text('              Really.'),
       ]),
     ]);
-    spaceCode(mdast);
+    suppressSpaceCode(mdast);
     await assertMD(mdast, 'spacecode.md');
   });
 });

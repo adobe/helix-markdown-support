@@ -11,11 +11,8 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
-const assert = require('assert');
-const index = require('../src/index.js');
+import assert from 'assert';
+import * as index from '../src/index.js';
 
 const MODS = [
   'remarkMatter',

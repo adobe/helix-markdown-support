@@ -13,7 +13,7 @@
 /**
  * Remark extension that handles soft-breaks correctly.
  */
-function softBreak() {
+export default function softBreak() {
   function handleBreak(node, _, context) {
     if (context.stack.indexOf('tableCell') !== -1) {
       return '   ';
@@ -31,5 +31,3 @@ function softBreak() {
     },
   });
 }
-
-module.exports = softBreak;

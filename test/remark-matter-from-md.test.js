@@ -10,19 +10,17 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-env mocha */
-const assert = require('assert');
-const jsYaml = require('js-yaml');
-const unified = require('unified');
-const remark = require('remark-parse');
-const inspect = require('unist-util-inspect').noColor;
-const visit = require('unist-util-visit');
-const {
-  root,
-  text,
-  heading,
-  paragraph,
-} = require('mdast-builder');
-const remarkMatter = require('../src/remark-matter');
+import assert from 'assert';
+import jsYaml from 'js-yaml';
+import { unified } from 'unified';
+import remark from 'remark-parse';
+import { inspectNoColor as inspect } from 'unist-util-inspect';
+import { visit } from 'unist-util-visit';
+import {
+  heading, paragraph, root, text,
+} from 'mdast-builder';
+
+import { remarkMatter } from '../src/index.js';
 
 const yaml = (payload, yamlDump) => ({
   type: 'yaml',
