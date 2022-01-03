@@ -4,7 +4,7 @@
   "description": "Helix Markdown Support",
   "type": "module",
   "scripts": {
-    "test": " c8 mocha",
+    "test": "c8 mocha",
     "test-ci": "c8 mocha && codecov",
     "lint": "eslint .",
     "semantic-release": "semantic-release",
@@ -32,7 +32,8 @@
     "spec": "test/**/*.test.js",
     "recursive": "true",
     "reporter": "mocha-multi-reporters",
-    "reporter-options": "configFile=.mocha-multi.json"
+    "reporter-options": "configFile=.mocha-multi.json",
+    "node-option": "conditions=development"
   },
   "peerDependencies": {
     "unified": "10.x"
