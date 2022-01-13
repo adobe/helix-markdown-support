@@ -18,11 +18,12 @@ import { assertMD } from './utils.js';
 import { sanitizeHeading } from '../src/index.js';
 
 describe('sanitize-heading Tests', () => {
-  it('Moves images in heading to next paragraph.', async () => {
+  it('Moves images in heading to next paragraph. by default', async () => {
     const mdast = root([
       heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image 1'),
         text('This contains an image: '),
-        image('https://dummyimage.com/300', 'Dummy Image'),
+        image('https://dummyimage.com/300', 'Dummy Image 2'),
         text('.'),
       ]),
       paragraph([
@@ -33,7 +34,65 @@ describe('sanitize-heading Tests', () => {
     await assertMD(mdast, 'sanitized-heading.md');
   });
 
-  it('Removes empty headings.', async () => {
+  it('Moves images in heading to next paragraph if enabled', async () => {
+    const mdast = root([
+      heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image 1'),
+        text('This contains an image: '),
+        image('https://dummyimage.com/300', 'Dummy Image 2'),
+        text('.'),
+      ]),
+      paragraph([
+        text('Hello, world.'),
+      ]),
+    ]);
+    sanitizeHeading(mdast, { imageHandling: 'after' });
+    await assertMD(mdast, 'sanitized-heading.md');
+  });
+
+  it('Moves images in heading to previous paragraph if enabled', async () => {
+    const mdast = root([
+      heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image 1'),
+        text('This contains an image: '),
+        image('https://dummyimage.com/300', 'Dummy Image 2'),
+        text('.'),
+      ]),
+      paragraph([
+        text('Hello, world.'),
+      ]),
+    ]);
+    sanitizeHeading(mdast, { imageHandling: 'before' });
+    await assertMD(mdast, 'sanitized-heading-before.md');
+  });
+
+  it('Moves images in heading to previous and next paragraph if enabled', async () => {
+    const mdast = root([
+      heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image 1'),
+        image('https://dummyimage.com/300', 'Dummy Image 2'),
+        text('This contains an image: '),
+        image('https://dummyimage.com/300', 'Dummy Image 3'),
+        image('https://dummyimage.com/300', 'Dummy Image 4'),
+        text('.'),
+      ]),
+      heading(2, [
+        image('https://dummyimage.com/300', 'Dummy Image 5'),
+        image('https://dummyimage.com/300', 'Dummy Image 6'),
+        text('This also contains images: '),
+        image('https://dummyimage.com/300', 'Dummy Image 7'),
+        image('https://dummyimage.com/300', 'Dummy Image 8'),
+        text('.'),
+      ]),
+      paragraph([
+        text('Hello, world.'),
+      ]),
+    ]);
+    sanitizeHeading(mdast, { imageHandling: 'both' });
+    await assertMD(mdast, 'sanitized-heading-both.md');
+  });
+
+  it('Removes empty headings after all images moved out.', async () => {
     const mdast = root([
       heading(2, [
         image('https://dummyimage.com/300', 'Dummy Image'),
@@ -44,5 +103,17 @@ describe('sanitize-heading Tests', () => {
     ]);
     sanitizeHeading(mdast);
     await assertMD(mdast, 'sanitized-heading-removed.md');
+  });
+
+  it('Removes empty headings.', async () => {
+    const mdast = root([
+      heading(2, [
+      ]),
+      paragraph([
+        text('Hello, world.'),
+      ]),
+    ]);
+    sanitizeHeading(mdast);
+    await assertMD(mdast, 'sanitized-heading-empty.md');
   });
 });
