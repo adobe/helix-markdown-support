@@ -12,7 +12,7 @@
 /* eslint-disable no-param-reassign */
 import { toHast as md2hast } from 'mdast-util-to-hast';
 import { toHtml as hast2html } from 'hast-util-to-html';
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 
 /**
  * Converts tables to HTML
@@ -23,7 +23,7 @@ import { visit } from 'unist-util-visit';
 export default function robustTables(tree) {
   visit(tree, (node) => {
     if (node.type !== 'table') {
-      return visit.CONTINUE;
+      return CONTINUE;
     }
     let html = '<table>\n';
     (node.children /* c8 ignore next */ || []).forEach((row) => {
@@ -71,7 +71,7 @@ export default function robustTables(tree) {
     node.type = 'html';
     node.value = html;
     delete node.children;
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }
