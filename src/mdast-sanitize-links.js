@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 import find from 'unist-util-find';
 
 /**
@@ -61,7 +61,7 @@ export default function sanitizeLinks(tree) {
         }
       }
     }
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }

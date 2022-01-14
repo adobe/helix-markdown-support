@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 
 /**
  * Sanitizes text:
@@ -43,7 +43,7 @@ export default function sanitizeFormats(tree) {
         }
       }
     }
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }
