@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/adobe/helix-markdown-support/compare/v3.0.0...v3.1.0) (2022-01-14)
+
+
+### Features
+
+* improve sanitize-headings to move leading images before heading ([292dc72](https://github.com/adobe/helix-markdown-support/commit/292dc72dbe43def0d97e8f1c528eeb065b3bff12)), closes [#83](https://github.com/adobe/helix-markdown-support/issues/83)
+
 # [3.0.0](https://github.com/adobe/helix-markdown-support/compare/v2.0.1...v3.0.0) (2021-12-07)
 
 
