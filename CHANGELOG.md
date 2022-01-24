@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/adobe/helix-markdown-support/compare/v3.1.1...v3.1.2) (2022-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update external fixes ([#86](https://github.com/adobe/helix-markdown-support/issues/86)) ([addbdae](https://github.com/adobe/helix-markdown-support/commit/addbdae518dead84f9057da6dc799a1ec8c52779))
+
 ## [3.1.1](https://github.com/adobe/helix-markdown-support/compare/v3.1.0...v3.1.1) (2022-01-15)
 
 
