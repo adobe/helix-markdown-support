@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/adobe/helix-markdown-support/compare/v3.1.2...v3.1.3) (2022-05-10)
+
+
+### Bug Fixes
+
+* keep html in table paragraphs ([#108](https://github.com/adobe/helix-markdown-support/issues/108)) ([9b3ea28](https://github.com/adobe/helix-markdown-support/commit/9b3ea28a1fd785e575a56bb99d47f1c07ef2a88e))
+
 ## [3.1.2](https://github.com/adobe/helix-markdown-support/compare/v3.1.1...v3.1.2) (2022-01-24)
 
 
