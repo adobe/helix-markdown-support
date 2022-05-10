@@ -1,3 +1,10 @@
+## [3.1.4](https://github.com/adobe/helix-markdown-support/compare/v3.1.3...v3.1.4) (2022-05-10)
+
+
+### Bug Fixes
+
+* preserve spans ([#109](https://github.com/adobe/helix-markdown-support/issues/109)) ([9d6ba00](https://github.com/adobe/helix-markdown-support/commit/9d6ba00e2623349bf469ab56bb093f5dbed976fc))
+
 ## [3.1.3](https://github.com/adobe/helix-markdown-support/compare/v3.1.2...v3.1.3) (2022-05-10)
 
 
