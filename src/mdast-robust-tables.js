@@ -29,20 +29,26 @@ export default function robustTables(tree) {
     (node.children /* c8 ignore next */ || []).forEach((row) => {
       html += '  <tr>\n';
       (row.children /* c8 ignore next */ || []).forEach((cell) => {
-        let align = '';
+        let attrs = '';
         if (cell.align === 'right') {
-          align = ' align="right"';
+          attrs = ' align="right"';
         } else if (cell.align === 'center') {
-          align = ' align="center"';
+          attrs = ' align="center"';
         } else if (cell.align === 'both') {
-          align = ' align="justify"';
+          attrs = ' align="justify"';
         }
         if (cell.valign === 'middle') {
-          align += ' valign="middle"';
+          attrs += ' valign="middle"';
         } else if (cell.valign === 'bottom') {
-          align += ' valign="bottom"';
+          attrs += ' valign="bottom"';
         }
-        html += `    <td${align}>`;
+        if (cell.rowSpan > 1) {
+          attrs += ` rowspan="${cell.rowSpan}"`;
+        }
+        if (cell.colSpan > 1) {
+          attrs += ` colspan="${cell.colSpan}"`;
+        }
+        html += `    <td${attrs}>`;
 
         // if cell contains only 1 single paragraph, unwrap it
         let { children } = cell;
