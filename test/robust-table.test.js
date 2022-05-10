@@ -222,6 +222,21 @@ describe('mdast-robust-table Tests', () => {
           ])),
         ]),
         tableRow([
+          tableCell([
+            paragraph([
+              text('H'),
+              html('<sub>'),
+              text('2'),
+              html('</sub>'),
+              text('SO'),
+              html('<sub>'),
+              text('4'),
+              html('</sub>'),
+            ]),
+            paragraph([text('(source: Wikipedia)')]),
+          ]),
+        ]),
+        tableRow([
           tableCell(paragraph([
             html('<u>'),
             text('https://www.example.com'),
