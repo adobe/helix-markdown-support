@@ -70,7 +70,7 @@ export default function sanitizeLinks(tree) {
         // eslint-disable-next-line no-param-reassign
         index += 1;
       }
-      // move trailing links after link
+      // move trailing breaks after link
       let last = children.length - 1;
       while (children[last]?.type === 'break') {
         const brk = children.pop();
