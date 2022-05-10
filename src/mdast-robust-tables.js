@@ -54,7 +54,8 @@ export default function robustTables(tree) {
           if (child.type === 'html') {
             html += child.value;
           } else {
-            const cellHtml = hast2html(md2hast(child));
+            const hast = md2hast(child, { allowDangerousHtml: true });
+            const cellHtml = hast2html(hast, { allowDangerousHtml: true });
             if (child.type === 'code') {
               // code needs special treatment, otherwise the newlines disappear.
               html += cellHtml.replace(/\r?\n/g, '<br>');
