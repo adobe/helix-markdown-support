@@ -14,6 +14,7 @@ import { visit } from 'unist-util-visit';
 /**
  * Sanitizes headings:
  * - (re)move images ('before', 'both', 'after')
+ * - converts BREAKs inside headings to <br>.
  *
  * @param {object} tree
  * @param {object} [opts] options

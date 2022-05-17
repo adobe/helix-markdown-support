@@ -16,7 +16,7 @@ import find from 'unist-util-find';
  * Sanitizes links:
  * - unwraps formatting in links if possible. eg: [_text_](...) -> _[test](...)_
  * - moves leading, trailing BREAKs out of link
- * - converts BREAKs inside link to spaces.
+ * - converts BREAKs inside link to <br>.
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
