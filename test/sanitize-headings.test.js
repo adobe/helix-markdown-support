@@ -17,6 +17,8 @@ import {
 import { assertMD } from './utils.js';
 import { sanitizeHeading } from '../src/index.js';
 
+const brk = () => ({ type: 'break' });
+
 describe('sanitize-heading Tests', () => {
   it('Moves images in heading to next paragraph. by default', async () => {
     const mdast = root([
@@ -115,5 +117,17 @@ describe('sanitize-heading Tests', () => {
     ]);
     sanitizeHeading(mdast);
     await assertMD(mdast, 'sanitized-heading-empty.md');
+  });
+
+  it('Converts soft breaks to <br>s.', async () => {
+    const mdast = root([
+      heading(2, [
+        text('Adobe'),
+        brk(),
+        text('Rules'),
+      ]),
+    ]);
+    sanitizeHeading(mdast);
+    await assertMD(mdast, 'sanitized-heading-breaks.md');
   });
 });

@@ -77,12 +77,12 @@ export default function sanitizeLinks(tree) {
         parent.children.splice(index + 1, 0, brk);
         last -= 1;
       }
-      // convert inline breaks to spaces
+      // convert inline breaks to <br>
       for (let i = 0; i < children.length; i += 1) {
         if (children[i].type === 'break') {
           children[i] = {
-            type: 'text',
-            value: ' ',
+            type: 'html',
+            value: '<br>',
           };
         }
       }

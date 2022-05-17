@@ -24,7 +24,7 @@ Leading links:\
 \
 [adobe rules.](https://www.adobe.com)
 
-Links inside:[adobe rules.](https://www.adobe.com)
+Links inside:[adobe<br>rules.](https://www.adobe.com)
 
 only breaks\
 \

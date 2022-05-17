@@ -47,6 +47,9 @@ export default function sanitizeHeading(tree, opts = {}) {
             siblings.splice(after, 0, para);
             after += 1;
           }
+        } else if (child.type === 'break') {
+          child.type = 'html';
+          child.value = '<br>';
         }
       }
       // remove empty headings
