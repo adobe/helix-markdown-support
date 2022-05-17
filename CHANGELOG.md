@@ -1,3 +1,10 @@
+## [3.1.5](https://github.com/adobe/helix-markdown-support/compare/v3.1.4...v3.1.5) (2022-05-17)
+
+
+### Bug Fixes
+
+* (re)move breaks in links and headings ([621c85b](https://github.com/adobe/helix-markdown-support/commit/621c85b664621e56111e00e9cbb9cd7d648471d6)), closes [#106](https://github.com/adobe/helix-markdown-support/issues/106)
+
 ## [3.1.4](https://github.com/adobe/helix-markdown-support/compare/v3.1.3...v3.1.4) (2022-05-10)
 
 
