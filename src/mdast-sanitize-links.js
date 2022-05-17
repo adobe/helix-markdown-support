@@ -15,6 +15,8 @@ import find from 'unist-util-find';
 /**
  * Sanitizes links:
  * - unwraps formatting in links if possible. eg: [_text_](...) -> _[test](...)_
+ * - moves leading, trailing BREAKs out of link
+ * - converts BREAKs inside link to <br>.
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
@@ -60,6 +62,31 @@ export default function sanitizeLinks(tree) {
           }
         }
       }
+    } else if (node.type === 'link' && children.length > 1) {
+      // move leading breaks outside of link
+      while (children[0]?.type === 'break') {
+        const brk = children.shift();
+        parent.children.splice(index, 0, brk);
+        // eslint-disable-next-line no-param-reassign
+        index += 1;
+      }
+      // move trailing breaks after link
+      let last = children.length - 1;
+      while (children[last]?.type === 'break') {
+        const brk = children.pop();
+        parent.children.splice(index + 1, 0, brk);
+        last -= 1;
+      }
+      // convert inline breaks to <br>
+      for (let i = 0; i < children.length; i += 1) {
+        if (children[i].type === 'break') {
+          children[i] = {
+            type: 'html',
+            value: '<br>',
+          };
+        }
+      }
+      return index + 1;
     }
     return CONTINUE;
   });

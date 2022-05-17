@@ -15,3 +15,18 @@ _[](https://www.adobe.com)_
 **[Curves on the ipad.](https://www.adobe.com)** The curves are nice.
 
 **[Curves on_the_ ipad. ](https://www.adobe.com)** The curves are nice.
+
+Trailing links:[adobe](https://www.adobe.com)\
+\
+rules.
+
+Leading links:\
+\
+[adobe rules.](https://www.adobe.com)
+
+Links inside:[adobe<br>rules.](https://www.adobe.com)
+
+only breaks\
+\
+\
+[](https://www.adobe.com)
