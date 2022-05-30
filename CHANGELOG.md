@@ -1,3 +1,10 @@
+## [3.1.6](https://github.com/adobe/helix-markdown-support/compare/v3.1.5...v3.1.6) (2022-05-30)
+
+
+### Bug Fixes
+
+* move leading and trailing breaks out of heading ([#112](https://github.com/adobe/helix-markdown-support/issues/112)) ([87775dc](https://github.com/adobe/helix-markdown-support/commit/87775dcf189f024ccf789f8c883ab90d296c8d0d))
+
 ## [3.1.5](https://github.com/adobe/helix-markdown-support/compare/v3.1.4...v3.1.5) (2022-05-17)
 
 
