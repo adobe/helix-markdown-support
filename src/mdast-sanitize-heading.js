@@ -42,24 +42,49 @@ export default function sanitizeHeading(tree, opts = {}) {
             siblings.splice(index, 0, para);
             // eslint-disable-next-line no-param-reassign
             index += 1;
-            after = index + 1;
+            after += 1;
           } else {
             // move after heading
             siblings.splice(after, 0, para);
             after += 1;
           }
-        } else if (child.type === 'break') {
-          child.type = 'html';
-          child.value = '<br>';
         }
       }
+
+      // move leading breaks before heading
+      while (children[0]?.type === 'break') {
+        const brk = children.shift();
+        siblings.splice(index, 0, brk);
+        // eslint-disable-next-line no-param-reassign
+        index += 1;
+      }
+      // move trailing breaks after heading
+      let last = children.length - 1;
+      while (children[last]?.type === 'break') {
+        const brk = children.pop();
+        siblings.splice(index + 1, 0, brk);
+        last -= 1;
+      }
+      // convert inline breaks to <br>
+      for (let i = 0; i < children.length; i += 1) {
+        if (children[i].type === 'break') {
+          children[i] = {
+            type: 'html',
+            value: '<br>',
+          };
+        }
+      }
+
       // remove empty headings
       if (!children.length) {
         siblings.splice(index, 1);
-        after -= 1;
+        // eslint-disable-next-line no-param-reassign
+        index -= 1;
       }
+      return index + 1;
     }
-    return after;
+
+    return index + 1;
   });
   return tree;
 }

@@ -126,6 +126,21 @@ describe('sanitize-heading Tests', () => {
         brk(),
         text('Rules'),
       ]),
+      paragraph(text('leading brk')),
+      heading(2, [
+        brk(),
+        text('Adobe'),
+        brk(),
+        text('Rules'),
+      ]),
+      paragraph(text('trailing brk')),
+      heading(2, [
+        text('Adobe'),
+        brk(),
+        text('Rules'),
+        brk(),
+      ]),
+      paragraph(text('done.')),
     ]);
     sanitizeHeading(mdast);
     await assertMD(mdast, 'sanitized-heading-breaks.md');
