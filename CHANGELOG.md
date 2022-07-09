@@ -1,3 +1,10 @@
+## [3.1.7](https://github.com/adobe/helix-markdown-support/compare/v3.1.6...v3.1.7) (2022-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-to-hast to v12.1.2 ([3df98b2](https://github.com/adobe/helix-markdown-support/commit/3df98b2f9b51e41b47998fc61bce94896def9c8c))
+
 ## [3.1.6](https://github.com/adobe/helix-markdown-support/compare/v3.1.5...v3.1.6) (2022-05-30)
 
 
