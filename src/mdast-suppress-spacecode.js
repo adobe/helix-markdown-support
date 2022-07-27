@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 
 /**
  * Looks for text starting with 4 spaces. As this would render as code in some markdown,
@@ -27,7 +27,7 @@ export default function suppressSpaceCode(tree) {
       // eslint-disable-next-line no-param-reassign
       child.value = child.value.replace(/^\s+/, ' ');
     }
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }

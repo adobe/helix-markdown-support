@@ -208,6 +208,41 @@ describe('mdast-robust-table Tests', () => {
     await assertMD(mdast, 'table-with-align.md', [gfm, breaksAsSpaces]);
   });
 
+  it('table spans converts correctly', async () => {
+    function cell(children, rowSpan, colSpan) {
+      const node = originalCell(children);
+      if (rowSpan) {
+        node.rowSpan = rowSpan;
+      }
+      if (colSpan) {
+        node.colSpan = colSpan;
+      }
+      return node;
+    }
+
+    const mdast = root([
+      heading(2, text('Table with spans')),
+      table(null, [
+        tableRow([
+          cell(text('AB0'), 0, 2),
+        ]),
+        tableRow([
+          cell(text('A1')),
+          cell(text('B1')),
+        ]),
+        tableRow([
+          cell(text('A2')),
+          cell(text('B23'), 2),
+        ]),
+        tableRow([
+          cell(text('A3')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-spans.md', [gfm, breaksAsSpaces]);
+  });
+
   it('Table with html items should not produce error', async () => {
     const mdast = root([
       heading(2, text('Table with HTML in cells')),
@@ -220,6 +255,21 @@ describe('mdast-robust-table Tests', () => {
             html('</sup>'),
             text(' time'),
           ])),
+        ]),
+        tableRow([
+          tableCell([
+            paragraph([
+              text('H'),
+              html('<sub>'),
+              text('2'),
+              html('</sub>'),
+              text('SO'),
+              html('<sub>'),
+              text('4'),
+              html('</sub>'),
+            ]),
+            paragraph([text('(source: Wikipedia)')]),
+          ]),
         ]),
         tableRow([
           tableCell(paragraph([

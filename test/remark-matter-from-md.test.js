@@ -15,7 +15,7 @@ import jsYaml from 'js-yaml';
 import { unified } from 'unified';
 import remark from 'remark-parse';
 import { inspectNoColor as inspect } from 'unist-util-inspect';
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 import {
   heading, paragraph, root, text,
 } from 'mdast-builder';
@@ -56,7 +56,7 @@ function removePositions(tree) {
   visit(tree, (node) => {
     // eslint-disable-next-line no-param-reassign
     delete node.position;
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }

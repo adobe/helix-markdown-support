@@ -20,6 +20,7 @@ import {
   strike,
   strong,
   text,
+  brk,
 } from 'mdast-builder';
 import gfm from 'remark-gfm';
 import { assertMD } from './utils.js';
@@ -76,6 +77,39 @@ describe('sanitize-links Tests', () => {
           ]),
         ]),
         text('The curves are nice.'),
+      ]),
+      paragraph([
+        text('Trailing links:'),
+        link('https://www.adobe.com', '', [
+          text('adobe'),
+          brk,
+          brk,
+        ]),
+        text('rules.'),
+      ]),
+      paragraph([
+        text('Leading links:'),
+        link('https://www.adobe.com', '', [
+          brk,
+          brk,
+          text('adobe rules.'),
+        ]),
+      ]),
+      paragraph([
+        text('Links inside:'),
+        link('https://www.adobe.com', '', [
+          text('adobe'),
+          brk,
+          text('rules.'),
+        ]),
+      ]),
+      paragraph([
+        text('only breaks'),
+        link('https://www.adobe.com', '', [
+          brk,
+          brk,
+          brk,
+        ]),
       ]),
     ]);
     sanitizeLinks(mdast);

@@ -1,3 +1,59 @@
+## [3.1.7](https://github.com/adobe/helix-markdown-support/compare/v3.1.6...v3.1.7) (2022-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-to-hast to v12.1.2 ([3df98b2](https://github.com/adobe/helix-markdown-support/commit/3df98b2f9b51e41b47998fc61bce94896def9c8c))
+
+## [3.1.6](https://github.com/adobe/helix-markdown-support/compare/v3.1.5...v3.1.6) (2022-05-30)
+
+
+### Bug Fixes
+
+* move leading and trailing breaks out of heading ([#112](https://github.com/adobe/helix-markdown-support/issues/112)) ([87775dc](https://github.com/adobe/helix-markdown-support/commit/87775dcf189f024ccf789f8c883ab90d296c8d0d))
+
+## [3.1.5](https://github.com/adobe/helix-markdown-support/compare/v3.1.4...v3.1.5) (2022-05-17)
+
+
+### Bug Fixes
+
+* (re)move breaks in links and headings ([621c85b](https://github.com/adobe/helix-markdown-support/commit/621c85b664621e56111e00e9cbb9cd7d648471d6)), closes [#106](https://github.com/adobe/helix-markdown-support/issues/106)
+
+## [3.1.4](https://github.com/adobe/helix-markdown-support/compare/v3.1.3...v3.1.4) (2022-05-10)
+
+
+### Bug Fixes
+
+* preserve spans ([#109](https://github.com/adobe/helix-markdown-support/issues/109)) ([9d6ba00](https://github.com/adobe/helix-markdown-support/commit/9d6ba00e2623349bf469ab56bb093f5dbed976fc))
+
+## [3.1.3](https://github.com/adobe/helix-markdown-support/compare/v3.1.2...v3.1.3) (2022-05-10)
+
+
+### Bug Fixes
+
+* keep html in table paragraphs ([#108](https://github.com/adobe/helix-markdown-support/issues/108)) ([9b3ea28](https://github.com/adobe/helix-markdown-support/commit/9b3ea28a1fd785e575a56bb99d47f1c07ef2a88e))
+
+## [3.1.2](https://github.com/adobe/helix-markdown-support/compare/v3.1.1...v3.1.2) (2022-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update external fixes ([#86](https://github.com/adobe/helix-markdown-support/issues/86)) ([addbdae](https://github.com/adobe/helix-markdown-support/commit/addbdae518dead84f9057da6dc799a1ec8c52779))
+
+## [3.1.1](https://github.com/adobe/helix-markdown-support/compare/v3.1.0...v3.1.1) (2022-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update external fixes ([791a84b](https://github.com/adobe/helix-markdown-support/commit/791a84b8c3ac94b745522668ffac59e10b98a4c2))
+
+# [3.1.0](https://github.com/adobe/helix-markdown-support/compare/v3.0.0...v3.1.0) (2022-01-14)
+
+
+### Features
+
+* improve sanitize-headings to move leading images before heading ([292dc72](https://github.com/adobe/helix-markdown-support/commit/292dc72dbe43def0d97e8f1c528eeb065b3bff12)), closes [#83](https://github.com/adobe/helix-markdown-support/issues/83)
+
 # [3.0.0](https://github.com/adobe/helix-markdown-support/compare/v2.0.1...v3.0.0) (2021-12-07)
 
 

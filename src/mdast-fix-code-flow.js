@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-param-reassign */
-import { visit } from 'unist-util-visit';
+import { visit, CONTINUE } from 'unist-util-visit';
 
 /**
  * ensures that `code` is at a flow level. i.e. outside a paragraph
@@ -50,7 +50,7 @@ export default function fixCodeFlow(tree) {
       }
     }
     // return index;
-    return visit.CONTINUE;
+    return CONTINUE;
   });
   return tree;
 }
