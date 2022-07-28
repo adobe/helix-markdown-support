@@ -1,3 +1,10 @@
+## [3.1.8](https://github.com/adobe/helix-markdown-support/compare/v3.1.7...v3.1.8) (2022-07-28)
+
+
+### Bug Fixes
+
+* matter plugin to run in micromark development mode ([#80](https://github.com/adobe/helix-markdown-support/issues/80)) ([36e69fa](https://github.com/adobe/helix-markdown-support/commit/36e69fa8328850950969597e074b7b610d40f0c9))
+
 ## [3.1.7](https://github.com/adobe/helix-markdown-support/compare/v3.1.6...v3.1.7) (2022-07-09)
 
 
