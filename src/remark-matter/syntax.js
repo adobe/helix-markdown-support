@@ -11,10 +11,11 @@
  */
 /* eslint-disable no-use-before-define */
 import jsYaml from 'js-yaml';
+import { codes } from 'micromark-util-symbol/codes.js';
+import { types } from 'micromark-util-symbol/types.js';
+import { markdownLineEnding, markdownSpace } from 'micromark-util-character';
 
 const type = (v) => ((v !== undefined && v !== null) ? v.constructor : v);
-
-const CODE_DASH = '-'.charCodeAt(0);
 
 function validYaml(str, errorHandler) {
   // console.log('validate yaml', str);
@@ -49,9 +50,9 @@ function validYaml(str, errorHandler) {
 }
 
 function parse(options) {
-  const valueType = 'yamlValue';
-  const fenceType = 'yamlFence';
-  const sequenceType = 'yamlSequence';
+  const yamlValue = 'yamlValue';
+  const yamlFence = 'yamlFence';
+  const yamlSequence = 'yamlSequence';
   const { errorHandler } = options;
 
   const fenceConstruct = {
@@ -102,20 +103,20 @@ function parse(options) {
     function lineStart(code) {
       // set the whitespace flag to true
       wasWS = true;
-      if (code === -5 || code === -4 || code === -3 || code === null) {
+      if (code === codes.eof || markdownLineEnding(code)) {
         return lineEnd(code);
       }
-      effects.enter(valueType);
+      effects.enter(yamlValue);
       return lineData(code);
     }
 
     function lineData(code) {
-      if (code === -5 || code === -4 || code === -3 || code === null) {
-        effects.exit(valueType);
+      if (code === codes.eof || markdownLineEnding(code)) {
+        effects.exit(yamlValue);
         return lineEnd(code);
       }
 
-      if (!(code === -2 || code === -1 || code === 32)) {
+      if (!markdownSpace(code)) {
         // if not whitespace, clear flag
         wasWS = false;
       }
@@ -125,40 +126,7 @@ function parse(options) {
     }
 
     function closedFence(code) {
-      // if we are at the end, don't check for empty line after
-      if (code === null) {
-        return afterClosedFence(code);
-      }
-
-      // remember new line
-      effects.enter('lineEnding');
-      effects.consume(code);
-      effects.exit('lineEnding');
-
-      // this is a bit a hack to avoid create soo many states
-      wasWS = false;
-
-      return afterClosedFence;
-    }
-
-    function afterClosedFence(code) {
-      // check for whitespace
-      if (code === -2 || code === -1 || code === 32) {
-        if (!wasWS) {
-          effects.enter('whitespace');
-          wasWS = true;
-        }
-        effects.consume(code);
-        return afterClosedFence;
-      } else if (wasWS) {
-        effects.exit('whitespace');
-        wasWS = false;
-      }
-
-      if (code !== -5 && code !== -4 && code !== -3 && code !== null) {
-        return nok(code);
-      }
-
+      // check if valid yaml
       const token = effects.exit('yaml');
       let yamlString = self.sliceSerialize(token).trim();
       // remove fences
@@ -167,18 +135,20 @@ function parse(options) {
         return nok(code);
       }
 
-      if (code !== null) {
-        // since there is a blank line after the `---`, also mark it.
-        effects.enter('lineEndingBlank');
-        effects.exit('lineEndingBlank');
+      // if we are at the end, don't check for empty line after
+      if (code === codes.eof) {
+        return ok(code);
       }
 
-      return ok(code);
+      return effects.check({
+        tokenize: tokenizeEmptyLine,
+        partial: true,
+      }, ok, nok)(code);
     }
 
     function lineEnd(code) {
       // Require a closing fence.
-      if (code === null) {
+      if (code === codes.eof) {
         return nok(code);
       }
 
@@ -196,9 +166,9 @@ function parse(options) {
       }
 
       // Can only be an eol.
-      effects.enter('lineEnding');
+      effects.enter(types.lineEnding);
       effects.consume(code);
-      effects.exit('lineEnding');
+      effects.exit(types.lineEnding);
 
       // attempt to detect the closing fence `---`. if not, start next line
       return effects.attempt(fenceConstruct, closedFence, lineStart);
@@ -211,9 +181,9 @@ function parse(options) {
     return start;
 
     function start(code) {
-      if (code === CODE_DASH) {
-        effects.enter(fenceType);
-        effects.enter(sequenceType);
+      if (code === codes.dash) {
+        effects.enter(yamlFence);
+        effects.enter(yamlSequence);
         return insideSequence(code);
       }
 
@@ -222,17 +192,17 @@ function parse(options) {
 
     function insideSequence(code) {
       if (numDashes === 3) {
-        effects.exit(sequenceType);
+        effects.exit(yamlSequence);
 
-        if (code === -2 || code === -1 || code === 32) {
-          effects.enter('whitespace');
+        if (markdownSpace(code)) {
+          effects.enter(types.whitespace);
           return insideWhitespace(code);
         }
 
         return fenceEnd(code);
       }
 
-      if (code === CODE_DASH) {
+      if (code === codes.dash) {
         effects.consume(code);
         numDashes += 1;
         return insideSequence;
@@ -243,20 +213,56 @@ function parse(options) {
 
     // white space after fence
     function insideWhitespace(code) {
-      if (code === -2 || code === -1 || code === 32) {
+      if (markdownSpace(code)) {
         effects.consume(code);
         return insideWhitespace;
       }
 
-      effects.exit('whitespace');
+      effects.exit(types.whitespace);
       return fenceEnd(code);
     }
 
     // after fence (plus potential ws) we expect a LF
     function fenceEnd(code) {
-      if (code === -5 || code === -4 || code === -3 || code === null) {
-        effects.exit(fenceType);
+      if (code === codes.eof || markdownLineEnding(code)) {
+        effects.exit(yamlFence);
         return ok(code);
+      }
+      return nok(code);
+    }
+  }
+
+  function tokenizeEmptyLine(effects, ok, nok) {
+    let wasWS = false;
+
+    return start;
+
+    /**
+     * after the closed fence, we either need EOF or an empty line.
+     */
+    function start(code) {
+      // always eol
+      effects.enter(types.lineEnding);
+      effects.consume(code);
+      effects.exit(types.lineEnding);
+      return emptyLines;
+    }
+
+    function emptyLines(code) {
+      if (code === codes.eof || markdownLineEnding(code)) {
+        return ok(code);
+      }
+      // check for whitespace
+      if (markdownSpace(code)) {
+        if (!wasWS) {
+          effects.enter(types.whitespace);
+          wasWS = true;
+        }
+        effects.consume(code);
+        return emptyLines;
+      }
+      if (wasWS) {
+        effects.exit(types.whitespace);
       }
       return nok(code);
     }
@@ -266,7 +272,7 @@ function parse(options) {
 export default function create(options = {}) {
   return {
     flow: {
-      [CODE_DASH]: [parse(options)],
+      [codes.dash]: [parse(options)],
     },
   };
 }

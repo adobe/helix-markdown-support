@@ -4,7 +4,7 @@
   "description": "Helix Markdown Support",
   "type": "module",
   "scripts": {
-    "test": " c8 mocha",
+    "test": "c8 mocha",
     "test-ci": "c8 mocha && codecov",
     "lint": "eslint .",
     "semantic-release": "semantic-release",
@@ -25,6 +25,8 @@
     "hast-util-to-html": "8.0.3",
     "js-yaml": "4.1.0",
     "mdast-util-to-hast": "12.1.2",
+    "micromark-util-character": "1.1.0",
+    "micromark-util-symbol": "1.0.1",
     "unist-util-find": "1.0.2",
     "unist-util-visit": "4.1.0"
   },
@@ -32,7 +34,8 @@
     "spec": "test/**/*.test.js",
     "recursive": "true",
     "reporter": "mocha-multi-reporters",
-    "reporter-options": "configFile=.mocha-multi.json"
+    "reporter-options": "configFile=.mocha-multi.json",
+    "node-option": "conditions=development"
   },
   "peerDependencies": {
     "unified": "10.x"
