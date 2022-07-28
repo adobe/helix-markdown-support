@@ -63,8 +63,10 @@ function removePositions(tree) {
 
 let errors = [];
 
-const procMd = (md, noErrorHandler, yamlDump) => {
-  const source = multiline(md).replace(/@/g, ' ');
+const procMd = (md, noErrorHandler, yamlDump, raw) => {
+  const source = raw
+    ? md
+    : multiline(md).replace(/@/g, ' ');
   // console.log(source);
 
   // parse w/o frontmatter plugin
@@ -98,8 +100,8 @@ const procMd = (md, noErrorHandler, yamlDump) => {
   };
 };
 
-const assertCorrect = (md, expected, yamlDump) => {
-  const { proc } = procMd(md, false, yamlDump);
+const assertCorrect = (md, expected, yamlDump, raw) => {
+  const { proc } = procMd(md, false, yamlDump, raw);
   const actual = inspect(proc);
   assert.strictEqual(actual, inspect(expected));
 };
@@ -332,6 +334,24 @@ describe('remark-matter from markdown', () => {
       Bar: 42,
     }),
   ])));
+
+  it('Reject: frontmatter with not all ws after it', () => assertError(`
+      ---
+      Bar: 42
+      ---
+      @@@xxx
+  `));
+
+  it('Ok: frontmatter with new line after it', () => assertCorrect([
+    '---',
+    'Bar: 42',
+    '---',
+    '',
+  ].join('\n'), root([
+    yaml({
+      Bar: 42,
+    }),
+  ]), false, true));
 
   it('Reject: frontmatter with insufficient space after it', () => assertError(`
       ---
