@@ -11,6 +11,7 @@
  */
 
 export { default as remarkMatter } from './remark-matter/index.js';
+export { default as remarkGridTable } from './remark-gridtable/index.js';
 export { default as robustTables } from './mdast-robust-tables.js';
 export { default as breaksAsSpaces } from './remark-breaks-as-spaces.js';
 export { default as sanitizeHeading } from './mdast-sanitize-heading.js';

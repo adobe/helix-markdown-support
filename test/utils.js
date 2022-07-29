@@ -34,5 +34,6 @@ export async function assertMD(mdast, fixture, plugins = []) {
     });
   processor = plugins.reduce((proc, plug) => (proc.use(plug)), processor);
   const actual = processor.stringify(mdast);
+  console.log(actual);
   assert.equal(actual, expected);
 }
