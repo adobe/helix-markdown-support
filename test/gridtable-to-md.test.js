@@ -19,12 +19,27 @@ import {
   root,
   tableCell,
   tableRow,
-  text, list, listItem,
+  text,
+  list as originalList,
+  listItem as originalListItem,
+  strong,
+  emphasis,
 } from 'mdast-builder';
 import { assertMD } from './utils.js';
 import { remarkGridTable } from '../src/index.js';
 
-const LARUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. Integer interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.';
+const LARUM_XL = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. Integer interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.';
+const LARUM_L = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a.';
+const LARUM_M = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+const TEST_M = '0 1 2 3 4 5 6 7 8 9 0 a b c d e f 0 1 2 3 4 5 6 7 8 9 0 a b c d e f';
+
+const LARUM_MD = [
+  text('Lorem ipsum dolor '),
+  strong(text('sit amet')),
+  text(', consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. '),
+  emphasis(text('Integer')),
+  text(' interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.'),
+];
 
 const CODE = `for (const row of this.rows) {
   for (let i = 0; i < row.length; i += 1) {
@@ -39,6 +54,18 @@ const CODE = `for (const row of this.rows) {
     }
   }
 }`;
+
+function listItem(kids) {
+  const li = originalListItem(kids);
+  li.spread = false;
+  return li;
+}
+
+function list(ordered, kids) {
+  const li = originalList(ordered, kids);
+  li.spread = false;
+  return li;
+}
 
 function gtCell(children, align, verticalAlign) {
   const node = tableCell(children);
@@ -192,28 +219,31 @@ describe('gridtable to md', () => {
           gtRow([
             gtCell(text('A1')),
             gtCell(text('B1')),
-            gtCell(text('C1')),
+            gtCell(heading(2, text(LARUM_M))),
           ]),
         ]),
         gtBody([
           gtRow([
             gtCell([
-              heading(2, text('This is heading 2')),
+              heading(2, text('My Heading 1')),
               paragraph([
                 image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7'),
                 brk,
-                text(LARUM),
+                ...LARUM_MD,
+                brk,
+                text(TEST_M),
               ]),
             ]),
             gtCell(code('js', CODE)),
             gtCell([
               blockquote([
                 text('My quote'),
-                text('And his'),
+                text(LARUM_L),
               ]),
               list(false, [
                 listItem(text('item one')),
                 listItem(text('item two')),
+                listItem(text(LARUM_L)),
               ]),
             ]),
           ]),
@@ -226,5 +256,57 @@ describe('gridtable to md', () => {
       ]),
     ]);
     await assertMD(mdast, 'gt-large.md', [remarkGridTable]);
+  });
+
+  it('table spans converts correctly', async () => {
+    function cell(children, rowSpan, colSpan) {
+      const node = gtCell(children);
+      if (rowSpan) {
+        node.rowSpan = rowSpan;
+      }
+      if (colSpan) {
+        node.colSpan = colSpan;
+      }
+      return node;
+    }
+
+    const mdast = root([
+      heading(2, text('Table with spans')),
+      gridTable([
+        gtRow([
+          cell(text(`AB0 - ${LARUM_M}`), 0, 2),
+          cell(text('C0')),
+        ]),
+        gtRow([
+          cell(text('A1')),
+          cell(text('B1')),
+          cell(text('C1')),
+        ]),
+        gtRow([
+          cell(text('A2')),
+          cell(text('BC2'), 0, 2),
+        ]),
+        gtRow([
+          cell(text('A3')),
+          cell([
+            heading(1, text('B34')),
+            list('ordered', [
+              listItem(text('item one')),
+              listItem(text('item two')),
+              listItem(text('item three')),
+              listItem(text('item four')),
+              listItem(text(LARUM_L)),
+            ]),
+          ], 1),
+          cell(text('C3')),
+        ]),
+        gtRow([
+          cell(text('A4')),
+          cell(text('A4')),
+          cell(text('C4')),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-spans.md', [remarkGridTable]);
   });
 });

@@ -19,22 +19,23 @@ import toMarkdown from './to-markdown.js';
  * GridTables look like this:
  *
  * ```
- * +--------+----------+------+
+ * +-------------------+------+
  * | Table Headings    | Here |
  * |--------+----------+------|
  * | Sub    | Headings | Too  |
- * |========+==========+======|
+ * |========+=================|
  * | cell   | column spanning |
- * | spans  +---------:+------|
+ * | spans  +---------<+------|
  * | rows   |   normal | cell |
- * |--------+:--------:+------|
- * | multi  | cells can be    |
- * | line   | *formatted*     |
+ * |--------+>---------------<|
+ * |        | cells can be    |
+ * |        | *formatted*     |
  * |        | **paragraphs**  |
- * | cells  | ```             |
- * |        | and contain blocks |
  * |        | ```             |
- * |========+=========:+======|
+ * | multi  | and contain     |
+ * | line   | blocks          |
+ * ^ cells  | ```             |
+ * |========+=========<+======|
  * | footer |    cells |      |
  * +--------+----------+------+
  * ```
@@ -43,7 +44,8 @@ import toMarkdown from './to-markdown.js';
  * - if the table contains a footer but no header, the top row should use `=` as grid line.
  * - col spans are indicated by missing column (|) delimiters
  * - row spans are indicated by missing row (-) delimiters
- * - cells can be left, center, or right aligned; indicated by the placement of colons (:)
+ * - cells can be left, center, or right aligned; indicated by the placement of arrows (> <)
+ * - cells can be top, middle, or bottom v-aligned; indicated by the placement of arrows (v ^)
  * - the header and footer sections are delimited by section delimiters (=).
  * - if no section delimiters are present, all cells are placed in the table body.
  * - if only 1 section delimiter is present, it delimits header from body.
