@@ -28,6 +28,7 @@ import {
 import { assertMD } from './utils.js';
 import { remarkGridTable } from '../src/index.js';
 
+// eslint-disable-next-line no-unused-vars
 const LARUM_XL = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. Integer interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.';
 const LARUM_L = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a.';
 const LARUM_M = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
@@ -297,12 +298,14 @@ describe('gridtable to md', () => {
               listItem(text('item four')),
               listItem(text(LARUM_L)),
             ]),
-          ], 1),
+          ], 2),
           cell(text('C3')),
         ]),
         gtRow([
-          cell(text('A4')),
-          cell(text('A4')),
+          cell([
+            heading(1, text('A4')),
+            text(LARUM_M),
+          ]),
           cell(text('C4')),
         ]),
       ]),

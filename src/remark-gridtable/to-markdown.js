@@ -210,13 +210,12 @@ class Table {
             const col = cols[x + idx];
             col.width = Math.max(col.width, avgColWidth);
           }
-          // todo factor in rowspans?
-          row.height = Math.max(row.height, cell.height);
         }
       }
     }
     // re-render cells where elements dictated the min-width (eg, large headings)
     for (const row of this.rows) {
+      row.minHeight = 0;
       row.height = 0;
       for (let x = 0; x < row.cells.length; x += 1) {
         const cell = row.cells[x];
@@ -238,7 +237,23 @@ class Table {
           } else {
             cell.width = width;
           }
-          row.height = Math.max(row.height, cell.height);
+          if (cell.rowSpan === 1) {
+            row.height = Math.max(row.height, cell.height);
+          }
+        }
+      }
+    }
+
+    // distribute row spans
+    for (let y = 0; y < this.rows.length; y += 1) {
+      const row = this.rows[y];
+      for (let x = 0; x < row.cells.length; x += 1) {
+        const cell = row.cells[x];
+        if (cell.rowSpan > 1) {
+          const distHeight = cell.height - cell.rowSpan + 1; // subtract 1 for each cell divider
+          for (const [d, idx] of distribute(distHeight, cell.rowSpan)) {
+            this.rows[y + idx].height = Math.max(this.rows[y + idx].height, d);
+          }
         }
       }
     }
@@ -263,7 +278,10 @@ class Table {
         if (cell.tree) {
           grid.push(`${b}${c.repeat(col.width - 1)}`);
         } else if (cell.linked) {
-          grid.push(`${b}${' '.repeat(col.width - 1)}`);
+          const width = spanWidth(cols, x, cell.linked);
+          const text = cell.linked.lines.shift() || '';
+          grid.push(`${b} ${text.padEnd(width - 3, ' ')} `);
+          x += cell.linked.colSpan - 1;
         } else {
           grid.push(c.repeat(col.width));
         }
@@ -275,14 +293,14 @@ class Table {
       for (let yy = 0; yy < row.height; yy += 1) {
         const line = [];
         for (let x = 0; x < row.cells.length; x += 1) {
-          const cell = row.cells[x];
+          let cell = row.cells[x];
+          if (cell.linked) {
+            cell = cell.linked;
+          }
           if (cell.tree) {
             const width = spanWidth(cols, x, cell);
-            const text = cell.lines[yy] || '';
+            const text = cell.lines.shift() || '';
             line.push(` ${text.padEnd(width - 3, ' ')} `);
-          } else if (cell.linked) {
-            const width = spanWidth(cols, x, cell.linked);
-            line.push(`${' '.repeat(width - 1)}`);
           }
         }
         lines.push(`|${line.join('|')}|`);
