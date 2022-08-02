@@ -120,6 +120,10 @@ class Table {
     for (let i = 1; i < cell.colSpan; i += 1) {
       row.cells.push({});
     }
+    // remember align for last span
+    if (cell.colSpan > 1) {
+      row.cells[row.cells.length - 1].align = cell.align;
+    }
   }
 
   renderCell(cell, context, maxWidth) {
@@ -185,7 +189,7 @@ class Table {
     // add empty cells if needed
     for (const row of this.rows) {
       for (let i = row.cells.length; i < numCols; i += 1) {
-        row.cells.push({});
+        row.cells.push({ tree: { type: 'root' }, colSpan: 1, rowSpan: 1 });
       }
     }
 
@@ -276,14 +280,17 @@ class Table {
         const cell = row.cells[x];
         const col = cols[x];
         if (cell.tree) {
-          grid.push(`${b}${c.repeat(col.width - 1)}`);
+          const d1 = cell.align === 'left' || cell.align === 'center' ? '>' : c;
+          const d2 = cell.colSpan === 1 && (cell.align === 'right' || cell.align === 'center') ? '<' : c;
+          grid.push(`${b}${d1}${c.repeat(col.width - 3)}${d2}`);
         } else if (cell.linked) {
           const width = spanWidth(cols, x, cell.linked);
           const text = cell.linked.lines.shift() || '';
           grid.push(`${b} ${text.padEnd(width - 3, ' ')} `);
           x += cell.linked.colSpan - 1;
         } else {
-          grid.push(c.repeat(col.width));
+          const d2 = cell.align === 'right' || cell.align === 'center' ? '<' : c;
+          grid.push(`${c.repeat(col.width - 1)}${d2}`);
         }
         b = '+';
       }
@@ -299,11 +306,23 @@ class Table {
           }
           if (cell.tree) {
             const width = spanWidth(cols, x, cell);
-            const text = cell.lines.shift() || '';
-            line.push(` ${text.padEnd(width - 3, ' ')} `);
+            let text = '';
+            if (!cell.valign
+              || cell.valign === 'top'
+              || (cell.valign === 'middle' && yy >= Math.floor(row.height - cell.height) / 2)
+              || (cell.valign === 'bottom' && yy >= row.height - cell.height)) {
+              text = cell.lines.shift() || '';
+            }
+            let d1 = yy === 0 && (cell.valign === 'top' || cell.valign === 'middle') ? 'v' : '|';
+            if (cell.valign === 'middle' && row.height === 1) {
+              d1 = 'X';
+            } else if ((cell.valign === 'middle' || cell.valign === 'bottom') && yy === row.height - 1) {
+              d1 = '^';
+            }
+            line.push(`${d1} ${text.padEnd(width - 3, ' ')} `);
           }
         }
-        lines.push(`|${line.join('|')}|`);
+        lines.push(`${line.join('')}|`);
       }
     }
 

@@ -68,13 +68,19 @@ function list(ordered, kids) {
   return li;
 }
 
-function gtCell(children, align, verticalAlign) {
+function gtCell(children, align, verticalAlign, rowSpan, colSpan) {
   const node = tableCell(children);
   if (align) {
     node.align = align;
   }
   if (verticalAlign) {
     node.valign = verticalAlign;
+  }
+  if (rowSpan) {
+    node.rowSpan = rowSpan;
+  }
+  if (colSpan) {
+    node.colSpan = colSpan;
   }
   node.type = 'gtCell';
   return node;
@@ -311,5 +317,37 @@ describe('gridtable to md', () => {
       ]),
     ]);
     await assertMD(mdast, 'gt-spans.md', [remarkGridTable]);
+  });
+
+  it('table alignments converts correctly', async () => {
+    const mdast = root([
+      heading(2, text('Table with alignments')),
+      gridTable([
+        gtBody([
+          gtRow([
+            gtCell(text('top left'), 'left', 'top'),
+            gtCell(text('top center'), 'center', 'top'),
+            gtCell(text('top right'), 'right', 'top'),
+            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+          ]),
+          gtRow([
+            gtCell(text('middle left'), 'left', 'middle'),
+            gtCell(text('middle center'), 'center', 'middle'),
+            gtCell(text('middle right'), 'right', 'middle'),
+            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+          ]),
+          gtRow([
+            gtCell(text('bottom left'), 'left', 'bottom'),
+            gtCell(text('bottom center'), 'center', 'bottom'),
+            gtCell(text('bottom right'), 'right', 'bottom'),
+            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+          ]),
+          gtRow([
+            gtCell(text('middle center'), 'center', 'middle', 1, 3),
+          ]),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-with-align.md', [remarkGridTable]);
   });
 });
