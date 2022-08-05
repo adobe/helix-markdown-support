@@ -11,7 +11,7 @@
  */
 import fromMarkdown from './from-markdown.js';
 import toMarkdown from './to-markdown.js';
-// import syntax from './syntax.js';
+import syntax from './syntax.js';
 
 /**
  * GridTables remark plugin and micromark extension.
@@ -100,7 +100,7 @@ export default function gridTablePlugin(options) {
     }
   }
 
-  // add('micromarkExtensions', syntax(options));
+  add('micromarkExtensions', syntax(options));
   add('fromMarkdownExtensions', fromMarkdown(options));
   add('toMarkdownExtensions', toMarkdown(options));
 }
