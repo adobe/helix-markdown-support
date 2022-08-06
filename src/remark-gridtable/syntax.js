@@ -37,13 +37,14 @@ function parse() {
     let wasWS = false;
     // positions of columns
     const cols = [0];
+    let numRows = 0;
     let colPos = 0;
     let gridLine = null;
     return start;
 
     function start(code) {
       assert(code === codes.plusSign, 'table starts with +');
-      effects.enter(TYPE_TABLE);
+      effects.enter(TYPE_TABLE)._cols = cols;
       effects.enter(TYPE_BODY);
       return gridLineStart(code);
     }
@@ -122,24 +123,25 @@ function parse() {
     function rowStart(code) {
       // todo: leading whitespace
       if (code !== codes.verticalBar) {
-        // if (rows.length === 0) {
-        //   return nok(code);
-        // }
+        if (numRows === 0) {
+          return nok(code);
+        }
         effects.exit(TYPE_BODY);
         effects.exit(TYPE_TABLE);
         return ok(code);
       }
       effects.enter(TYPE_ROW);
+      numRows += 1;
       return rowLineStart(code);
     }
 
     function rowLineStart(code) {
+      colPos = 0;
       effects.enter(TYPE_ROW_LINE);
       effects.enter(TYPE_CELL_DIVIDER);
       effects.consume(code);
       effects.exit(TYPE_CELL_DIVIDER);
-      effects.enter(TYPE_CELL);
-      colPos = 0;
+      effects.enter(TYPE_CELL)._colStart = colPos;
       return cell;
     }
 
@@ -149,11 +151,11 @@ function parse() {
       if (code === codes.verticalBar) {
         const idx = cols.indexOf(colPos);
         if (idx >= 0) {
-          effects.exit(TYPE_CELL);
+          effects.exit(TYPE_CELL)._colEnd = colPos;
           effects.enter(TYPE_CELL_DIVIDER);
           effects.consume(code);
           effects.exit(TYPE_CELL_DIVIDER);
-          effects.enter(TYPE_CELL);
+          effects.enter(TYPE_CELL)._colStart = colPos;
           return cell;
         }
         effects.consume(code);
@@ -165,7 +167,7 @@ function parse() {
       }
       if (markdownLineEnding(code)) {
         effects.consume(code);
-        effects.exit(TYPE_CELL);
+        effects.exit(TYPE_CELL)._colEnd = colPos;
         effects.exit(TYPE_ROW_LINE);
         // todo: construct row?
         return rowOrGridStart;

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /*
  * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -15,6 +16,11 @@ import {
 
 function enterTable(token) {
   this.enter({ type: TYPE_TABLE, children: [] }, token);
+  this.setData('tableInfo', {
+    cols: token._cols,
+    colPos: 0,
+    cells: [],
+  });
 }
 
 function enter(token) {
@@ -23,10 +29,9 @@ function enter(token) {
 
 function enterRow(token) {
   this.enter({ type: TYPE_ROW, children: [] }, token);
-  this.setData('rowInfo', {
-    cells: [],
-    pos: 0,
-  });
+  const info = this.getData('tableInfo');
+  info.colPos = 0;
+  info.cells = [];
 }
 
 function enterCell() {
@@ -38,13 +43,16 @@ function exitCell(token) {
   this.config.enter.data.call(this, token);
   this.config.exit.data.call(this, token);
   const data = this.resume();
-  // const node = this.exit(token);
-  const info = this.getData('rowInfo');
-  if (!info.cells[info.pos]) {
-    info.cells[info.pos] = [];
+  const info = this.getData('tableInfo');
+  if (!info.cells[info.colPos]) {
+    info.cells[info.colPos] = {
+      colStart: token._colStart,
+      colEnd: token._colEnd,
+      lines: [],
+    };
   }
-  info.cells[info.pos].push(data);
-  info.pos += 1;
+  info.cells[info.colPos].lines.push(data);
+  info.colPos += 1;
 }
 
 function exit(token) {
@@ -52,8 +60,8 @@ function exit(token) {
 }
 
 function enterRowLine() {
-  const info = this.getData('rowInfo');
-  info.pos = 0;
+  const info = this.getData('tableInfo');
+  info.colPos = 0;
 }
 
 const multiline = (lines) => {
@@ -81,14 +89,20 @@ const multiline = (lines) => {
 };
 
 function exitRow(token) {
-  const info = this.getData('rowInfo');
+  const info = this.getData('tableInfo');
   // emit cells
   for (let i = 0; i < info.cells.length - 1; i += 1) {
+    const cell = info.cells[i];
+    // find colspan
+    const i0 = info.cols.indexOf(cell.colStart);
+    const i1 = info.cols.indexOf(cell.colEnd);
+    const colSpan = i0 >= 0 && i1 >= 0 ? i1 - i0 : 1;
     const node = {
       type: TYPE_CELL,
+      colSpan,
       children: [{
         type: 'text',
-        value: multiline(info.cells[i]),
+        value: multiline(cell.lines),
       }],
     };
     const fakeToken = {

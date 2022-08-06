@@ -11,7 +11,7 @@
  */
 /* eslint-env mocha */
 import assert from 'assert';
-import { readFile } from 'fs/promises';
+import { readFile, lstat } from 'fs/promises';
 import { unified } from 'unified';
 import remark from 'remark-parse';
 import { inspectNoColor as inspect } from 'unist-util-inspect';
@@ -43,21 +43,39 @@ async function testMD(spec) {
   console.log(actualTree);
   assert.strictEqual(actualTree, expected);
 
-  // convert back
+  // convert back. check if round-trip md exists
+  try {
+    await lstat(new URL(`./fixtures/${spec}.rt.md`, import.meta.url));
+    // eslint-disable-next-line no-param-reassign
+    spec += '.rt';
+  } catch {
+    // ignore
+  }
   await assertMD(actual, `${spec}.md`, [remarkGridTable]);
 }
 
 describe('gridtable from markdown', () => {
+  it('test no tables', async () => {
+    await testMD('gt-no-tables');
+  });
+
   it('simple table', async () => {
     await testMD('gt-simple');
   });
+
   it('large table', async () => {
     await testMD('gt-large');
   });
+
   it('footer no header table', async () => {
     await testMD('gt-footer-no-header');
   });
+
   it('header no footer table', async () => {
     await testMD('gt-header-no-footer');
+  });
+
+  it('table with spans', async () => {
+    await testMD('gt-spans');
   });
 });

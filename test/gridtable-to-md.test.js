@@ -314,6 +314,17 @@ describe('gridtable to md', () => {
           ]),
           cell(text('C4')),
         ]),
+        gtRow([
+          cell(text('A56'), 2, 1),
+          cell(text('BC5'), 1, 2),
+        ]),
+        gtRow([
+          cell(text('B6')),
+          cell(text('C67'), 2, 1),
+        ]),
+        gtRow([
+          cell(text('AB7'), 1, 2),
+        ]),
       ]),
     ]);
     await assertMD(mdast, 'gt-spans.md', [remarkGridTable]);
