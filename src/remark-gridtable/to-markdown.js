@@ -275,26 +275,24 @@ class Table {
       // first, draw the grid line
       const grid = [];
       const c = y === headerIdx || y === footerIdx ? '=' : '-';
-      let b = y === 0 ? '+' : '|';
       for (let x = 0; x < row.cells.length; x += 1) {
         const cell = row.cells[x];
         const col = cols[x];
         if (cell.tree) {
           const d1 = cell.align === 'left' || cell.align === 'center' ? '>' : c;
           const d2 = cell.colSpan === 1 && (cell.align === 'right' || cell.align === 'center') ? '<' : c;
-          grid.push(`${b}${d1}${c.repeat(col.width - 3)}${d2}`);
+          grid.push(`+${d1}${c.repeat(col.width - 3)}${d2}`);
         } else if (cell.linked) {
           const width = spanWidth(cols, x, cell.linked);
           const text = cell.linked.lines.shift() || '';
-          grid.push(`${b} ${text.padEnd(width - 3, ' ')} `);
+          grid.push(`+ ${text.padEnd(width - 3, ' ')} `);
           x += cell.linked.colSpan - 1;
         } else {
           const d2 = cell.align === 'right' || cell.align === 'center' ? '<' : c;
           grid.push(`${c.repeat(col.width - 1)}${d2}`);
         }
-        b = '+';
       }
-      lines.push(`${grid.join('')}${y === 0 ? '+' : '|'}`);
+      lines.push(`${grid.join('')}+`);
 
       // then draw the cells
       for (let yy = 0; yy < row.height; yy += 1) {

@@ -9,18 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-use-before-define,no-underscore-dangle,no-param-reassign */
 import { ok as assert } from 'uvu/assert';
 import { codes } from 'micromark-util-symbol/codes.js';
 import { types } from 'micromark-util-symbol/types.js';
-import { constants } from 'micromark-util-symbol/constants.js';
+// import { constants } from 'micromark-util-symbol/constants.js';
 import {
   markdownLineEnding,
   markdownLineEndingOrSpace,
   markdownSpace,
 } from 'micromark-util-character';
 import {
-  TYPE_HEADER, TYPE_ROW, TYPE_TABLE, TYPE_CELL,
+  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE, TYPE_CELL,
 } from './to-markdown.js';
 
 const TYPE_GRID_LINE = 'gridLine';
@@ -38,18 +38,19 @@ function parse() {
     // positions of columns
     const cols = [0];
     let colPos = 0;
+    let gridLine = null;
     return start;
 
     function start(code) {
       assert(code === codes.plusSign, 'table starts with +');
       effects.enter(TYPE_TABLE);
-      effects.enter(TYPE_HEADER);
+      effects.enter(TYPE_BODY);
       return gridLineStart(code);
     }
 
     function gridLineStart(code) {
       if (code === codes.plusSign) {
-        effects.enter(TYPE_GRID_LINE);
+        gridLine = effects.enter(TYPE_GRID_LINE);
         effects.consume(code);
         colPos = 0;
         return gridDivider;
@@ -85,7 +86,7 @@ function parse() {
       }
 
       if (code === codes.eof) {
-        effects.exit(TYPE_HEADER);
+        effects.exit(TYPE_BODY);
         effects.exit(TYPE_TABLE);
         return ok(code);
       }
@@ -99,6 +100,9 @@ function parse() {
     function gridDivider(code) {
       colPos += 1;
       if (code === codes.dash || code === codes.equalsTo) {
+        if (!gridLine._type) {
+          gridLine._type = code;
+        }
         effects.consume(code);
         return gridDivider;
       }
@@ -121,7 +125,7 @@ function parse() {
         // if (rows.length === 0) {
         //   return nok(code);
         // }
-        effects.exit(TYPE_HEADER);
+        effects.exit(TYPE_BODY);
         effects.exit(TYPE_TABLE);
         return ok(code);
       }
@@ -183,7 +187,66 @@ function parse() {
     }
   }
 
-  function resolveTable(events) {
+  function resolveTable(events, context) {
+    // detect headers:
+    // no `=` lines -> only body
+    // 1 `=` line -> header + body
+    // 2 `=` lines -> header + body + footer
+    const fatLines = [];
+    let bodyStart = -1; // should default to 1. but just be sure
+
+    for (let idx = 0; idx < events.length; idx += 1) {
+      const [e, node] = events[idx];
+      const { type } = node;
+      if (type === TYPE_BODY) {
+        if (e === 'enter') {
+          bodyStart = idx;
+        } else {
+          // eslint-disable-next-line prefer-const
+          let [hdrIdx, ftrIdx] = fatLines;
+          const bdy = node;
+          if (hdrIdx > bodyStart + 1) {
+            // insert header above body
+            const hdr = {
+              type: TYPE_HEADER,
+              start: bdy.start,
+              end: events[hdrIdx][1].end,
+            };
+            bdy.start = hdr.end;
+            events[bodyStart][1] = hdr;
+            events.splice(
+              hdrIdx,
+              0,
+              ['exit', hdr, context],
+              ['enter', bdy, context],
+            );
+            idx += 2;
+            ftrIdx += 2;
+          }
+
+          if (ftrIdx) {
+            // insert footer below body
+            const ftr = {
+              type: TYPE_FOOTER,
+              start: events[ftrIdx][1].start,
+              end: bdy.end,
+            };
+            bdy.end = ftr.start;
+            events.splice(
+              ftrIdx,
+              0,
+              ['exit', bdy, context],
+              ['enter', ftr, context],
+            );
+            idx += 2;
+            events[idx][1] = ftr;
+          }
+        }
+      } else if (type === TYPE_GRID_LINE && e === 'enter' && node._type === codes.equalsTo) {
+        fatLines.push(idx);
+      }
+    }
+
     // consolidate the cells in the same row
     // const result = [];
     // let row = [];

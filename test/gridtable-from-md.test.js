@@ -49,6 +49,15 @@ async function testMD(spec) {
 
 describe('gridtable from markdown', () => {
   it('simple table', async () => {
+    await testMD('gt-simple');
+  });
+  it('large table', async () => {
     await testMD('gt-large');
+  });
+  it('footer no header table', async () => {
+    await testMD('gt-footer-no-header');
+  });
+  it('header no footer table', async () => {
+    await testMD('gt-header-no-footer');
   });
 });

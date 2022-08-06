@@ -9,13 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { TYPE_CELL, TYPE_HEADER, TYPE_ROW, TYPE_TABLE } from './to-markdown.js';
+import {
+  TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
+} from './to-markdown.js';
 
 function enterTable(token) {
   this.enter({ type: TYPE_TABLE, children: [] }, token);
 }
 
-function enterHeader(token) {
+function enter(token) {
   this.enter({ type: token.type, children: [] }, token);
 }
 
@@ -27,7 +29,7 @@ function enterRow(token) {
   });
 }
 
-function enterCell(token) {
+function enterCell() {
   // this.enter({ type: TYPE_CELL }, token);
   this.buffer();
 }
@@ -54,16 +56,40 @@ function enterRowLine() {
   info.pos = 0;
 }
 
+const multiline = (lines) => {
+  // remove empty trailing lines
+  while (lines.length > 0 && lines[lines.length - 1].match(/^\s*$/)) {
+    lines.pop();
+  }
+
+  // calculate common indent
+  const prefixLen = lines
+    .filter((line) => !line.match(/^\s*$/))
+    .map((line) => line.match(/^ */)[0].length)
+    .reduce((min, len) => Math.min(len, min), Infinity);
+
+  // remove prefix
+  return lines.map((line) => {
+    let l = line.slice(prefixLen);
+    // remove trailing whitespace, if not ends with `\\`
+    l = l.trimEnd();
+    if (l.endsWith('\\')) {
+      l += ' ';
+    }
+    return l;
+  }).join('\n');
+};
+
 function exitRow(token) {
   const info = this.getData('rowInfo');
   // emit cells
   for (let i = 0; i < info.cells.length - 1; i += 1) {
     const node = {
       type: TYPE_CELL,
-      children: info.cells[i].map((text) => ({
+      children: [{
         type: 'text',
-        value: text,
-      })),
+        value: multiline(info.cells[i]),
+      }],
     };
     const fakeToken = {
       type: TYPE_CELL,
@@ -81,7 +107,9 @@ export default function fromMarkdown(options = {}) {
   return {
     enter: {
       [TYPE_TABLE]: enterTable,
-      [TYPE_HEADER]: enterHeader,
+      [TYPE_HEADER]: enter,
+      [TYPE_BODY]: enter,
+      [TYPE_FOOTER]: enter,
       [TYPE_ROW]: enterRow,
       [TYPE_CELL]: enterCell,
       rowLine: enterRowLine,
@@ -89,6 +117,8 @@ export default function fromMarkdown(options = {}) {
     exit: {
       [TYPE_TABLE]: exit,
       [TYPE_HEADER]: exit,
+      [TYPE_BODY]: exit,
+      [TYPE_FOOTER]: exit,
       [TYPE_ROW]: exitRow,
       [TYPE_CELL]: exitCell,
       // rowLine: exitRowLine,
