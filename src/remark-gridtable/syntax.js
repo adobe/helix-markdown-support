@@ -10,22 +10,25 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-use-before-define,no-underscore-dangle,no-param-reassign */
-import { ok as assert } from 'uvu/assert';
 import { codes } from 'micromark-util-symbol/codes.js';
 import { types } from 'micromark-util-symbol/types.js';
 // import { constants } from 'micromark-util-symbol/constants.js';
 import {
   markdownLineEnding,
-  markdownLineEndingOrSpace,
   markdownSpace,
 } from 'micromark-util-character';
 import {
-  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE, TYPE_CELL,
+  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_TABLE, TYPE_CELL,
 } from './to-markdown.js';
 
-const TYPE_GRID_LINE = 'gridLine';
+// the cell divider: | or +
 const TYPE_CELL_DIVIDER = 'cellDivider';
+
+// a line within a row. can have cells or dividers or both, in case of row spans
 const TYPE_ROW_LINE = 'rowLine';
+
+// the grid divider: - / =
+const TYPE_GRID_DIVIDER = 'gridDivider';
 
 function parse() {
   return {
@@ -34,66 +37,89 @@ function parse() {
   };
 
   function tokenizeTable(effects, ok, nok) {
-    let wasWS = false;
     // positions of columns
     const cols = [0];
     let numRows = 0;
+    let numCols = 0;
     let colPos = 0;
-    let gridLine = null;
+    let rowLine = null;
     return start;
 
     function start(code) {
-      assert(code === codes.plusSign, 'table starts with +');
       effects.enter(TYPE_TABLE)._cols = cols;
       effects.enter(TYPE_BODY);
-      return gridLineStart(code);
+      return lineStart(code);
     }
 
-    function gridLineStart(code) {
-      if (code === codes.plusSign) {
-        gridLine = effects.enter(TYPE_GRID_LINE);
+    function lineStart(code) {
+      if (code === codes.plusSign || code === codes.verticalBar) {
+        rowLine = effects.enter(TYPE_ROW_LINE);
+        effects.enter(TYPE_CELL_DIVIDER);
         effects.consume(code);
+        effects.exit(TYPE_CELL_DIVIDER);
         colPos = 0;
-        return gridDivider;
+        numCols = 0;
+        return cellOrGridStart;
       }
-      return nok(code);
+      if (numRows < 3) {
+        return nok(code);
+      }
+      effects.exit(TYPE_BODY);
+      effects.exit(TYPE_TABLE);
+      return ok(code);
     }
 
-    function gridDividerStart(code) {
-      // code is after the `+` of a grid column divider
-      if (code === codes.eof || markdownLineEndingOrSpace(code)) {
-        wasWS = false;
-        effects.exit(TYPE_GRID_LINE);
-        return gridDividerEnd(code);
+    function cellOrGridStart(code) {
+      if (code === codes.dash || code === codes.equalsTo) {
+        effects.enter(TYPE_GRID_DIVIDER)._colStart = colPos;
+        return gridDivider(code);
       }
-      return gridDivider(code);
-    }
 
-    function gridDividerEnd(code) {
-      if (markdownLineEndingOrSpace(code)) {
-        if (!wasWS) {
-          effects.enter(types.whitespace);
-          wasWS = true;
-        }
-        effects.consume(code);
+      if (code === codes.eof || markdownLineEnding(code)) {
+        return lineEnd(code);
       }
+
+      effects.enter(TYPE_CELL)._colStart = colPos;
+      colPos += 1;
+      effects.consume(code);
 
       if (markdownSpace(code)) {
-        return gridDividerEnd;
+        return cellSpace;
       }
+      return cell(code);
+    }
 
-      if (wasWS) {
-        effects.exit(types.whitespace);
+    function cellSpace(code) {
+      if (code === codes.eof || markdownLineEnding(code)) {
+        effects.exit(TYPE_CELL);
+        return lineEnd(code);
       }
+      if (markdownSpace(code)) {
+        colPos += 1;
+        effects.consume(code);
+        return cellSpace;
+      }
+      return cell(code);
+    }
 
+    function lineEnd(code) {
+      if (numCols === 0) {
+        return nok(code);
+      }
+      if (markdownLineEnding(code)) {
+        effects.enter(types.lineEnding);
+        effects.consume(code);
+        effects.exit(types.lineEnding);
+      }
+      effects.exit(TYPE_ROW_LINE);
       if (code === codes.eof) {
         effects.exit(TYPE_BODY);
         effects.exit(TYPE_TABLE);
         return ok(code);
       }
-
       if (markdownLineEnding(code)) {
-        return rowStart;
+        numRows += 1;
+        return lineStart;
       }
       return nok(code);
     }
@@ -101,62 +127,41 @@ function parse() {
     function gridDivider(code) {
       colPos += 1;
       if (code === codes.dash || code === codes.equalsTo) {
-        if (!gridLine._type) {
-          gridLine._type = code;
+        if (!rowLine._type) {
+          rowLine._type = code;
         }
         effects.consume(code);
         return gridDivider;
       }
-      if (code === codes.plusSign) {
+      if (code === codes.plusSign || code === codes.verticalBar) {
         // remember cols
         const idx = cols.indexOf(colPos);
         if (idx < 0) {
           cols.push(colPos);
           cols.sort((c0, c1) => c0 - c1);
         }
+        effects.exit(TYPE_GRID_DIVIDER)._colEnd = colPos;
+        effects.enter(TYPE_CELL_DIVIDER);
         effects.consume(code);
-        return gridDividerStart;
+        effects.exit(TYPE_CELL_DIVIDER);
+        numCols += 1;
+        return cellOrGridStart;
       }
       return nok(code);
-    }
-
-    function rowStart(code) {
-      // todo: leading whitespace
-      if (code !== codes.verticalBar) {
-        if (numRows === 0) {
-          return nok(code);
-        }
-        effects.exit(TYPE_BODY);
-        effects.exit(TYPE_TABLE);
-        return ok(code);
-      }
-      effects.enter(TYPE_ROW);
-      numRows += 1;
-      return rowLineStart(code);
-    }
-
-    function rowLineStart(code) {
-      colPos = 0;
-      effects.enter(TYPE_ROW_LINE);
-      effects.enter(TYPE_CELL_DIVIDER);
-      effects.consume(code);
-      effects.exit(TYPE_CELL_DIVIDER);
-      effects.enter(TYPE_CELL)._colStart = colPos;
-      return cell;
     }
 
     function cell(code) {
       colPos += 1;
       // find existing col
-      if (code === codes.verticalBar) {
+      if (code === codes.verticalBar || code === codes.plusSign) {
         const idx = cols.indexOf(colPos);
         if (idx >= 0) {
           effects.exit(TYPE_CELL)._colEnd = colPos;
           effects.enter(TYPE_CELL_DIVIDER);
           effects.consume(code);
           effects.exit(TYPE_CELL_DIVIDER);
-          effects.enter(TYPE_CELL)._colStart = colPos;
-          return cell;
+          numCols += 1;
+          return cellOrGridStart;
         }
         effects.consume(code);
         return cell;
@@ -165,31 +170,13 @@ function parse() {
         // row with cells never terminate eof
         return nok(code);
       }
-      if (markdownLineEnding(code)) {
-        effects.consume(code);
-        effects.exit(TYPE_CELL)._colEnd = colPos;
-        effects.exit(TYPE_ROW_LINE);
-        // todo: construct row?
-        return rowOrGridStart;
-      }
 
       effects.consume(code);
       return cell;
     }
-
-    function rowOrGridStart(code) {
-      if (code === codes.verticalBar) {
-        return rowLineStart(code);
-      }
-      if (code === codes.plusSign) {
-        effects.exit(TYPE_ROW);
-        return gridLineStart(code);
-      }
-      return nok(code);
-    }
   }
 
-  function resolveTable(events, context) {
+  function resolveHeaderAndFooter(events, context) {
     // detect headers:
     // no `=` lines -> only body
     // 1 `=` line -> header + body
@@ -244,58 +231,25 @@ function parse() {
             events[idx][1] = ftr;
           }
         }
-      } else if (type === TYPE_GRID_LINE && e === 'enter' && node._type === codes.equalsTo) {
+      } else if (type === TYPE_ROW_LINE && e === 'enter' && node._type === codes.equalsTo) {
         fatLines.push(idx);
       }
     }
+    return events;
+  }
 
-    // consolidate the cells in the same row
-    // const result = [];
-    // let row = [];
-    // let pos = 0;
-    // for (const evt of events) {
-    //   const [e, node, context] = evt;
-    //   const { type } = node;
-    //   if (type === TYPE_CELL) {
-    //     if (!row[pos]) {
-    //       row[pos] = [];
-    //     }
-    //     const text = {
-    //       type: types.chunkText,
-    //       start: node.start,
-    //       end: node.end,
-    //       contentType: constants.contentTypeText,
-    //     };
-    //     row[pos].push([e, text, context]);
-    //     if (e === 'exit') {
-    //       pos += 1;
-    //     }
-    //   } else if (type === TYPE_ROW_LINE) {
-    //     if (e === 'enter') {
-    //       pos = 0;
-    //     }
-    //   } else if (type === TYPE_ROW) {
-    //     if (e === 'enter') {
-    //       result.push(evt);
-    //       row = [];
-    //     } else {
-    //       // create combines cells
-    //       for (const cells of row) {
-    //         const cell = {
-    //           type: TYPE_CELL,
-    //           contentType: constants.contentTypeDocument,
-    //         };
-    //         result.push(['enter', cell, context]);
-    //         result.push(...cells);
-    //         result.push(['exit', cell, context]);
-    //       }
-    //       result.push(evt);
-    //     }
-    //   } else {
-    //     result.push(evt);
+  function resolveTable(events, context) {
+    events = resolveHeaderAndFooter(events, context);
+    // let i = 0;
+    // for (const [d, { type }] of events) {
+    //   if (d === 'exit') {
+    //     i -= 2;
+    //   }
+    //   console.log(' '.repeat(i), d, type);
+    //   if (d === 'enter') {
+    //     i += 2;
     //   }
     // }
-    // return result;
     return events;
   }
 }

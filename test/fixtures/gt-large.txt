@@ -1,6 +1,28 @@
 root[2]
 ├─0 heading[1]
 │   │ depth: 2
-│   └─0 text "Single Cell Grid Table"
-└─1 paragraph[1]
-    └─0 text "+----+\n| A1 |\n+----+"
+│   └─0 text "Large Grid Table"
+└─1 gridTable[2]
+    ├─0 gtHeader[0]
+    └─1 gtBody[3]
+        ├─0 gtRow[3]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "A1"
+        │   ├─1 gtCell[1]
+        │   │   └─0 text "B1"
+        │   └─2 gtCell[1]
+        │       └─0 text "## Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        ├─1 gtRow[3]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "## My Heading 1\n\n![](https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7)\\ \nLorem ipsum dolor **sit amet**, consectetur adipiscing elit. Vivamus rhoncus elit nibh,\nsed vestibulum metus tincidunt a. _Integer_ interdum tempus consectetur. Phasellus\ntristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur\nac augue ornare, iaculis sem luctus, feugiat tellus.\\ \n0 1 2 3 4 5 6 7 8 9 0 a b c d e f 0 1 2 3 4 5 6 7 8 9 0 a b c d e f"
+        │   ├─1 gtCell[1]
+        │   │   └─0 text "```js\nfor (const row of this.rows) {\n  for (let i = 0; i < row.length; i += 1) {\n    let col = cols[i];\n    if (!col) {\n      col = {};\n      cols.push(col);\n    }\n    const cell = row[i];\n    if (cell.value) {\n      col.size = Math.max(col.size || 0, cell.value.length);\n    }\n  }\n}\n```"
+        │   └─2 gtCell[1]
+        │       └─0 text "> My quote\n>\n> Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n> Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt\n> a.\n\n-   item one\n-   item two\n-   Lorem ipsum dolor sit amet, consectetur adipiscing\n    elit. Vivamus rhoncus elit nibh, sed vestibulum metus\n    tincidunt a."
+        └─2 gtRow[3]
+            ├─0 gtCell[1]
+            │   └─0 text "a3"
+            ├─1 gtCell[1]
+            │   └─0 text "b3"
+            └─2 gtCell[1]
+                └─0 text "c3"

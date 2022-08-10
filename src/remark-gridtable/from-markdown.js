@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /*
  * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,61 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* eslint-disable no-underscore-dangle */
 import {
   TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
 } from './to-markdown.js';
 
-function enterTable(token) {
-  this.enter({ type: TYPE_TABLE, children: [] }, token);
-  this.setData('tableInfo', {
-    cols: token._cols,
-    colPos: 0,
-    cells: [],
-  });
-}
-
-function enter(token) {
-  this.enter({ type: token.type, children: [] }, token);
-}
-
-function enterRow(token) {
-  this.enter({ type: TYPE_ROW, children: [] }, token);
-  const info = this.getData('tableInfo');
-  info.colPos = 0;
-  info.cells = [];
-}
-
-function enterCell() {
-  // this.enter({ type: TYPE_CELL }, token);
-  this.buffer();
-}
-
-function exitCell(token) {
-  this.config.enter.data.call(this, token);
-  this.config.exit.data.call(this, token);
-  const data = this.resume();
-  const info = this.getData('tableInfo');
-  if (!info.cells[info.colPos]) {
-    info.cells[info.colPos] = {
-      colStart: token._colStart,
-      colEnd: token._colEnd,
-      lines: [],
-    };
-  }
-  info.cells[info.colPos].lines.push(data);
-  info.colPos += 1;
-}
-
-function exit(token) {
-  this.exit(token);
-}
-
-function enterRowLine() {
-  const info = this.getData('tableInfo');
-  info.colPos = 0;
-}
-
-const multiline = (lines) => {
+function multiline(lines) {
   // remove empty trailing lines
   while (lines.length > 0 && lines[lines.length - 1].match(/^\s*$/)) {
     lines.pop();
@@ -86,34 +36,166 @@ const multiline = (lines) => {
     }
     return l;
   }).join('\n');
-};
+}
 
-function exitRow(token) {
+function getColSpan(info, token) {
+  const i0 = info.cols.indexOf(token._colStart);
+  const i1 = info.cols.indexOf(token._colEnd);
+  return i0 >= 0 && i1 >= 0 ? i1 - i0 : 1;
+}
+
+function enterTable(token) {
+  this.enter({ type: TYPE_TABLE, children: [] }, token);
+  this.setData('tableInfo', {
+    // the column positions of the table
+    cols: token._cols,
+    // the current column
+    colPos: 0,
+    // list of all cells
+    allCells: [],
+    // cells that are still open via rowSpan
+    pendingCells: [],
+    // the current cells of a row
+    cells: [],
+  });
+}
+
+function exitTable(token) {
+  // render cells
   const info = this.getData('tableInfo');
-  // emit cells
-  for (let i = 0; i < info.cells.length - 1; i += 1) {
-    const cell = info.cells[i];
-    // find colspan
-    const i0 = info.cols.indexOf(cell.colStart);
-    const i1 = info.cols.indexOf(cell.colEnd);
-    const colSpan = i0 >= 0 && i1 >= 0 ? i1 - i0 : 1;
-    const node = {
-      type: TYPE_CELL,
-      colSpan,
-      children: [{
-        type: 'text',
-        value: multiline(cell.lines),
-      }],
-    };
-    const fakeToken = {
-      type: TYPE_CELL,
-      start: { line: 0, column: 0, offset: 0 },
-      end: { line: 0, column: 0, offset: 0 },
-    };
-    this.enter(node, fakeToken);
-    this.exit(fakeToken);
+  for (const cell of info.allCells) {
+    const {
+      node, lines, colSpan, rowSpan,
+    } = cell;
+    node.children = [{
+      type: 'text',
+      value: multiline(lines),
+    }];
+    if (colSpan > 1) {
+      node.colSpan = colSpan;
+    }
+    if (rowSpan > 1) {
+      node.rowSpan = rowSpan;
+    }
   }
   this.exit(token);
+}
+
+function enter(token) {
+  this.enter({ type: token.type, children: [] }, token);
+}
+
+function enterCell() {
+  this.buffer();
+}
+
+function exitCell(token) {
+  this.config.enter.data.call(this, token);
+  this.config.exit.data.call(this, token);
+  const data = this.resume();
+  const info = this.getData('tableInfo');
+  const colSpan = getColSpan(info, token);
+
+  let cell = info.pendingCells[info.colPos];
+
+  // open rowspan if we are on a divider line
+  if (info.isDivider) {
+    if (!cell) {
+      cell = info.cells[info.colPos];
+      if (!cell) {
+        throw Error('no matching rowspan');
+      }
+      info.pendingCells[info.colPos] = cell;
+      cell.rowSpan += 1;
+    }
+  }
+
+  // if a rowspan is open, append to its cell
+  if (cell) {
+    cell.lines.push(data);
+    info.colPos += colSpan;
+    return;
+  }
+
+  // otherwise append to regular cell
+  cell = info.cells[info.colPos];
+  if (!cell) {
+    cell = {
+      rowSpan: 1,
+      colSpan,
+      node: {
+        type: TYPE_CELL,
+      },
+      lines: [],
+    };
+    info.cells[info.colPos] = cell;
+    info.allCells.push(cell);
+  }
+  cell.lines.push(data);
+  info.colPos += colSpan;
+}
+
+function enterGridDivider(token) {
+  const info = this.getData('tableInfo');
+  // clear pending rowspans
+  let colSpan = getColSpan(info, token);
+  while (colSpan > 0) {
+    colSpan -= 1;
+    info.pendingCells[info.colPos] = null;
+    info.colPos += 1;
+  }
+}
+
+function enterRowLine(token) {
+  const info = this.getData('tableInfo');
+  info.isDivider = token._type;
+  info.colPos = 0;
+}
+
+function commitRow(info) {
+  // create fake token for 'gtRow'
+  const rowToken = {
+    type: TYPE_ROW,
+    start: { line: 0, column: 0, offset: 0 },
+    end: { line: 0, column: 0, offset: 0 },
+  };
+  this.enter({ type: TYPE_ROW, children: [] }, rowToken);
+
+  // emit cells
+  for (const cell of info.cells) {
+    if (cell) {
+      const cellToken = {
+        type: TYPE_CELL,
+        start: { line: 0, column: 0, offset: 0 },
+        end: { line: 0, column: 0, offset: 0 },
+      };
+      this.enter(cell.node, cellToken);
+      this.exit(cellToken);
+    }
+  }
+
+  this.exit(rowToken);
+  // eslint-disable-next-line no-param-reassign
+  info.cells = [];
+}
+
+function exitHeader(token) {
+  const info = this.getData('tableInfo');
+  // commit row  has some cells
+  if (info.cells.length) {
+    commitRow.call(this, info);
+    // also close all rowspans.
+    info.pendingCells = [];
+  }
+  this.exit(token);
+}
+
+function exitRowLine() {
+  const info = this.getData('tableInfo');
+  // commit row if on a divider and has some cells
+  if (info.isDivider && info.cells.length) {
+    commitRow.call(this, info);
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -124,18 +206,17 @@ export default function fromMarkdown(options = {}) {
       [TYPE_HEADER]: enter,
       [TYPE_BODY]: enter,
       [TYPE_FOOTER]: enter,
-      [TYPE_ROW]: enterRow,
       [TYPE_CELL]: enterCell,
+      gridDivider: enterGridDivider,
       rowLine: enterRowLine,
     },
     exit: {
-      [TYPE_TABLE]: exit,
-      [TYPE_HEADER]: exit,
-      [TYPE_BODY]: exit,
-      [TYPE_FOOTER]: exit,
-      [TYPE_ROW]: exitRow,
+      [TYPE_TABLE]: exitTable,
+      [TYPE_HEADER]: exitHeader,
+      [TYPE_BODY]: exitHeader,
+      [TYPE_FOOTER]: exitHeader,
       [TYPE_CELL]: exitCell,
-      // rowLine: exitRowLine,
+      rowLine: exitRowLine,
     },
   };
 }

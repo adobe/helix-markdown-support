@@ -275,6 +275,7 @@ class Table {
       // first, draw the grid line
       const grid = [];
       const c = y === headerIdx || y === footerIdx ? '=' : '-';
+      let prevCell;
       for (let x = 0; x < row.cells.length; x += 1) {
         const cell = row.cells[x];
         const col = cols[x];
@@ -285,14 +286,21 @@ class Table {
         } else if (cell.linked) {
           const width = spanWidth(cols, x, cell.linked);
           const text = cell.linked.lines.shift() || '';
-          grid.push(`+ ${text.padEnd(width - 3, ' ')} `);
+          grid.push(`| ${text.padEnd(width - 3, ' ')} `);
           x += cell.linked.colSpan - 1;
         } else {
           const d2 = cell.align === 'right' || cell.align === 'center' ? '<' : c;
           grid.push(`${c.repeat(col.width - 1)}${d2}`);
         }
+        prevCell = cell;
       }
-      lines.push(`${grid.join('')}+`);
+
+      // if last col was a rowspan, draw a |
+      if (prevCell?.linked) {
+        lines.push(`${grid.join('')}|`);
+      } else {
+        lines.push(`${grid.join('')}+`);
+      }
 
       // then draw the cells
       for (let yy = 0; yy < row.height; yy += 1) {
@@ -326,10 +334,15 @@ class Table {
 
     // add last grid line
     const grid = [];
-    for (const col of cols) {
-      grid.push('-'.repeat(col.width - 1));
+    const lastRow = this.rows[this.rows.length - 1];
+    for (let x = 0; x < cols.length; x += 1) {
+      const col = cols[x];
+      // if the cell above was a colspan, and we are on the last line, don't draw the `+`
+      const aboveCell = lastRow.cells[x];
+      const c = aboveCell.tree || aboveCell.linked ? '+' : '-';
+      grid.push(`${c}${'-'.repeat(col.width - 1)}`);
     }
-    lines.push(`+${grid.join('+')}+`);
+    lines.push(`${grid.join('')}+`);
 
     return lines.join('\n');
   }

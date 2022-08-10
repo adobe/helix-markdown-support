@@ -63,6 +63,10 @@ describe('gridtable from markdown', () => {
     await testMD('gt-simple');
   });
 
+  it('single-cell table', async () => {
+    await testMD('gt-single-cell');
+  });
+
   it('large table', async () => {
     await testMD('gt-large');
   });

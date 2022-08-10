@@ -3,28 +3,53 @@ root[2]
 │   │ depth: 2
 │   └─0 text "Table with spans"
 └─1 gridTable[1]
-    └─0 gtBody[3]
+    └─0 gtBody[8]
         ├─0 gtRow[2]
         │   ├─0 gtCell[1]
         │   │   │ colSpan: 2
-        │   │   └─0 text "AB0"
+        │   │   └─0 text "AB0 - Lorem ipsum dolor sit amet, consectetur adipiscing elit."
         │   └─1 gtCell[1]
-        │       │ colSpan: 1
         │       └─0 text "C0"
         ├─1 gtRow[3]
         │   ├─0 gtCell[1]
-        │   │   │ colSpan: 1
         │   │   └─0 text "A1"
         │   ├─1 gtCell[1]
-        │   │   │ colSpan: 1
         │   │   └─0 text "B1"
         │   └─2 gtCell[1]
-        │       │ colSpan: 1
         │       └─0 text "C1"
-        └─2 gtRow[2]
-            ├─0 gtCell[1]
-            │   │ colSpan: 1
-            │   └─0 text "A2"
-            └─1 gtCell[1]
+        ├─2 gtRow[2]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "A2"
+        │   └─1 gtCell[1]
+        │       │ colSpan: 2
+        │       └─0 text "BC2"
+        ├─3 gtRow[3]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "A3"
+        │   ├─1 gtCell[1]
+        │   │   │ rowSpan: 2
+        │   │   └─0 text "# B34\n\n1.  item one\n2.  item two\n3.  item three\n4.  item four\n5.  Lorem ipsum dolor sit amet,\n    consectetur adipiscing elit. Vivamus\n    rhoncus elit nibh, sed vestibulum metus\n    tincidunt a."
+        │   └─2 gtCell[1]
+        │       └─0 text "C3"
+        ├─4 gtRow[2]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "# A4\n\nLorem ipsum dolor sit amet,\nconsectetur adipiscing elit."
+        │   └─1 gtCell[1]
+        │       └─0 text "C4"
+        ├─5 gtRow[2]
+        │   ├─0 gtCell[1]
+        │   │   │ rowSpan: 2
+        │   │   └─0 text "A56"
+        │   └─1 gtCell[1]
+        │       │ colSpan: 2
+        │       └─0 text "BC5"
+        ├─6 gtRow[2]
+        │   ├─0 gtCell[1]
+        │   │   └─0 text "B6"
+        │   └─1 gtCell[1]
+        │       │ rowSpan: 2
+        │       └─0 text "C67"
+        └─7 gtRow[1]
+            └─0 gtCell[1]
                 │ colSpan: 2
-                └─0 text "BC2"
+                └─0 text "AB7"
