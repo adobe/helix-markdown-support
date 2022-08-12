@@ -6,4 +6,5 @@ root[2]
     └─0 gtBody[1]
         └─0 gtRow[1]
             └─0 gtCell[1]
-                └─0 text "A1"
+                └─0 paragraph[1]
+                    └─0 text "A1"

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-underscore-dangle */
+import { fromMarkdown } from 'mdast-util-from-markdown';
 import {
   TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
 } from './to-markdown.js';
@@ -27,15 +28,9 @@ function multiline(lines) {
     .reduce((min, len) => Math.min(len, min), Infinity);
 
   // remove prefix
-  return lines.map((line) => {
-    let l = line.slice(prefixLen);
-    // remove trailing whitespace, if not ends with `\\`
-    l = l.trimEnd();
-    if (l.endsWith('\\')) {
-      l += ' ';
-    }
-    return l;
-  }).join('\n');
+  return lines
+    .map((line) => line.substring(prefixLen).trimEnd())
+    .join('\n');
 }
 
 function getColSpan(info, token) {
@@ -67,10 +62,9 @@ function exitTable(token) {
     const {
       node, lines, colSpan, rowSpan,
     } = cell;
-    node.children = [{
-      type: 'text',
-      value: multiline(lines),
-    }];
+    const cellContent = multiline(lines);
+    const tree = fromMarkdown(cellContent, {});
+    node.children = tree.children;
     if (colSpan > 1) {
       node.colSpan = colSpan;
     }
@@ -199,7 +193,7 @@ function exitRowLine() {
 }
 
 // eslint-disable-next-line no-unused-vars
-export default function fromMarkdown(options = {}) {
+export default function handler(options = {}) {
   return {
     enter: {
       [TYPE_TABLE]: enterTable,

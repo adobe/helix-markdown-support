@@ -40,7 +40,11 @@ function spanWidth(cols, idx, cell) {
 }
 
 export function lineWrapTextHandler(node, parent, context, safeOptions) {
-  let value = textHandler(node, parent, context, safeOptions);
+  const textNode = {
+    ...node,
+    value: node.value.replaceAll(/\s/g, ' '),
+  };
+  let value = textHandler(textNode, parent, context, safeOptions);
   const { lineWidth } = context.options;
   if (lineWidth && value.length > lineWidth) {
     // check if in heading
