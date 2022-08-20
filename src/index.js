@@ -20,3 +20,4 @@ export { default as sanitizeFormats } from './mdast-sanitize-formats.js';
 export { default as fixCodeFlow } from './mdast-fix-code-flow.js';
 export { default as sanitizeLinks } from './mdast-sanitize-links.js';
 export { default as sanitizeText } from './mdast-sanitize-text.js';
+export { default as imageReferences } from './mdast-image-references.js';
