@@ -68,10 +68,20 @@ import syntax from './syntax.js';
  * Horizontal align is indicated by placing markers at the grid line above the cell:
  *
  * ```
- * Center     Left       Right
- * +>-----<+  +>------+  +------<+
- * |  ABC  |  | ABC   |  |   ABC |
- * +-------+  +-------+  +-------+
+ * with '<>'
+ *
+ * Justify     Center     Left       Right
+ * +>-----<+  +---x---+  +>------+  +------<+
+ * | A b C |  |  ABC  |  | ABC   |  |   ABC |
+ * +-------+  +-------+  +-------+  +-------+
+ * ```
+ *
+ * with ':'
+ *
+ * Justify     Center     Left       Right
+ * +:-----:+  +---:---+  +:------+  +------:+
+ * | A b C |  |  ABC  |  | ABC   |  |   ABC |
+ * +-------+  +-------+  +-------+  +-------+
  * ```
  *
  * Vertical align is indicated by placing markers at the grid line left of the cell:
@@ -86,7 +96,12 @@ import syntax from './syntax.js';
  * +-------+  +-------+  +-------+
  * ```
  *
- * @param {object} options Plugin options
+ * Stringify options
+ * =================
+ *
+ * @property {string} [gtHLineEnds = '|'] the character to use for the horizontal grid line ends.
+ * @property {string} [gtVLineEnds = '+'] the character to use for the vertical grid line ends.
+ * @property {string} [gtAlignStyle = ':'] the character to use for the align (':' or '><')
  */
 export default function gridTablePlugin(options) {
   const data = this.data();

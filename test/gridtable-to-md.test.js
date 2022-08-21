@@ -327,7 +327,22 @@ describe('gridtable to md', () => {
         ]),
       ]),
     ]);
-    await assertMD(mdast, 'gt-spans.md', [remarkGridTable]);
+    await assertMD(mdast, 'gt-spans.md', [remarkGridTable], {
+      gtVLineEnds: '+',
+      gtHLineEnds: '+',
+    });
+    await assertMD(mdast, 'gt-spans-smooth-sides.md', [remarkGridTable], {
+      gtVLineEnds: '+',
+      gtHLineEnds: '|',
+    });
+    await assertMD(mdast, 'gt-spans-smooth-tops.md', [remarkGridTable], {
+      gtVLineEnds: '-',
+      gtHLineEnds: '+',
+    });
+    await assertMD(mdast, 'gt-spans-smooth-both.md', [remarkGridTable], {
+      gtVLineEnds: '-',
+      gtHLineEnds: '|',
+    });
   });
 
   it('table alignments converts correctly', async () => {
@@ -338,27 +353,40 @@ describe('gridtable to md', () => {
           gtRow([
             gtCell(text('top left'), 'left', 'top'),
             gtCell(text('top center'), 'center', 'top'),
+            gtCell(text('top justify'), 'both', 'top'),
             gtCell(text('top right'), 'right', 'top'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
           gtRow([
             gtCell(text('middle left'), 'left', 'middle'),
             gtCell(text('middle center'), 'center', 'middle'),
+            gtCell(text('top justify'), 'both', 'middle'),
             gtCell(text('middle right'), 'right', 'middle'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
           gtRow([
             gtCell(text('bottom left'), 'left', 'bottom'),
             gtCell(text('bottom center'), 'center', 'bottom'),
+            gtCell(text('top justify'), 'both', 'bottom'),
             gtCell(text('bottom right'), 'right', 'bottom'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
           gtRow([
-            gtCell(text('middle center'), 'center', 'middle', 1, 3),
+            gtCell(text('middle center'), 'center', 'middle', 1, 4),
+          ]),
+          gtRow([
+            gtCell(text('top left'), 'left', 'top', 1, 2),
+            gtCell(text('bottom right'), 'right', 'bottom', 1, 2),
+          ]),
+          gtRow([
+            gtCell(text('middle justify'), 'both', 'middle', 1, 4),
           ]),
         ]),
       ]),
     ]);
     await assertMD(mdast, 'gt-with-align.md', [remarkGridTable]);
+    await assertMD(mdast, 'gt-with-align-colon.md', [remarkGridTable], {
+      gtAlignStyle: ':',
+    });
   });
 });

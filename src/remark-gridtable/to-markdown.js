@@ -82,10 +82,12 @@ class Table {
       rows: [],
       headerSize: 0,
       footerSize: 0,
-      // default desired width of a table (including delimiters)
-      width: 120,
-      // minimum cell content width (excluding delimiters)
-      minCellWidth: 12,
+      opts: {
+        // default desired width of a table (including delimiters)
+        width: 120,
+        // minimum cell content width (excluding delimiters)
+        minCellWidth: 12,
+      },
     });
   }
 
@@ -136,7 +138,7 @@ class Table {
     // it's easier to calculate in the padding (+2) and border (+1) here than everywhere else.
     // so the column width is equal to the cell.width
     context.options.lineWidth = maxWidth - 3;
-    context.options.minLineWidth = this.minCellWidth;
+    context.options.minLineWidth = this.opts.minCellWidth;
 
     cell.value = context.handle(cell.tree, null, context, {
       before: '\n',
@@ -198,7 +200,7 @@ class Table {
     }
 
     // populate the columns with default max widths
-    for (const [d, idx] of distribute(this.width, numCols)) {
+    for (const [d, idx] of distribute(this.opts.width, numCols)) {
       cols[idx].maxWidth = d;
     }
 
@@ -267,6 +269,19 @@ class Table {
     }
 
     // create grid and table
+    const {
+      gtVLineEnds = '+',
+      gtHLineEnds = '|',
+    } = context.options;
+    const align = context.options.gtAlignStyle === ':'
+      ? { l: ':', r: ':', c: ':' }
+      : { l: '>', r: '<', c: 'x' };
+    const vAlignWide = {
+      t: 'v', b: '^', mt: 'v', mb: '^',
+    };
+    const vAlignNarrow = {
+      t: 'v', b: '^', mt: 'x', mb: 'x',
+    };
     const lines = [];
     // eslint-disable-next-line no-nested-ternary
     const headerIdx = this.headerSize
@@ -280,31 +295,61 @@ class Table {
       const grid = [];
       const c = y === headerIdx || y === footerIdx ? '=' : '-';
       let prevCell;
+      let pendingCenter = '';
+
+      const commitCenter = () => {
+        if (pendingCenter) {
+          const middle = Math.round(pendingCenter.length / 2);
+          grid.push(`${pendingCenter.substring(0, middle)}${align.c}${pendingCenter.substring(middle + 1)}`);
+          pendingCenter = '';
+        }
+      };
+
       for (let x = 0; x < row.cells.length; x += 1) {
+        let d0 = '+';
+        if (x === 0 && y > 0) {
+          d0 = gtHLineEnds;
+        }
+        if (y === 0 && x > 0) {
+          d0 = gtVLineEnds;
+        }
         const cell = row.cells[x];
         const col = cols[x];
         if (cell.tree) {
-          const d1 = cell.align === 'left' || cell.align === 'center' ? '>' : c;
-          const d2 = cell.colSpan === 1 && (cell.align === 'right' || cell.align === 'center') ? '<' : c;
-          grid.push(`+${d1}${c.repeat(col.width - 3)}${d2}`);
+          commitCenter();
+          const d1 = cell.align === 'left' || cell.align === 'both' ? align.l : c;
+          const d2 = cell.colSpan === 1 && (cell.align === 'right' || cell.align === 'both') ? align.r : c;
+          const line = `${d0}${d1}${c.repeat(col.width - 3)}${d2}`;
+          if (cell.align === 'center') {
+            pendingCenter = line;
+          } else {
+            grid.push(line);
+          }
         } else if (cell.linked) {
+          commitCenter();
           const width = spanWidth(cols, x, cell.linked);
           const text = cell.linked.lines.shift() || '';
           grid.push(`| ${text.padEnd(width - 3, ' ')} `);
           x += cell.linked.colSpan - 1;
         } else {
-          const d2 = cell.align === 'right' || cell.align === 'center' ? '<' : c;
-          grid.push(`${c.repeat(col.width - 1)}${d2}`);
+          const d2 = cell.align === 'right' || cell.align === 'both' ? align.r : c;
+          const line = `${c.repeat(col.width - 1)}${d2}`;
+          if (pendingCenter) {
+            pendingCenter += line;
+          } else {
+            grid.push(line);
+          }
         }
         prevCell = cell;
       }
+      commitCenter();
 
       // if last col was a rowspan, draw a |
-      if (prevCell?.linked) {
-        lines.push(`${grid.join('')}|`);
-      } else {
-        lines.push(`${grid.join('')}+`);
+      let d3 = prevCell?.linked ? '|' : gtHLineEnds;
+      if (y === 0) {
+        d3 = '+';
       }
+      lines.push(`${grid.join('')}${d3}`);
 
       // then draw the cells
       for (let yy = 0; yy < row.height; yy += 1) {
@@ -323,11 +368,17 @@ class Table {
               || (cell.valign === 'bottom' && yy >= row.height - cell.height)) {
               text = cell.lines.shift() || '';
             }
-            let d1 = yy === 0 && (cell.valign === 'top' || cell.valign === 'middle') ? 'v' : '|';
-            if (cell.valign === 'middle' && row.height === 1) {
-              d1 = 'X';
-            } else if ((cell.valign === 'middle' || cell.valign === 'bottom') && yy === row.height - 1) {
-              d1 = '^';
+            const va = row.height === 1 ? vAlignNarrow : vAlignWide;
+            let d1 = '|';
+            if (yy === 0 && cell.valign === 'top') {
+              d1 = va.t;
+            } else if (yy === 0 && cell.valign === 'middle') {
+              d1 = va.mt;
+            }
+            if (yy === row.height - 1 && cell.valign === 'bottom') {
+              d1 = va.b;
+            } else if (yy === row.height - 1 && cell.valign === 'middle') {
+              d1 = va.mb;
             }
             line.push(`${d1} ${text.padEnd(width - 3, ' ')} `);
           }
@@ -343,7 +394,10 @@ class Table {
       const col = cols[x];
       // if the cell above was a colspan, and we are on the last line, don't draw the `+`
       const aboveCell = lastRow.cells[x];
-      const c = aboveCell.tree || aboveCell.linked ? '+' : '-';
+      let c = aboveCell.tree || aboveCell.linked ? gtVLineEnds : '-';
+      if (x === 0) {
+        c = '+';
+      }
       grid.push(`${c}${'-'.repeat(col.width - 1)}`);
     }
     lines.push(`${grid.join('')}+`);
@@ -449,10 +503,6 @@ export default function toMarkdown() {
       // the default mdast-to-markdown handlers
       text: lineWrapTextHandler,
       gridTable,
-      // gtHeader,
-      // gtBody,
-      // gtFooter,
-      // gtCell,
       // gtRow,
     },
   };

@@ -17,7 +17,7 @@ import stringify from 'remark-stringify';
 import { unified } from 'unified';
 
 // eslint-disable-next-line import/prefer-default-export
-export async function assertMD(mdast, fixture, plugins = []) {
+export async function assertMD(mdast, fixture, plugins = [], opts = {}) {
   // console.log(require('unist-util-inspect')(mdast));
   const expected = await readFile(new URL(`./fixtures/${fixture}`, import.meta.url), 'utf-8');
   let processor = unified()
@@ -31,6 +31,9 @@ export async function assertMD(mdast, fixture, plugins = []) {
       rule: '-',
       ruleRepetition: 3,
       ruleSpaces: false,
+      gtVLineEnds: '+',
+      gtHLineEnds: '+',
+      ...opts,
     });
   processor = plugins.reduce((proc, plug) => (proc.use(plug)), processor);
   const actual = processor.stringify(mdast);
