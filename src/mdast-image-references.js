@@ -25,21 +25,23 @@ export default function imageReferences(tree) {
 
   visit(tree, (node) => {
     if (node.type === 'image') {
-      // todo: support title ?
-      const { url } = node;
-      let identifier = images.get(url);
+      const { url, alt = '', title = '' } = node;
+      const key = `${url}\n${title}`;
+      let identifier = images.get(key);
       if (!identifier) {
         identifier = `image${images.size}`;
-        images.set(url, identifier);
+        images.set(key, identifier);
         definitions.push({
           type: 'definition',
           identifier,
           url,
+          title,
         });
       }
       node.type = 'imageReference';
       node.identifier = identifier;
       node.referenceType = 'full';
+      node.alt = alt.trim();
     }
     return CONTINUE;
   });
