@@ -99,9 +99,8 @@ import syntax from './syntax.js';
  * Stringify options
  * =================
  *
- * @property {string} [gtHLineEnds = '|'] the character to use for the horizontal grid line ends.
+ * @property {string} [gtHLineEnds = '+'] the character to use for the horizontal grid line ends.
  * @property {string} [gtVLineEnds = '+'] the character to use for the vertical grid line ends.
- * @property {string} [gtAlignStyle = ':'] the character to use for the align (':' or '><')
  */
 export default function gridTablePlugin(options) {
   const data = this.data();

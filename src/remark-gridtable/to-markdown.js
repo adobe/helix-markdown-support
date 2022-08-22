@@ -271,11 +271,14 @@ class Table {
     // create grid and table
     const {
       gtVLineEnds = '+',
-      gtHLineEnds = '|',
+      gtHLineEnds = '+',
     } = context.options;
-    const align = context.options.gtAlignStyle === ':'
-      ? { l: ':', r: ':', c: ':' }
-      : { l: '>', r: '<', c: 'x' };
+    const align = {
+      left: { b: ':', e: '', len: 1 },
+      right: { b: '', e: ':', len: 1 },
+      center: { b: ':', e: ':', len: 2 },
+      both: { b: '>', e: '<', len: 2 },
+    };
     const vAlignWide = {
       t: 'v', b: '^', mt: 'v', mb: '^',
     };
@@ -295,13 +298,20 @@ class Table {
       const grid = [];
       const c = y === headerIdx || y === footerIdx ? '=' : '-';
       let prevCell;
-      let pendingCenter = '';
+      let pendingGrid = 0;
+      let pendingAlign = null;
 
-      const commitCenter = () => {
-        if (pendingCenter) {
-          const middle = Math.round(pendingCenter.length / 2);
-          grid.push(`${pendingCenter.substring(0, middle)}${align.c}${pendingCenter.substring(middle + 1)}`);
-          pendingCenter = '';
+      const commitGridLine = () => {
+        if (pendingGrid) {
+          if (pendingAlign) {
+            pendingGrid -= pendingAlign.len;
+            grid.push(pendingAlign.b);
+            grid.push(c.repeat(pendingGrid));
+            grid.push(pendingAlign.e);
+          } else {
+            grid.push(c.repeat(pendingGrid));
+          }
+          pendingGrid = 0;
         }
       };
 
@@ -316,33 +326,22 @@ class Table {
         const cell = row.cells[x];
         const col = cols[x];
         if (cell.tree) {
-          commitCenter();
-          const d1 = cell.align === 'left' || cell.align === 'both' ? align.l : c;
-          const d2 = cell.colSpan === 1 && (cell.align === 'right' || cell.align === 'both') ? align.r : c;
-          const line = `${d0}${d1}${c.repeat(col.width - 3)}${d2}`;
-          if (cell.align === 'center') {
-            pendingCenter = line;
-          } else {
-            grid.push(line);
-          }
+          commitGridLine();
+          grid.push(d0);
+          pendingGrid = col.width - 1;
+          pendingAlign = align[cell.align];
         } else if (cell.linked) {
-          commitCenter();
+          commitGridLine();
           const width = spanWidth(cols, x, cell.linked);
           const text = cell.linked.lines.shift() || '';
           grid.push(`| ${text.padEnd(width - 3, ' ')} `);
           x += cell.linked.colSpan - 1;
         } else {
-          const d2 = cell.align === 'right' || cell.align === 'both' ? align.r : c;
-          const line = `${c.repeat(col.width - 1)}${d2}`;
-          if (pendingCenter) {
-            pendingCenter += line;
-          } else {
-            grid.push(line);
-          }
+          pendingGrid += col.width;
         }
         prevCell = cell;
       }
-      commitCenter();
+      commitGridLine();
 
       // if last col was a rowspan, draw a |
       let d3 = prevCell?.linked ? '|' : gtHLineEnds;

@@ -349,7 +349,7 @@ describe('gridtable to md', () => {
     const mdast = root([
       heading(2, text('Table with alignments')),
       gridTable([
-        gtBody([
+        gtHeader([
           gtRow([
             gtCell(text('top left'), 'left', 'top'),
             gtCell(text('top center'), 'center', 'top'),
@@ -357,6 +357,8 @@ describe('gridtable to md', () => {
             gtCell(text('top right'), 'right', 'top'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
+        ]),
+        gtBody([
           gtRow([
             gtCell(text('middle left'), 'left', 'middle'),
             gtCell(text('middle center'), 'center', 'middle'),
@@ -385,8 +387,5 @@ describe('gridtable to md', () => {
       ]),
     ]);
     await assertMD(mdast, 'gt-with-align.md', [remarkGridTable]);
-    await assertMD(mdast, 'gt-with-align-colon.md', [remarkGridTable], {
-      gtAlignStyle: ':',
-    });
   });
 });
