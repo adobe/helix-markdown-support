@@ -82,4 +82,8 @@ describe('gridtable from markdown', () => {
   it('table with spans', async () => {
     await testMD('gt-spans');
   });
+
+  it('table in tables', async () => {
+    await testMD('gt-tables-in-tables');
+  });
 });

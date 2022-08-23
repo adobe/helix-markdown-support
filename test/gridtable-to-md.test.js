@@ -388,4 +388,78 @@ describe('gridtable to md', () => {
     ]);
     await assertMD(mdast, 'gt-with-align.md', [remarkGridTable]);
   });
+
+  it('tables in tables in tables', async () => {
+    const innerTable = gridTable([
+      gtHeader([
+        gtRow([
+          gtCell(text('A0')),
+          gtCell(text('B0')),
+        ]),
+      ]),
+      gtBody([
+        gtRow([
+          gtCell(text('A1')),
+          gtCell(text('B1')),
+        ]),
+        gtRow([
+          gtCell(text('some text with a | in it')),
+          gtCell(text('| or at the beginning')),
+        ]),
+      ]),
+    ]);
+
+    const nestedTable = gridTable([
+      gtHeader([
+        gtRow([
+          gtCell(text('nested tables are fun!'), '', '', 1, 2),
+        ]),
+      ]),
+      gtBody([
+        gtRow([
+          gtCell(text('r0')),
+          gtCell(innerTable, '', '', 3),
+        ]),
+        gtRow([
+          gtCell(text('r1')),
+        ]),
+        gtRow([
+          gtCell(text('r2')),
+        ]),
+      ]),
+    ]);
+
+    const mdast = root([
+      heading(2, text('Tables in tables in tables')),
+      gridTable([
+        gtHeader([
+          gtRow([
+            gtCell(text('Cards (one, two, many)'), '', '', 1, 2),
+          ]),
+        ]),
+        gtBody([
+          gtRow([
+            gtCell(text('One')),
+            gtCell(innerTable),
+          ]),
+          gtRow([
+            gtCell(text('two')),
+            gtCell(text('three')),
+          ]),
+          gtRow([
+            gtCell(innerTable, '', '', 1, 2),
+          ]),
+          gtRow([
+            gtCell(text('four')),
+            gtCell(text('five')),
+          ]),
+          gtRow([
+            gtCell(text('nested')),
+            gtCell(nestedTable),
+          ]),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-tables-in-tables.md', [remarkGridTable]);
+  });
 });
