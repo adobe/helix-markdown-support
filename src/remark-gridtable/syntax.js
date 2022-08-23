@@ -12,24 +12,57 @@
 /* eslint-disable no-use-before-define,no-underscore-dangle,no-param-reassign */
 import { codes } from 'micromark-util-symbol/codes.js';
 import { types } from 'micromark-util-symbol/types.js';
-// import { constants } from 'micromark-util-symbol/constants.js';
+import { constants } from 'micromark-util-symbol/constants.js';
 import {
   markdownLineEnding,
   markdownSpace,
 } from 'micromark-util-character';
 import {
-  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_TABLE, TYPE_CELL,
+  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_TABLE, TYPE_CELL, TYPE_ROW,
 } from './to-markdown.js';
 
 // the cell divider: | or +
 const TYPE_CELL_DIVIDER = 'cellDivider';
 
 // a line within a row. can have cells or dividers or both, in case of row spans
-const TYPE_ROW_LINE = 'rowLine';
+const TYPE_GRID_LINE = 'gridLine';
 
 // the grid divider: - / =
 const TYPE_GRID_DIVIDER = 'gridDivider';
 
+/*
+
+enter row
+enter cell (a0)
+enter chunk (a0.0)
+exit chunk
+exit cell
+enter cell (b0)
+enter chunk (b0.0)
+exit chunk
+exit cell
+enter cell (c0)
+enter chunk (c0.0)
+exit chunk
+exit cell
+enter chunk (a0.1)
+exit chunk
+enter chunk (b0.1)
+exit chunk
+enter chunk (c0.1)
+exit chunk
+enter chunk (a0.2)
+exit chunk
+enter chunk (b0.2)
+exit chunk
+enter chunk (c0.2)
+exit chunk
+exit row
+....
+
+
+
+ */
 function parse() {
   return {
     tokenize: tokenizeTable,
@@ -42,8 +75,20 @@ function parse() {
     let numRows = 0;
     let numCols = 0;
     let colPos = 0;
-    let rowLine = null;
+    let gridLine = null;
+    // open cells
+    let cells = null;
     return start;
+
+    function closeCells() {
+      // for (const chunk of cells) {
+      //   if (chunk) {
+      //     effects.exit(TYPE_CELL);
+      //   }
+      // }
+      effects.exit(TYPE_ROW);
+      cells = null;
+    }
 
     function start(code) {
       effects.enter(TYPE_TABLE)._cols = cols;
@@ -52,8 +97,29 @@ function parse() {
     }
 
     function lineStart(code) {
-      if (code === codes.plusSign || code === codes.verticalBar) {
-        rowLine = effects.enter(TYPE_ROW_LINE);
+      // if (code === codes.plusSign || code === codes.verticalBar) {
+      if (code === codes.plusSign) {
+        if (cells) {
+          closeCells();
+        }
+        gridLine = effects.enter(TYPE_GRID_LINE);
+        effects.enter(TYPE_CELL_DIVIDER);
+        effects.consume(code);
+        effects.exit(TYPE_CELL_DIVIDER);
+        colPos = 0;
+        numCols = 0;
+        return cellOrGridStart;
+      }
+      if (code === codes.verticalBar) {
+        if (gridLine) {
+          effects.exit(TYPE_GRID_LINE);
+          gridLine = null;
+        }
+        if (!cells) {
+          // start new row
+          effects.enter(TYPE_ROW);
+          cells = [];
+        }
         effects.enter(TYPE_CELL_DIVIDER);
         effects.consume(code);
         effects.exit(TYPE_CELL_DIVIDER);
@@ -64,6 +130,7 @@ function parse() {
       if (numRows < 3) {
         return nok(code);
       }
+      effects.exit(TYPE_GRID_LINE);
       effects.exit(TYPE_BODY);
       effects.exit(TYPE_TABLE);
       return ok(code);
@@ -79,7 +146,29 @@ function parse() {
         return lineEnd(code);
       }
 
-      effects.enter(TYPE_CELL)._colStart = colPos;
+      let cellInfo = cells[numCols];
+      if (!cellInfo) {
+        // open new cell
+        effects.enter(TYPE_CELL)._colStart = colPos;
+        cellInfo = {
+          open: true,
+        };
+        cells[numCols] = cellInfo;
+      }
+      const { previous } = cellInfo;
+
+      // continue or start chunked document
+      const token = effects.enter(types.chunkDocument, {
+        contentType: constants.contentTypeDocument,
+        previous,
+      });
+
+      // remember token
+      if (previous) {
+        previous.next = token;
+      }
+      cellInfo.previous = token;
+
       colPos += 1;
       effects.consume(code);
 
@@ -91,7 +180,8 @@ function parse() {
 
     function cellSpace(code) {
       if (code === codes.eof || markdownLineEnding(code)) {
-        effects.exit(TYPE_CELL);
+        effects.exit(types.chunkDocument);
+        // effects.exit(TYPE_CELL);
         return lineEnd(code);
       }
       if (markdownSpace(code)) {
@@ -111,8 +201,8 @@ function parse() {
         effects.consume(code);
         effects.exit(types.lineEnding);
       }
-      effects.exit(TYPE_ROW_LINE);
       if (code === codes.eof) {
+        closeCells();
         effects.exit(TYPE_BODY);
         effects.exit(TYPE_TABLE);
         return ok(code);
@@ -127,8 +217,8 @@ function parse() {
     function gridDivider(code) {
       colPos += 1;
       if (code === codes.dash || code === codes.equalsTo) {
-        if (!rowLine._type) {
-          rowLine._type = code;
+        if (!gridLine._type) {
+          gridLine._type = code;
         }
         effects.consume(code);
         return gridDivider;
@@ -156,7 +246,13 @@ function parse() {
       if (code === codes.verticalBar || code === codes.plusSign) {
         const idx = cols.indexOf(colPos);
         if (idx >= 0) {
-          effects.exit(TYPE_CELL)._colEnd = colPos;
+          // check if cell is still open
+          const cellInfo = cells[numCols];
+          effects.exit(types.chunkDocument);
+          if (cellInfo.open) {
+            effects.exit(TYPE_CELL)._colEnd = colPos;
+            cellInfo.open = false;
+          }
           effects.enter(TYPE_CELL_DIVIDER);
           effects.consume(code);
           effects.exit(TYPE_CELL_DIVIDER);
@@ -239,7 +335,7 @@ function parse() {
   }
 
   function resolveTable(events, context) {
-    events = resolveHeaderAndFooter(events, context);
+    // events = resolveHeaderAndFooter(events, context);
     // let i = 0;
     // for (const [d, { type }] of events) {
     //   if (d === 'exit') {

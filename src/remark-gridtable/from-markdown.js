@@ -79,6 +79,10 @@ function enter(token) {
   this.enter({ type: token.type, children: [] }, token);
 }
 
+function exit(token) {
+  this.exit(token);
+}
+
 function enterCell() {
   this.buffer();
 }
@@ -196,21 +200,41 @@ function exitRowLine() {
 export default function handler(options = {}) {
   return {
     enter: {
-      [TYPE_TABLE]: enterTable,
+      [TYPE_TABLE]: enter,
       [TYPE_HEADER]: enter,
       [TYPE_BODY]: enter,
       [TYPE_FOOTER]: enter,
-      [TYPE_CELL]: enterCell,
-      gridDivider: enterGridDivider,
-      rowLine: enterRowLine,
+      [TYPE_CELL]: enter,
+      [TYPE_ROW]: enter,
+      gridDivider: enter,
+      gridLine: enter,
     },
     exit: {
-      [TYPE_TABLE]: exitTable,
-      [TYPE_HEADER]: exitHeader,
-      [TYPE_BODY]: exitHeader,
-      [TYPE_FOOTER]: exitHeader,
-      [TYPE_CELL]: exitCell,
-      rowLine: exitRowLine,
+      [TYPE_TABLE]: exit,
+      [TYPE_HEADER]: exit,
+      [TYPE_BODY]: exit,
+      [TYPE_FOOTER]: exit,
+      [TYPE_CELL]: exit,
+      [TYPE_ROW]: exit,
+      gridDivider: exit,
+      gridLine: exit,
     },
+    // enter: {
+    //   [TYPE_TABLE]: enterTable,
+    //   [TYPE_HEADER]: enter,
+    //   [TYPE_BODY]: enter,
+    //   [TYPE_FOOTER]: enter,
+    //   [TYPE_CELL]: enterCell,
+    //   gridDivider: enterGridDivider,
+    //   rowLine: enterRowLine,
+    // },
+    // exit: {
+    //   [TYPE_TABLE]: exitTable,
+    //   [TYPE_HEADER]: exitHeader,
+    //   [TYPE_BODY]: exitHeader,
+    //   [TYPE_FOOTER]: exitHeader,
+    //   [TYPE_CELL]: exitCell,
+    //   rowLine: exitRowLine,
+    // },
   };
 }
