@@ -96,13 +96,8 @@ import syntax from './syntax.js';
  * +-------+  +-------+  +-------+
  * ```
  *
- * Stringify options
- * =================
- *
- * @property {string} [gtHLineEnds = '+'] the character to use for the horizontal grid line ends.
- * @property {string} [gtVLineEnds = '+'] the character to use for the vertical grid line ends.
  */
-export default function gridTablePlugin(options) {
+export default function gridTablePlugin(options = {}) {
   const data = this.data();
 
   function add(field, value) {
@@ -114,7 +109,12 @@ export default function gridTablePlugin(options) {
     }
   }
 
+  const opts = {
+    processor: this,
+    ...options,
+  };
+
   add('micromarkExtensions', syntax(options));
-  add('fromMarkdownExtensions', fromMarkdown(options));
+  add('fromMarkdownExtensions', fromMarkdown(opts));
   add('toMarkdownExtensions', toMarkdown(options));
 }

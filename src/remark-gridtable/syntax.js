@@ -86,7 +86,7 @@ function parse() {
       if (markdownSpace(code)) {
         return cellSpace;
       }
-      return cell(code);
+      return cell;
     }
 
     function cellSpace(code) {
@@ -117,11 +117,8 @@ function parse() {
         effects.exit(TYPE_TABLE);
         return ok(code);
       }
-      if (markdownLineEnding(code)) {
-        numRows += 1;
-        return lineStart;
-      }
-      return nok(code);
+      numRows += 1;
+      return lineStart;
     }
 
     function gridDivider(code) {

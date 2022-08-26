@@ -244,8 +244,6 @@ class Table {
             } else {
               cell.width = width;
             }
-          } else {
-            cell.width = width;
           }
           if (cell.rowSpan === 1) {
             row.height = Math.max(row.height, cell.height);
@@ -269,10 +267,8 @@ class Table {
     }
 
     // create grid and table
-    const {
-      gtVLineEnds = '+',
-      gtHLineEnds = '+',
-    } = context.options;
+    const gtVLineEnds = '+';
+    const gtHLineEnds = '+';
     const align = {
       left: { b: ':', e: '', len: 1 },
       right: { b: '', e: ':', len: 1 },
@@ -436,7 +432,7 @@ function handleCell(node, parent, context, safeOptions) {
 
 function handleRow(node, parent, context, safeOptions) {
   const row = [];
-  for (const child of node.children || []) {
+  for (const child of node.children) {
     if (child.type === TYPE_CELL) {
       row.push(handleCell(child, node, context, safeOptions));
     }
@@ -446,7 +442,7 @@ function handleRow(node, parent, context, safeOptions) {
 
 function handleHeader(node, parent, context, safeOptions) {
   const table = peekTable(context);
-  for (const child of node.children || []) {
+  for (const child of node.children) {
     if (child.type === TYPE_ROW) {
       table.addHeaderRow(handleRow(child, node, context, safeOptions));
     }
@@ -455,7 +451,7 @@ function handleHeader(node, parent, context, safeOptions) {
 
 function handleBody(node, parent, context, safeOptions) {
   const table = peekTable(context);
-  for (const child of node.children || []) {
+  for (const child of node.children) {
     if (child.type === TYPE_ROW) {
       table.addRow(handleRow(child, node, context, safeOptions));
     }
@@ -464,7 +460,7 @@ function handleBody(node, parent, context, safeOptions) {
 
 function handleFooter(node, parent, context, safeOptions) {
   const table = peekTable(context);
-  for (const child of node.children || []) {
+  for (const child of node.children) {
     if (child.type === TYPE_ROW) {
       table.addFooterRow(handleRow(child, node, context, safeOptions));
     }
@@ -476,7 +472,7 @@ function gridTable(node, parent, context, safeOptions) {
 
   const table = pushTable(context, new Table());
 
-  for (const child of node.children || []) {
+  for (const child of node.children) {
     if (child.type === TYPE_HEADER) {
       handleHeader(child, node, context, safeOptions);
     } else if (child.type === TYPE_BODY) {

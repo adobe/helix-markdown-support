@@ -31,17 +31,27 @@ function removePositions(tree) {
 
 async function testMD(spec) {
   const source = await readFile(new URL(`./fixtures/${spec}.md`, import.meta.url), 'utf-8');
-  let expected = await readFile(new URL(`./fixtures/${spec}.txt`, import.meta.url), 'utf-8');
-  expected = expected.trim();
+  let expectedTree;
+  try {
+    expectedTree = await readFile(new URL(`./fixtures/${spec}.txt`, import.meta.url), 'utf-8');
+    expectedTree = expectedTree.trim();
+  } catch (e) {
+    // ignore
+  }
 
   const actual = unified()
     .use(remark)
     .use(gridTablePlugin, {})
     .parse(source);
+
   removePositions(actual);
   const actualTree = inspect(actual);
+  // eslint-disable-next-line no-console
   console.log(actualTree);
-  assert.strictEqual(actualTree, expected);
+
+  if (expectedTree) {
+    assert.strictEqual(actualTree, expectedTree);
+  }
 
   // convert back. check if round-trip md exists
   try {
@@ -57,6 +67,10 @@ async function testMD(spec) {
 describe('gridtable from markdown', () => {
   it('test no tables', async () => {
     await testMD('gt-no-tables');
+  });
+
+  it('test wrong tables', async () => {
+    await testMD('gt-double-divider');
   });
 
   it('simple table', async () => {

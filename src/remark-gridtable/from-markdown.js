@@ -36,7 +36,7 @@ function multiline(lines) {
 function getColSpan(info, token) {
   const i0 = info.cols.indexOf(token._colStart);
   const i1 = info.cols.indexOf(token._colEnd);
-  return i0 >= 0 && i1 >= 0 ? i1 - i0 : 1;
+  return i1 - i0;
 }
 
 function enterTable(token) {
@@ -55,24 +55,31 @@ function enterTable(token) {
   });
 }
 
-function exitTable(token) {
-  // render cells
-  const info = this.getData('tableInfo');
-  for (const cell of info.allCells) {
-    const {
-      node, lines, colSpan, rowSpan,
-    } = cell;
-    const cellContent = multiline(lines);
-    const tree = fromMarkdown(cellContent, {});
-    node.children = tree.children;
-    if (colSpan > 1) {
-      node.colSpan = colSpan;
+function createExitTable(options) {
+  const { processor } = options;
+
+  return function exitTable(token) {
+    // render cells
+    const info = this.getData('tableInfo');
+    for (const cell of info.allCells) {
+      const {
+        node, lines, colSpan, rowSpan,
+      } = cell;
+      const cellContent = multiline(lines);
+      const tree = fromMarkdown(cellContent, {
+        extensions: processor.data('micromarkExtensions'),
+        mdastExtensions: processor.data('fromMarkdownExtensions'),
+      });
+      node.children = tree.children;
+      if (colSpan > 1) {
+        node.colSpan = colSpan;
+      }
+      if (rowSpan > 1) {
+        node.rowSpan = rowSpan;
+      }
     }
-    if (rowSpan > 1) {
-      node.rowSpan = rowSpan;
-    }
-  }
-  this.exit(token);
+    this.exit(token);
+  };
 }
 
 function enter(token) {
@@ -96,10 +103,11 @@ function exitCell(token) {
   if (info.isDivider) {
     if (!cell) {
       cell = info.cells[info.colPos];
-      if (!cell) {
-        throw Error('no matching rowspan');
-      }
       info.pendingCells[info.colPos] = cell;
+    }
+    if (!cell) {
+      // throw Error('no matching rowspan');
+    } else {
       cell.rowSpan += 1;
     }
   }
@@ -205,7 +213,7 @@ export default function handler(options = {}) {
       rowLine: enterRowLine,
     },
     exit: {
-      [TYPE_TABLE]: exitTable,
+      [TYPE_TABLE]: createExitTable(options),
       [TYPE_HEADER]: exitHeader,
       [TYPE_BODY]: exitHeader,
       [TYPE_FOOTER]: exitHeader,
