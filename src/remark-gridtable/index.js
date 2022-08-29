@@ -21,36 +21,38 @@ import syntax from './syntax.js';
  * ```
  * +-------------------+------+
  * | Table Headings    | Here |
- * |--------+----------+------|
+ * +--------+----------+------+
  * | Sub    | Headings | Too  |
- * |========+=================|
+ * +========+=================+
  * | cell   | column spanning |
- * | spans  +---------<+------|
+ * | spans  +---------:+------+
  * | rows   |   normal | cell |
- * |--------+>---------------<|
+ * +---v----+:---------------:+
  * |        | cells can be    |
  * |        | *formatted*     |
  * |        | **paragraphs**  |
  * |        | ```             |
  * | multi  | and contain     |
  * | line   | blocks          |
- * ^ cells  | ```             |
- * |========+=========<+======|
+ * | cells  | ```             |
+ * +========+=========<+======+
  * | footer |    cells |      |
  * +--------+----------+------+
  * ```
  *
- * - the top of a cell must be indicated by +- followed by some - or + and finished by -+.
+ * - the top of a cell must be indicated by `+-` followed by some `-` or `+` and finished by `-+`.
  * - if the table contains a footer but no header, the top row should use `=` as grid line.
- * - col spans are indicated by missing column (|) delimiters
- * - row spans are indicated by missing row (-) delimiters
+ * - col spans are indicated by missing column (`|`) delimiters
+ * - row spans are indicated by missing row (`-`) delimiters
  * - cells can be left, center, right, or justify aligned; indicated by the placement of `:` or `><`
- * - cells can be top, middle, or bottom v-aligned; indicated by the placement of arrows (v ^ x)
- * - the header and footer sections are delimited by section delimiters (=).
+ * - cells can be top, middle, or bottom v-aligned;
+ *   indicated by the placement of arrows (`v` `^` `x`)
+ * - the header and footer sections are delimited by section delimiters (`=`).
  * - if no section delimiters are present, all cells are placed in the table body.
  * - if only 1 section delimiter is present, it delimits header from body.
- * - the content in cells can be a full Markdown document again. note, that the cell boundaries (|)
- *   need to exactly match with the column markers (+) in the row delimiters, if the cell content
+ * - the content in cells can be a full Markdown document again.
+ *   note, that the cell boundaries (`|`)
+ *   need to exactly match with the column markers (`+`) in the row delimiters, if the cell content
  *   contains `|`, otherwise the correct layout of the table can't be guaranteed.
  *
  * Layout
