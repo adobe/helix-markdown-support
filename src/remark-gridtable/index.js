@@ -44,8 +44,8 @@ import syntax from './syntax.js';
  * - if the table contains a footer but no header, the top row should use `=` as grid line.
  * - col spans are indicated by missing column (|) delimiters
  * - row spans are indicated by missing row (-) delimiters
- * - cells can be left, center, or right aligned; indicated by the placement of arrows (> <)
- * - cells can be top, middle, or bottom v-aligned; indicated by the placement of arrows (v ^ X)
+ * - cells can be left, center, right, or justify aligned; indicated by the placement of `:` or `><`
+ * - cells can be top, middle, or bottom v-aligned; indicated by the placement of arrows (v ^ x)
  * - the header and footer sections are delimited by section delimiters (=).
  * - if no section delimiters are present, all cells are placed in the table body.
  * - if only 1 section delimiter is present, it delimits header from body.
@@ -68,31 +68,21 @@ import syntax from './syntax.js';
  * Horizontal align is indicated by placing markers at the grid line above the cell:
  *
  * ```
- * with '<>'
- *
  * Justify     Center     Left       Right
- * +>-----<+  +---x---+  +>------+  +------<+
+ * +>-----<+  +:-----:+  +:------+  +------:+
  * | A b C |  |  ABC  |  | ABC   |  |   ABC |
  * +-------+  +-------+  +-------+  +-------+
  * ```
  *
- * with ':'
- *
- * Justify     Center     Left       Right
- * +:-----:+  +---:---+  +:------+  +------:+
- * | A b C |  |  ABC  |  | ABC   |  |   ABC |
- * +-------+  +-------+  +-------+  +-------+
- * ```
- *
- * Vertical align is indicated by placing markers at the grid line left of the cell:
+ * Vertical align is indicated by placing markers at the center of the grid line above the cell:
  *
  * ```
- * Top        Middle     Bottom     Middle (condensed)
- * +-------+  +-------+  +-------+  +---------------+
- * v Larum |  v       |  |       |  X This is small |
- * | Ipsum |  | Larum |  |       |  +---------------+
+ * Top        Middle     Bottom
+ * +---^---+  +---x---+  +---v---+
+ * | Larum |  |       |  |       |
+ * | Ipsum |  | Larum |  |       |
  * |       |  | Ipsum |  | Larum |
- * |       |  ^       |  ^ Ipsum |
+ * |       |  |       |  | Ipsum |
  * +-------+  +-------+  +-------+
  * ```
  *
