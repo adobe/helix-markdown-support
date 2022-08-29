@@ -100,4 +100,8 @@ describe('gridtable from markdown', () => {
   it('table in tables', async () => {
     await testMD('gt-tables-in-tables');
   });
+
+  it('table with align', async () => {
+    await testMD('gt-with-align');
+  });
 });

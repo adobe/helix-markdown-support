@@ -341,7 +341,7 @@ describe('gridtable to md', () => {
           gtRow([
             gtCell(text('top left'), 'left', 'top'),
             gtCell(text('top center'), 'center', 'top'),
-            gtCell(text('top justify'), 'both', 'top'),
+            gtCell(text('top justify'), 'justify', 'top'),
             gtCell(text('top right'), 'right', 'top'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
@@ -350,14 +350,14 @@ describe('gridtable to md', () => {
           gtRow([
             gtCell(text('middle left'), 'left', 'middle'),
             gtCell(text('middle center'), 'center', 'middle'),
-            gtCell(text('top justify'), 'both', 'middle'),
+            gtCell(text('top justify'), 'justify', 'middle'),
             gtCell(text('middle right'), 'right', 'middle'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
           gtRow([
             gtCell(text('bottom left'), 'left', 'bottom'),
             gtCell(text('bottom center'), 'center', 'bottom'),
-            gtCell(text('top justify'), 'both', 'bottom'),
+            gtCell(text('top justify'), 'justify', 'bottom'),
             gtCell(text('bottom right'), 'right', 'bottom'),
             gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
           ]),
@@ -369,9 +369,13 @@ describe('gridtable to md', () => {
             gtCell(text('bottom right'), 'right', 'bottom', 1, 2),
           ]),
           gtRow([
-            gtCell(text('middle justify'), 'both', 'middle', 1, 4),
+            gtCell(text('middle justify'), 'justify', 'middle', 1, 4),
           ]),
         ]),
+      ]),
+      heading(2, text('Super small table with align')),
+      gridTable([
+        gtCell(text('A'), 'justify', 'middle'),
       ]),
     ]);
     await assertMD(mdast, 'gt-with-align.md', [remarkGridTable]);

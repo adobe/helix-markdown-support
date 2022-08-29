@@ -52,6 +52,8 @@ function enterTable(token) {
     pendingCells: [],
     // the current cells of a row
     cells: [],
+    // the grid dividers use for align the cells
+    dividers: [],
   });
 }
 
@@ -64,6 +66,7 @@ function createExitTable(options) {
     for (const cell of info.allCells) {
       const {
         node, lines, colSpan, rowSpan,
+        align, valign,
       } = cell;
       const cellContent = multiline(lines);
       const tree = fromMarkdown(cellContent, {
@@ -76,6 +79,12 @@ function createExitTable(options) {
       }
       if (rowSpan > 1) {
         node.rowSpan = rowSpan;
+      }
+      if (align) {
+        node.align = align;
+      }
+      if (valign) {
+        node.valign = valign;
       }
     }
     this.exit(token);
@@ -122,9 +131,12 @@ function exitCell(token) {
   // otherwise append to regular cell
   cell = info.cells[info.colPos];
   if (!cell) {
+    const div = info.dividers[info.colPos];
     cell = {
       rowSpan: 1,
       colSpan,
+      align: div?._align,
+      valign: div?._valign,
       node: {
         type: TYPE_CELL,
       },
@@ -139,11 +151,12 @@ function exitCell(token) {
 
 function enterGridDivider(token) {
   const info = this.getData('tableInfo');
-  // clear pending rowspans
+  // clear pending rowspans and set divider info
   let colSpan = getColSpan(info, token);
   while (colSpan > 0) {
     colSpan -= 1;
     info.pendingCells[info.colPos] = null;
+    info.dividers[info.colPos] = token;
     info.colPos += 1;
   }
 }
@@ -152,6 +165,9 @@ function enterRowLine(token) {
   const info = this.getData('tableInfo');
   info.isDivider = token._type;
   info.colPos = 0;
+  if (info.isDivider) {
+    info.dividers = [];
+  }
 }
 
 function commitRow(info) {

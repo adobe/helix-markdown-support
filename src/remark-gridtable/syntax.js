@@ -30,6 +30,12 @@ const TYPE_ROW_LINE = 'rowLine';
 // the grid divider: - / =
 const TYPE_GRID_DIVIDER = 'gridDivider';
 
+const V_ALIGN_CODES = {
+  [codes.lowercaseV]: 'bottom',
+  [codes.lowercaseX]: 'middle',
+  [codes.caret]: 'top',
+};
+
 function parse() {
   return {
     tokenize: tokenizeTable,
@@ -43,6 +49,8 @@ function parse() {
     let numCols = 0;
     let colPos = 0;
     let rowLine = null;
+    let align = '';
+    let valign = '';
     return start;
 
     function start(code) {
@@ -70,9 +78,19 @@ function parse() {
     }
 
     function cellOrGridStart(code) {
-      if (code === codes.dash || code === codes.equalsTo) {
+      align = '';
+      valign = '';
+      if (code === codes.dash || code === codes.equalsTo
+        || code === codes.colon || code === codes.greaterThan) {
         effects.enter(TYPE_GRID_DIVIDER)._colStart = colPos;
-        return gridDivider(code);
+        colPos += 1;
+        if (code === codes.colon) {
+          align = 'left';
+        } else if (code === codes.greaterThan) {
+          align = 'justify';
+        }
+        effects.consume(code);
+        return gridDivider;
       }
 
       if (code === codes.eof || markdownLineEnding(code)) {
@@ -130,21 +148,64 @@ function parse() {
         effects.consume(code);
         return gridDivider;
       }
-      if (code === codes.plusSign || code === codes.verticalBar) {
-        // remember cols
-        const idx = cols.indexOf(colPos);
-        if (idx < 0) {
-          cols.push(colPos);
-          cols.sort((c0, c1) => c0 - c1);
+      if (code === codes.colon) {
+        if (!align) {
+          align = 'right';
+        } else if (align === 'left') {
+          align = 'center';
+        } else {
+          return nok(code);
         }
-        effects.exit(TYPE_GRID_DIVIDER)._colEnd = colPos;
-        effects.enter(TYPE_CELL_DIVIDER);
         effects.consume(code);
-        effects.exit(TYPE_CELL_DIVIDER);
-        numCols += 1;
-        return cellOrGridStart;
+        return gridDividerEnd;
+      }
+      if (code === codes.lessThan) {
+        if (align !== 'justify') {
+          return nok(code);
+        }
+        effects.consume(code);
+        return gridDividerEnd;
+      }
+
+      if (V_ALIGN_CODES[code]) {
+        if (valign) {
+          return nok(code);
+        }
+        valign = V_ALIGN_CODES[code];
+        effects.consume(code);
+        return gridDivider;
+      }
+      if (code === codes.plusSign || code === codes.verticalBar) {
+        colPos -= 1;
+        return gridDividerEnd(code);
       }
       return nok(code);
+    }
+
+    function gridDividerEnd(code) {
+      if (code !== codes.plusSign && code !== codes.verticalBar) {
+        return nok(code);
+      }
+      // for a super small column, assume dash
+      if (!rowLine._type) {
+        rowLine._type = code.dash;
+      }
+      colPos += 1;
+      // remember cols
+      const idx = cols.indexOf(colPos);
+      if (idx < 0) {
+        cols.push(colPos);
+        cols.sort((c0, c1) => c0 - c1);
+      }
+      const token = effects.exit(TYPE_GRID_DIVIDER);
+      token._colEnd = colPos;
+      token._align = align;
+      token._valign = valign;
+      effects.enter(TYPE_CELL_DIVIDER);
+      effects.consume(code);
+      effects.exit(TYPE_CELL_DIVIDER);
+      numCols += 1;
+      return cellOrGridStart;
     }
 
     function cell(code) {

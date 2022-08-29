@@ -273,13 +273,10 @@ class Table {
       left: { b: ':', e: '', len: 1 },
       right: { b: '', e: ':', len: 1 },
       center: { b: ':', e: ':', len: 2 },
-      both: { b: '>', e: '<', len: 2 },
-    };
-    const vAlignWide = {
-      t: 'v', b: '^', mt: 'v', mb: '^',
-    };
-    const vAlignNarrow = {
-      t: 'v', b: '^', mt: 'x', mb: 'x',
+      justify: { b: '>', e: '<', len: 2 },
+      top: '^',
+      bottom: 'v',
+      middle: 'x',
     };
     const lines = [];
     // eslint-disable-next-line no-nested-ternary
@@ -296,16 +293,28 @@ class Table {
       let prevCell;
       let pendingGrid = 0;
       let pendingAlign = null;
+      let pendingVAlign = null;
+
+      const commitInnerGridLine = () => {
+        if (pendingVAlign) {
+          const middle = Math.floor((pendingGrid - 1) / 2);
+          grid.push(c.repeat(middle));
+          grid.push(pendingVAlign);
+          grid.push(c.repeat(pendingGrid - middle - 1));
+        } else {
+          grid.push(c.repeat(pendingGrid));
+        }
+      };
 
       const commitGridLine = () => {
         if (pendingGrid) {
           if (pendingAlign) {
             pendingGrid -= pendingAlign.len;
             grid.push(pendingAlign.b);
-            grid.push(c.repeat(pendingGrid));
+            commitInnerGridLine();
             grid.push(pendingAlign.e);
           } else {
-            grid.push(c.repeat(pendingGrid));
+            commitInnerGridLine();
           }
           pendingGrid = 0;
         }
@@ -326,6 +335,7 @@ class Table {
           grid.push(d0);
           pendingGrid = col.width - 1;
           pendingAlign = align[cell.align];
+          pendingVAlign = align[cell.valign];
         } else if (cell.linked) {
           commitGridLine();
           const width = spanWidth(cols, x, cell.linked);
@@ -363,19 +373,7 @@ class Table {
               || (cell.valign === 'bottom' && yy >= row.height - cell.height)) {
               text = cell.lines.shift() || '';
             }
-            const va = row.height === 1 ? vAlignNarrow : vAlignWide;
-            let d1 = '|';
-            if (yy === 0 && cell.valign === 'top') {
-              d1 = va.t;
-            } else if (yy === 0 && cell.valign === 'middle') {
-              d1 = va.mt;
-            }
-            if (yy === row.height - 1 && cell.valign === 'bottom') {
-              d1 = va.b;
-            } else if (yy === row.height - 1 && cell.valign === 'middle') {
-              d1 = va.mb;
-            }
-            line.push(`${d1} ${text.padEnd(width - 3, ' ')} `);
+            line.push(`| ${text.padEnd(width - 3, ' ')} `);
           }
         }
         lines.push(`${line.join('')}|`);
