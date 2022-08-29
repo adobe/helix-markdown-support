@@ -109,7 +109,8 @@ function parse() {
 
     function cellSpace(code) {
       if (code === codes.eof || markdownLineEnding(code)) {
-        effects.exit(TYPE_CELL);
+        // mark as discarded, will be filtered out in transform
+        effects.exit(TYPE_CELL)._discard = true;
         return lineEnd(code);
       }
       if (markdownSpace(code)) {
@@ -224,11 +225,21 @@ function parse() {
         effects.consume(code);
         return cell;
       }
+      if (code === codes.backslash) {
+        effects.consume(code);
+        return cellEscaped;
+      }
       if (code === codes.eof) {
         // row with cells never terminate eof
         return nok(code);
       }
 
+      effects.consume(code);
+      return cell;
+    }
+
+    function cellEscaped(code) {
+      colPos += 1;
       effects.consume(code);
       return cell;
     }
@@ -297,6 +308,9 @@ function parse() {
   }
 
   function resolveTable(events, context) {
+    // remove discarded
+    events = events.filter(([, node]) => !node._discard);
+
     events = resolveHeaderAndFooter(events, context);
     // let i = 0;
     // for (const [d, { type }] of events) {

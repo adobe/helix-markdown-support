@@ -140,12 +140,17 @@ class Table {
     context.options.lineWidth = maxWidth - 3;
     context.options.minLineWidth = this.opts.minCellWidth;
 
+    // enter cell construct in order to escape unsafe characters
+    const exit = context.enter(TYPE_CELL);
+
     cell.value = context.handle(cell.tree, null, context, {
       before: '\n',
       after: '\n',
       now: { line: 1, column: 1 },
       lineShift: 0,
     });
+
+    exit();
 
     context.options.lineWidth = oldWidth;
     // calculate actual width and height of cell
@@ -491,6 +496,11 @@ function gridTable(node, parent, context, safeOptions) {
 
 export default function toMarkdown() {
   return {
+    unsafe: [
+      // A pipe or a + in a cell must be encoded.
+      { character: '|', inConstruct: TYPE_CELL },
+      { character: '+', inConstruct: TYPE_CELL },
+    ],
     handlers: {
       // for now, we only line wrap 'text' nodes. all other would need more support in
       // the default mdast-to-markdown handlers

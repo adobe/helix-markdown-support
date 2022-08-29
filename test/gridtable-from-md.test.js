@@ -47,7 +47,7 @@ async function testMD(spec) {
   removePositions(actual);
   const actualTree = inspect(actual);
   // eslint-disable-next-line no-console
-  console.log(actualTree);
+  // console.log(actualTree);
 
   if (expectedTree) {
     assert.strictEqual(actualTree, expectedTree);
@@ -103,5 +103,9 @@ describe('gridtable from markdown', () => {
 
   it('table with align', async () => {
     await testMD('gt-with-align');
+  });
+
+  it('table with divider in content', async () => {
+    await testMD('gt-divider-in-content');
   });
 });
