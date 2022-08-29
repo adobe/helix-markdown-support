@@ -31,8 +31,6 @@ export async function assertMD(mdast, fixture, plugins = [], opts = {}) {
       rule: '-',
       ruleRepetition: 3,
       ruleSpaces: false,
-      gtVLineEnds: '+',
-      gtHLineEnds: '+',
       ...opts,
     });
   processor = plugins.reduce((proc, plug) => (proc.use(plug)), processor);

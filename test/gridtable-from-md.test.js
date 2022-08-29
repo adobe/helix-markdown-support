@@ -16,6 +16,7 @@ import { unified } from 'unified';
 import remark from 'remark-parse';
 import { inspectNoColor as inspect } from 'unist-util-inspect';
 import { visit, CONTINUE } from 'unist-util-visit';
+import gfm from 'remark-gfm';
 import gridTablePlugin from '../src/remark-gridtable/index.js';
 import { remarkGridTable } from '../src/index.js';
 import { assertMD } from './utils.js';
@@ -61,7 +62,7 @@ async function testMD(spec) {
   } catch {
     // ignore
   }
-  await assertMD(actual, `${spec}.md`, [remarkGridTable]);
+  await assertMD(actual, `${spec}.md`, [gfm, remarkGridTable]);
 }
 
 describe('gridtable from markdown', () => {

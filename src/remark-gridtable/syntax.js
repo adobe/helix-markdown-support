@@ -225,23 +225,24 @@ function parse() {
         effects.consume(code);
         return cell;
       }
-      if (code === codes.backslash) {
-        effects.consume(code);
-        return cellEscaped;
-      }
       if (code === codes.eof) {
         // row with cells never terminate eof
         return nok(code);
       }
 
       effects.consume(code);
-      return cell;
+      return (code === codes.backslash)
+        ? cellEscaped
+        : cell;
     }
 
     function cellEscaped(code) {
-      colPos += 1;
-      effects.consume(code);
-      return cell;
+      if (code === codes.backslash || code === codes.verticalBar || code === codes.plusSign) {
+        colPos += 1;
+        effects.consume(code);
+        return cell;
+      }
+      return cell(code);
     }
   }
 

@@ -11,6 +11,8 @@
  */
 /* eslint-disable no-unused-vars,no-param-reassign */
 import { text as textHandler } from 'mdast-util-to-markdown/lib/handle/text.js';
+import { inlineCode } from 'mdast-util-to-markdown/lib/handle/inline-code.js';
+import { code } from 'mdast-util-to-markdown/lib/handle/code.js';
 
 export const TYPE_TABLE = 'gridTable';
 export const TYPE_HEADER = 'gtHeader';
@@ -494,6 +496,32 @@ function gridTable(node, parent, context, safeOptions) {
   return popTable(context).toMarkdown(context);
 }
 
+/**
+ * Escapes cell delimiters in (block)) code
+ */
+function blockCodeWithTable(node, parent, context) {
+  let value = code(node, parent, context);
+
+  if (context.stack.includes(TYPE_CELL)) {
+    value = value.replace(/[|+]/mg, '\\$&');
+  }
+
+  return value;
+}
+
+/**
+ * Escapes cell delimiters in inline code
+ */
+function inlineCodeWithTable(node, parent, context) {
+  let value = inlineCode(node, parent, context);
+
+  if (context.stack.includes(TYPE_CELL)) {
+    value = value.replace(/[|+]/g, '\\$&');
+  }
+
+  return value;
+}
+
 export default function toMarkdown() {
   return {
     unsafe: [
@@ -506,7 +534,8 @@ export default function toMarkdown() {
       // the default mdast-to-markdown handlers
       text: lineWrapTextHandler,
       gridTable,
-      // gtRow,
+      inlineCode: inlineCodeWithTable,
+      code: blockCodeWithTable,
     },
   };
 }

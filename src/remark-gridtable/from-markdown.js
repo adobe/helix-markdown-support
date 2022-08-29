@@ -11,9 +11,20 @@
  */
 /* eslint-disable no-underscore-dangle */
 import { fromMarkdown } from 'mdast-util-from-markdown';
+import { CONTINUE, visit } from 'unist-util-visit';
 import {
   TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
 } from './to-markdown.js';
+
+function unescapeDelimsInCode(tree) {
+  visit(tree, (node) => {
+    if (node.type === 'inlineCode' || node.type === 'code') {
+      // eslint-disable-next-line no-param-reassign
+      node.value = node.value.replaceAll(/\\([+|])/gm, '$1');
+    }
+    return CONTINUE;
+  });
+}
 
 function multiline(lines) {
   // remove empty trailing lines
@@ -73,6 +84,10 @@ function createExitTable(options) {
         extensions: processor.data('micromarkExtensions'),
         mdastExtensions: processor.data('fromMarkdownExtensions'),
       });
+
+      // remove escaped pipes and plusses in code
+      unescapeDelimsInCode(tree);
+
       node.children = tree.children;
       if (colSpan > 1) {
         node.colSpan = colSpan;

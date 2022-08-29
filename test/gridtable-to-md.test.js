@@ -24,6 +24,7 @@ import {
   listItem as originalListItem,
   strong,
   emphasis,
+  inlineCode,
 } from 'mdast-builder';
 import { assertMD } from './utils.js';
 import { remarkGridTable } from '../src/index.js';
@@ -398,6 +399,13 @@ describe('gridtable to md', () => {
           gtCell(text('some text with a | in it')),
           gtCell(text('| or at the beginning')),
         ]),
+        gtRow([
+          gtCell([
+            text('or some in code: '),
+            inlineCode('a + b = c'),
+            text('.'),
+          ], '', '', 1, 2),
+        ]),
       ]),
     ]);
 
@@ -453,5 +461,20 @@ describe('gridtable to md', () => {
       ]),
     ]);
     await assertMD(mdast, 'gt-tables-in-tables.md', [remarkGridTable]);
+  });
+
+  it('table with delimiters in code', async () => {
+    const mdast = root([
+      heading(2, text('Table with delimiters in code')),
+      gridTable([
+        gtRow([
+          gtCell(inlineCode('a + b = c')),
+        ]),
+        gtRow([
+          gtCell(code('js', 'a + b = c;\nif (a || b) {\n  throw Error();\n}')),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-code-with-delim.md', [remarkGridTable]);
   });
 });
