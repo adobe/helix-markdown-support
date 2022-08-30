@@ -14,7 +14,7 @@ import { fromMarkdown } from 'mdast-util-from-markdown';
 import { CONTINUE, visit } from 'unist-util-visit';
 import {
   TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
-} from './to-markdown.js';
+} from './types.js';
 
 function unescapeDelimsInCode(tree) {
   visit(tree, (node) => {

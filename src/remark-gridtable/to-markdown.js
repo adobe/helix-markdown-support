@@ -14,12 +14,9 @@ import { text as textHandler } from 'mdast-util-to-markdown/lib/handle/text.js';
 import { inlineCode } from 'mdast-util-to-markdown/lib/handle/inline-code.js';
 import { code } from 'mdast-util-to-markdown/lib/handle/code.js';
 
-export const TYPE_TABLE = 'gridTable';
-export const TYPE_HEADER = 'gtHeader';
-export const TYPE_BODY = 'gtBody';
-export const TYPE_FOOTER = 'gtFooter';
-export const TYPE_ROW = 'gtRow';
-export const TYPE_CELL = 'gtCell';
+import {
+  TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_ROW, TYPE_TABLE,
+} from './types.js';
 
 function* distribute(size, times) {
   const delta = size / times;

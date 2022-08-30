@@ -400,11 +400,11 @@ describe('gridtable to md', () => {
           gtCell(text('| or at the beginning')),
         ]),
         gtRow([
-          gtCell([
+          gtCell(paragraph([
             text('or some in code: '),
             inlineCode('a + b = c'),
             text('.'),
-          ], '', '', 1, 2),
+          ]), '', '', 1, 2),
         ]),
       ]),
     ]);

@@ -12,14 +12,13 @@
 /* eslint-disable no-use-before-define,no-underscore-dangle,no-param-reassign */
 import { codes } from 'micromark-util-symbol/codes.js';
 import { types } from 'micromark-util-symbol/types.js';
-// import { constants } from 'micromark-util-symbol/constants.js';
 import {
   markdownLineEnding,
   markdownSpace,
 } from 'micromark-util-character';
 import {
-  TYPE_HEADER, TYPE_BODY, TYPE_FOOTER, TYPE_TABLE, TYPE_CELL,
-} from './to-markdown.js';
+  TYPE_BODY, TYPE_CELL, TYPE_HEADER, TYPE_FOOTER, TYPE_TABLE,
+} from './types.js';
 
 // the cell divider: | or +
 const TYPE_CELL_DIVIDER = 'cellDivider';
