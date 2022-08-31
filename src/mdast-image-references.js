@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Adobe. All rights reserved.
+ * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -25,19 +25,23 @@ export default function imageReferences(tree) {
 
   visit(tree, (node) => {
     if (node.type === 'image') {
-      const { url, alt = '', title = '' } = node;
+      const { url, alt = '', title } = node;
       const key = `${url}\n${title}`;
       let identifier = images.get(key);
       if (!identifier) {
         identifier = `image${images.size}`;
         images.set(key, identifier);
-        definitions.push({
+        const def = {
           type: 'definition',
           identifier,
           url,
-          title,
-        });
+        };
+        if (title) {
+          def.title = title;
+        }
+        definitions.push(def);
       }
+      delete node.title;
       node.type = 'imageReference';
       node.identifier = identifier;
       node.referenceType = 'full';

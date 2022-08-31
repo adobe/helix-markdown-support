@@ -22,6 +22,12 @@
 
 ![This is 300x300][image1]
 
+## Links refs
+
+[Adobe][adobe-ref]
+
+[adobe-ref]: https://www.adobe.com "Adobe Title"
+
 [image0]: https://dummyimage.com/300
 
 [image1]: https://dummyimage.com/300 "This is no Bob Ross"

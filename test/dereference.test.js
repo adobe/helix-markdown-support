@@ -15,10 +15,10 @@ import {
   heading, image, root, text,
 } from 'mdast-builder';
 import { assertMD } from './utils.js';
-import { imageReferences } from '../src/index.js';
+import { imageReferences, dereference } from '../src/index.js';
 
-describe('image-references Tests', () => {
-  it('creates image reference', async () => {
+describe('dereferences Tests', () => {
+  it('dereferences images and links', async () => {
     const link1 = {
       type: 'linkReference',
       identifier: 'adobe-ref',
@@ -30,6 +30,13 @@ describe('image-references Tests', () => {
       type: 'definition',
       identifier: 'adobe-ref',
       title: 'Adobe Title',
+      url: 'https://www.adobe.com',
+    };
+
+    const def2 = {
+      type: 'definition',
+      identifier: 'unused',
+      title: 'Unused Definition',
       url: 'https://www.adobe.com',
     };
 
@@ -49,8 +56,12 @@ describe('image-references Tests', () => {
       heading(2, text('Links refs')),
       link1,
       def1,
+      def2,
     ]);
+
     imageReferences(mdast);
-    await assertMD(mdast, 'image-references.md');
+    dereference(mdast);
+
+    await assertMD(mdast, 'image-dereferenced.md');
   });
 });
