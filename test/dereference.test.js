@@ -14,11 +14,104 @@
 import {
   heading, image, root, text,
 } from 'mdast-builder';
-import { assertMD } from './utils.js';
+import { unified } from 'unified';
+import remark from 'remark-parse';
+import {
+  assertMD,
+  gridTable,
+  gtBody,
+  gtCell,
+  gtHeader,
+  gtRow,
+  mdast2md,
+} from './utils.js';
 import { imageReferences, dereference } from '../src/index.js';
+import gridTablePlugin from '../src/remark-gridtable/index.js';
 
 describe('dereferences Tests', () => {
-  it('dereferences images and links', async () => {
+  it('dereferences images and links in tables', async () => {
+    const link1 = {
+      type: 'linkReference',
+      identifier: 'adobe-ref',
+      referenceType: 'full',
+      children: [text('Adobe')],
+    };
+
+    const def1 = {
+      type: 'definition',
+      identifier: 'adobe-ref',
+      title: 'Adobe Title',
+      url: 'https://www.adobe.com',
+    };
+
+    const def2 = {
+      type: 'definition',
+      identifier: 'unused',
+      title: 'Unused Definition',
+      url: 'https://www.adobe.com',
+    };
+
+    const mdast = root([
+      heading(2, text('Grid Table with images')),
+      gridTable([
+        gtHeader([
+          gtRow([
+            gtCell(text('A1')),
+            gtCell(text('B1')),
+          ]),
+        ]),
+        gtBody([
+          gtRow([
+            gtCell(text('a2')),
+            gtCell(image('https://dummyimage.com/300')),
+          ]),
+          gtRow([
+            gtCell(text('a3')),
+            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross')),
+          ]),
+          gtRow([
+            gtCell(text('a4')),
+            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross either.')),
+          ]),
+          gtRow([
+            gtCell(text('a5')),
+            gtCell(image('https://dummyimage.com/300', undefined, 'A example 300x300 image')),
+          ]),
+          gtRow([
+            gtCell(text('a6')),
+            gtCell(image('https://dummyimage.com/200', undefined, '  A example 200x200 image  ')),
+          ]),
+          gtRow([
+            gtCell(text('a7')),
+            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300')),
+          ]),
+          gtRow([
+            gtCell(text('a8')),
+            gtCell(link1),
+          ]),
+        ]),
+      ]),
+      link1,
+      def1,
+      def2,
+    ]);
+
+    imageReferences(mdast);
+    // const md = await assertMD(mdast, 'gt-with-references.md', [gridTablePlugin]);
+    const md = mdast2md(mdast, [gridTablePlugin]);
+
+    // reparse the md
+    const actual = unified()
+      .use(remark)
+      .use(gridTablePlugin, {})
+      .parse(md);
+
+    dereference(actual);
+
+    await assertMD(actual, 'gt-with-dereferenced.md', [gridTablePlugin]);
+  });
+
+  it('dereferences images and links outside tables', async () => {
     const link1 = {
       type: 'linkReference',
       identifier: 'adobe-ref',
@@ -60,8 +153,17 @@ describe('dereferences Tests', () => {
     ]);
 
     imageReferences(mdast);
-    dereference(mdast);
+    // const md = await assertMD(mdast, 'gt-with-references.md', [gridTablePlugin]);
+    const md = await mdast2md(mdast);
 
-    await assertMD(mdast, 'image-dereferenced.md');
+    // reparse the md
+    const actual = unified()
+      .use(remark)
+      .use(gridTablePlugin, {})
+      .parse(md);
+
+    dereference(actual);
+
+    await assertMD(actual, 'image-dereferenced.md');
   });
 });

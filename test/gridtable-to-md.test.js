@@ -17,8 +17,6 @@ import {
   heading, image,
   paragraph,
   root,
-  tableCell,
-  tableRow,
   text,
   list as originalList,
   listItem as originalListItem,
@@ -26,7 +24,9 @@ import {
   emphasis,
   inlineCode,
 } from 'mdast-builder';
-import { assertMD } from './utils.js';
+import {
+  assertMD, gridTable, gtBody, gtCell, gtFooter, gtHeader, gtRow,
+} from './utils.js';
 import { remarkGridTable } from '../src/index.js';
 
 // eslint-disable-next-line no-unused-vars
@@ -67,54 +67,6 @@ function list(ordered, kids) {
   const li = originalList(ordered, kids);
   li.spread = false;
   return li;
-}
-
-function gtCell(children, align, verticalAlign, rowSpan, colSpan) {
-  const node = tableCell(children);
-  if (align) {
-    node.align = align;
-  }
-  if (verticalAlign) {
-    node.valign = verticalAlign;
-  }
-  if (rowSpan) {
-    node.rowSpan = rowSpan;
-  }
-  if (colSpan) {
-    node.colSpan = colSpan;
-  }
-  node.type = 'gtCell';
-  return node;
-}
-
-function gridTable(children) {
-  const node = blockquote(children);
-  node.type = 'gridTable';
-  return node;
-}
-
-function gtHeader(children) {
-  const node = blockquote(children);
-  node.type = 'gtHeader';
-  return node;
-}
-
-function gtBody(children) {
-  const node = blockquote(children);
-  node.type = 'gtBody';
-  return node;
-}
-
-function gtFooter(children) {
-  const node = blockquote(children);
-  node.type = 'gtFooter';
-  return node;
-}
-
-function gtRow(children) {
-  const node = tableRow(children);
-  node.type = 'gtRow';
-  return node;
 }
 
 describe('gridtable to md', () => {

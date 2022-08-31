@@ -39,6 +39,8 @@ function parse() {
   return {
     tokenize: tokenizeTable,
     resolve: resolveTable,
+    resolveAll: resolveAllTable,
+    concrete: true,
   };
 
   function tokenizeTable(effects, ok, nok) {
@@ -322,6 +324,21 @@ function parse() {
     //     i += 2;
     //   }
     // }
+    return events;
+  }
+
+  function resolveAllTable(events, context) {
+    // since we create a detached parser for each cell content later (in from-markdown.js)
+    // we need to remember the definitions of the overall document. otherwise the cell parsers
+    // would not detect the image and link references.
+    const { defined } = context.parser;
+
+    // find all grid tables and remember the definitions
+    for (const [evt, node] of events) {
+      if (evt === 'enter' && node.type === TYPE_TABLE) {
+        node._definitions = defined;
+      }
+    }
     return events;
   }
 }

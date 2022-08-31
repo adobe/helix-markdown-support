@@ -40,8 +40,7 @@ function multiline(lines) {
 
   // remove prefix
   return lines
-    .map((line) => line.substring(prefixLen).trimEnd())
-    .join('\n');
+    .map((line) => line.substring(prefixLen).trimEnd());
 }
 
 function getColSpan(info, token) {
@@ -65,6 +64,8 @@ function enterTable(token) {
     cells: [],
     // the grid dividers use for align the cells
     dividers: [],
+    // the link/image reference definitions
+    definitions: token._definitions,
   });
 }
 
@@ -79,11 +80,28 @@ function createExitTable(options) {
         node, lines, colSpan, rowSpan,
         align, valign,
       } = cell;
-      const cellContent = multiline(lines);
+
+      // add fake definitions...
+      const sanitizedLines = multiline(lines);
+      for (const def of info.definitions) {
+        sanitizedLines.push('');
+        sanitizedLines.push(`[${def}]: dummy`);
+      }
+      const cellContent = sanitizedLines.join('\n');
+
       const tree = fromMarkdown(cellContent, {
         extensions: processor.data('micromarkExtensions'),
         mdastExtensions: processor.data('fromMarkdownExtensions'),
       });
+
+      // remove previously added definitions
+      for (let i = 0; i < tree.children.length; i += 1) {
+        const child = tree.children[i];
+        if (child.type === 'definition' && info.definitions.includes(child.label)) {
+          tree.children.splice(i, 1);
+          i -= 1;
+        }
+      }
 
       // remove escaped pipes and plusses in code
       unescapeDelimsInCode(tree);

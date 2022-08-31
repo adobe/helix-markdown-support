@@ -15,11 +15,16 @@ import assert from 'assert';
 import { readFile } from 'fs/promises';
 import stringify from 'remark-stringify';
 import { unified } from 'unified';
+import { blockquote, tableCell, tableRow } from 'mdast-builder';
 
-// eslint-disable-next-line import/prefer-default-export
-export async function assertMD(mdast, fixture, plugins = [], opts = {}) {
-  // console.log(require('unist-util-inspect')(mdast));
-  const expected = await readFile(new URL(`./fixtures/${fixture}`, import.meta.url), 'utf-8');
+/**
+ * Converts the mdast to md using common settings.
+ * @param mdast
+ * @param plugins
+ * @param opts
+ * @returns {string}
+ */
+export function mdast2md(mdast, plugins = [], opts = {}) {
   let processor = unified()
     .use(stringify, {
       strong: '*',
@@ -34,7 +39,63 @@ export async function assertMD(mdast, fixture, plugins = [], opts = {}) {
       ...opts,
     });
   processor = plugins.reduce((proc, plug) => (proc.use(plug)), processor);
-  const actual = processor.stringify(mdast);
+  return processor.stringify(mdast);
+}
+
+// eslint-disable-next-line import/prefer-default-export
+export async function assertMD(mdast, fixture, plugins, opts) {
+  // console.log(require('unist-util-inspect')(mdast));
+  const expected = await readFile(new URL(`./fixtures/${fixture}`, import.meta.url), 'utf-8');
+  const actual = mdast2md(mdast, plugins, opts);
   // console.log(actual);
-  assert.equal(actual, expected);
+  assert.strictEqual(actual, expected);
+  return actual;
+}
+
+export function gtCell(children, align, verticalAlign, rowSpan, colSpan) {
+  const node = tableCell(children);
+  if (align) {
+    node.align = align;
+  }
+  if (verticalAlign) {
+    node.valign = verticalAlign;
+  }
+  if (rowSpan) {
+    node.rowSpan = rowSpan;
+  }
+  if (colSpan) {
+    node.colSpan = colSpan;
+  }
+  node.type = 'gtCell';
+  return node;
+}
+
+export function gridTable(children) {
+  const node = blockquote(children);
+  node.type = 'gridTable';
+  return node;
+}
+
+export function gtHeader(children) {
+  const node = blockquote(children);
+  node.type = 'gtHeader';
+  return node;
+}
+
+export function gtBody(children) {
+  const node = blockquote(children);
+  node.type = 'gtBody';
+  return node;
+}
+
+export function gtFooter(children) {
+  const node = blockquote(children);
+  node.type = 'gtFooter';
+  return node;
+}
+
+export function gtRow(children) {
+  const node = tableRow(children);
+  node.type = 'gtRow';
+  return node;
 }
