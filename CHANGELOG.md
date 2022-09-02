@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/adobe/helix-markdown-support/compare/v3.1.8...v4.0.0) (2022-09-02)
+
+
+### Features
+
+* markdown gridtables ([1f3d7d2](https://github.com/adobe/helix-markdown-support/commit/1f3d7d27045c3d31556c73b2631fc7b1b910ef46))
+
+
+### BREAKING CHANGES
+
+* the remarkMatter plugin export changed.
+
 ## [3.1.8](https://github.com/adobe/helix-markdown-support/compare/v3.1.7...v3.1.8) (2022-07-28)
 
 
