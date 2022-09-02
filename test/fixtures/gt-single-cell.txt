@@ -1,0 +1,10 @@
+root[2]
+├─0 heading[1]
+│   │ depth: 2
+│   └─0 text "Single Cell Grid Table"
+└─1 gridTable[1]
+    └─0 gtBody[1]
+        └─0 gtRow[1]
+            └─0 gtCell[1]
+                └─0 paragraph[1]
+                    └─0 text "A1"

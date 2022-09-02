@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-export { default as remarkMatter } from './remark-matter/index.js';
 export { default as robustTables } from './mdast-robust-tables.js';
 export { default as breaksAsSpaces } from './remark-breaks-as-spaces.js';
 export { default as sanitizeHeading } from './mdast-sanitize-heading.js';
@@ -19,3 +18,5 @@ export { default as sanitizeFormats } from './mdast-sanitize-formats.js';
 export { default as fixCodeFlow } from './mdast-fix-code-flow.js';
 export { default as sanitizeLinks } from './mdast-sanitize-links.js';
 export { default as sanitizeText } from './mdast-sanitize-text.js';
+export { default as imageReferences } from './mdast-image-references.js';
+export { default as dereference } from './mdast-dereference.js';

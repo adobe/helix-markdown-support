@@ -9,9 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import fromMarkdown from './from-markdown.js';
-import toMarkdown from './to-markdown.js';
-import syntax from './syntax.js';
 
 /**
  * Front- and mid-matter remark plugin.
@@ -83,19 +80,5 @@ import syntax from './syntax.js';
  * @param {object} options Plugin options
  * @param {Function} options.errorHandler Function that is invoked on yaml parsing errors.
  */
-export default function matterPlugin(options) {
-  const data = this.data();
-
-  function add(field, value) {
-    /* c8 ignore next 2 */
-    if (data[field]) {
-      data[field].push(value);
-    } else {
-      data[field] = [value];
-    }
-  }
-
-  add('micromarkExtensions', syntax(options));
-  add('fromMarkdownExtensions', fromMarkdown(options));
-  add('toMarkdownExtensions', toMarkdown(options));
-}
+export * from './types.js';
+export { default as remarkMatter } from './remark-plugin.js';

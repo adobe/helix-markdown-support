@@ -34,7 +34,7 @@ export default function robustTables(tree) {
           attrs = ' align="right"';
         } else if (cell.align === 'center') {
           attrs = ' align="center"';
-        } else if (cell.align === 'both') {
+        } else if (cell.align === 'justify') {
           attrs = ' align="justify"';
         }
         if (cell.valign === 'middle') {
