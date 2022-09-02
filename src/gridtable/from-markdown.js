@@ -20,7 +20,7 @@ function unescapeDelimsInCode(tree) {
   visit(tree, (node) => {
     if (node.type === 'inlineCode' || node.type === 'code') {
       // eslint-disable-next-line no-param-reassign
-      node.value = node.value.replaceAll(/\\([+|])/gm, '$1');
+      node.value = node.value.replace(/\\([+|])/gm, '$1');
     }
     return CONTINUE;
   });

@@ -46,6 +46,9 @@
   "peerDependencies": {
     "unified": "10.x"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.3.2",
     "@semantic-release/changelog": "6.0.1",
