@@ -14,7 +14,8 @@
 import jsYaml from 'js-yaml';
 import { heading, root, text } from 'mdast-builder';
 import { assertMD } from './utils.js';
-import { remarkMatter, breaksAsSpaces } from '../src/index.js';
+import { breaksAsSpaces } from '../src/index.js';
+import { remarkMatter } from '../src/matter/index.js';
 
 const yaml = (payload) => ({
   type: 'yaml',

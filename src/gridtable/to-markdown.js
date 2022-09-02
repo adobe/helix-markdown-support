@@ -178,18 +178,14 @@ class Table {
           cols[x] = col;
         }
         const cell = row.cells[x];
-        cell.x = x;
-        cell.y = y;
         if (cell.rowSpan > 1) {
           // insert colspan amount of null cells below
           for (let i = 1; i < cell.rowSpan; i += 1) {
             const yy = i + y;
-            if (yy < this.rows.length) {
-              // create empty linked cells for the rows, so that it can render the lines
-              // correctly.
-              const empty = [{ linked: cell }].fill({}, 1, cell.colSpan);
-              this.rows[yy].cells.splice(x, 0, ...empty);
-            }
+            // create empty linked cells for the rows, so that it can render the lines correctly.
+            const empty = new Array(cell.colSpan).fill({});
+            empty[0] = { linked: cell };
+            this.rows[yy].cells.splice(x, 0, ...empty);
           }
         }
       }
@@ -262,7 +258,7 @@ class Table {
       for (let x = 0; x < row.cells.length; x += 1) {
         const cell = row.cells[x];
         if (cell.rowSpan > 1) {
-          const distHeight = cell.height - cell.rowSpan + 1; // subtract 1 for each cell divider
+          const distHeight = Math.max(cell.rowSpan, cell.height - cell.rowSpan + 1);
           for (const [d, idx] of distribute(distHeight, cell.rowSpan)) {
             this.rows[y + idx].height = Math.max(this.rows[y + idx].height, d);
           }

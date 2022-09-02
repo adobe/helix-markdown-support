@@ -20,6 +20,11 @@
   },
   "homepage": "https://github.com/adobe/helix-markdown-support#readme",
   "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./gridtable": "./src/gridtable/index.js",
+    "./matter": "./src/matter/index.js"
+  },
   "dependencies": {
     "hast-util-to-html": "8.0.3",
     "js-yaml": "4.1.0",

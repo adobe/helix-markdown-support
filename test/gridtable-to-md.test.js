@@ -27,7 +27,7 @@ import {
 import {
   assertMD, gridTable, gtBody, gtCell, gtFooter, gtHeader, gtRow,
 } from './utils.js';
-import { remarkGridTable } from '../src/index.js';
+import { remarkGridTable } from '../src/gridtable/index.js';
 
 // eslint-disable-next-line no-unused-vars
 const LARUM_XL = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. Integer interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.';
@@ -280,6 +280,25 @@ describe('gridtable to md', () => {
         ]),
         gtRow([
           cell(text('AB8'), 1, 2),
+        ]),
+      ]),
+      heading(2, text('Table with overlapping spans')),
+      gridTable([
+        gtRow([
+          cell(text('A1234'), 4, 1),
+          cell(text('B1')),
+          cell(text('CD1'), 1, 2),
+        ]),
+        gtRow([
+          cell(text('BC23'), 2, 2),
+          cell(text('D2')),
+        ]),
+        gtRow([
+          cell(text('D34'), 2, 1),
+        ]),
+        gtRow([
+          cell(text('B4')),
+          cell(text('C4')),
         ]),
       ]),
     ]);

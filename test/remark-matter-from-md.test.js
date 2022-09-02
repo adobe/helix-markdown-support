@@ -20,7 +20,7 @@ import {
   heading, paragraph, root, text,
 } from 'mdast-builder';
 
-import { remarkMatter } from '../src/index.js';
+import { remarkMatter } from '../src/matter/index.js';
 
 const yaml = (payload, yamlDump) => ({
   type: 'yaml',

@@ -182,7 +182,7 @@ enum alignType {
 ```js
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
-import { remarkGridTable } from '@adobe/helix-markdown-support';
+import { remarkGridTable } from '@adobe/helix-markdown-support/gridtable';
 
 const mdast = unified()
   .use(remarkParse)
@@ -194,12 +194,12 @@ const mdast = unified()
 
 ```js
 import { toHast, defaultHandlers } from 'mdast-util-to-hast';
-import { gridTableHandler } from '@adobe/helix-markdown-support';
+import { mdast2hastGridTableHandler, TYPE_TABLE } from '@adobe/helix-markdown-support/gridtable';
 
 const hast = toHast(mdast, {
   handlers: {
     ...defaultHandlers,
-    gridTable: gridTableHandler(),
+    [TYPE_TABLE]: mdast2hastGridTableHandler(),
   },
   allowDangerousHtml: true,
 });

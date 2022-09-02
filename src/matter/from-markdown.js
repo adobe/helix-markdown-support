@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 import jsYaml from 'js-yaml';
+import { TYPE_YAML } from './types.js';
 
 function open(token) {
-  this.enter({ type: 'yaml', value: '', payload: {} }, token);
+  this.enter({ type: TYPE_YAML, value: '', payload: {} }, token);
   this.buffer();
 }
 
@@ -41,10 +42,10 @@ function value(token) {
 export default function fromMarkdown(options = {}) {
   return {
     enter: {
-      yaml: open,
+      [TYPE_YAML]: open,
     },
     exit: {
-      yaml: createClose(options),
+      [TYPE_YAML]: createClose(options),
       yamlValue: value,
     },
   };

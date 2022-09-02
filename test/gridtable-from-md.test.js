@@ -17,8 +17,7 @@ import remark from 'remark-parse';
 import { inspectNoColor as inspect } from 'unist-util-inspect';
 import { visit, CONTINUE } from 'unist-util-visit';
 import gfm from 'remark-gfm';
-import gridTablePlugin from '../src/remark-gridtable/index.js';
-import { remarkGridTable } from '../src/index.js';
+import { remarkGridTable } from '../src/gridtable/index.js';
 import { assertMD } from './utils.js';
 
 function removePositions(tree) {
@@ -42,7 +41,7 @@ async function testMD(spec) {
 
   const actual = unified()
     .use(remark)
-    .use(gridTablePlugin, {})
+    .use(remarkGridTable, {})
     .parse(source);
 
   removePositions(actual);

@@ -14,6 +14,7 @@ import jsYaml from 'js-yaml';
 import { codes } from 'micromark-util-symbol/codes.js';
 import { types } from 'micromark-util-symbol/types.js';
 import { markdownLineEnding, markdownSpace } from 'micromark-util-character';
+import { TYPE_YAML } from './types.js';
 
 const type = (v) => ((v !== undefined && v !== null) ? v.constructor : v);
 
@@ -94,7 +95,7 @@ function parse(options) {
         }
       }
 
-      effects.enter('yaml');
+      effects.enter(TYPE_YAML);
 
       // after the fence `---` is detected, we are at the end of the line
       return effects.attempt(fenceConstruct, lineEnd, nok)(code);
@@ -127,7 +128,7 @@ function parse(options) {
 
     function closedFence(code) {
       // check if valid yaml
-      const token = effects.exit('yaml');
+      const token = effects.exit(TYPE_YAML);
       let yamlString = self.sliceSerialize(token).trim();
       // remove fences
       yamlString = yamlString.substring(4, yamlString.length - 3).trim();

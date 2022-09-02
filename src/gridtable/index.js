@@ -9,9 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import fromMarkdown from './from-markdown.js';
-import toMarkdown from './to-markdown.js';
-import syntax from './syntax.js';
 
 /**
  * GridTables remark plugin and micromark extension.
@@ -89,24 +86,6 @@ import syntax from './syntax.js';
  * ```
  *
  */
-export default function gridTablePlugin(options = {}) {
-  const data = this.data();
-
-  function add(field, value) {
-    /* c8 ignore next 2 */
-    if (data[field]) {
-      data[field].push(value);
-    } else {
-      data[field] = [value];
-    }
-  }
-
-  const opts = {
-    processor: this,
-    ...options,
-  };
-
-  add('micromarkExtensions', syntax(options));
-  add('fromMarkdownExtensions', fromMarkdown(opts));
-  add('toMarkdownExtensions', toMarkdown(options));
-}
+export * from './types.js';
+export { default as remarkGridTable } from './remark-plugin.js';
+export { default as mdast2hastGridTableHandler } from './mdast2hast-handler.js';

@@ -18,7 +18,7 @@ import { toHast as mdast2hast } from 'mdast-util-to-hast';
 // import { raw } from 'hast-util-raw';
 import { toHtml as hast2html } from 'hast-util-to-html';
 import rehypeFormat from 'rehype-format';
-import { gridTableHandler, remarkGridTable } from '../src/index.js';
+import { mdast2hastGridTableHandler, remarkGridTable, TYPE_TABLE } from '../src/gridtable/index.js';
 
 async function testMD(spec, mdast) {
   const expected = await readFile(new URL(`./fixtures/${spec}.html`, import.meta.url), 'utf-8');
@@ -41,7 +41,7 @@ async function testMD(spec, mdast) {
   // make hast
   const hast = mdast2hast(mdast, {
     handlers: {
-      gridTable: gridTableHandler(),
+      [TYPE_TABLE]: mdast2hastGridTableHandler(),
     },
     allowDangerousHtml: true,
   });
@@ -55,7 +55,7 @@ async function testMD(spec, mdast) {
   if (expectedLean) {
     const hastLean = mdast2hast(mdast, {
       handlers: {
-        gridTable: gridTableHandler({ noHeader: true }),
+        [TYPE_TABLE]: mdast2hastGridTableHandler({ noHeader: true }),
       },
       allowDangerousHtml: true,
     });

@@ -26,7 +26,7 @@ import {
   mdast2md,
 } from './utils.js';
 import { imageReferences, dereference } from '../src/index.js';
-import gridTablePlugin from '../src/remark-gridtable/index.js';
+import { remarkGridTable } from '../src/gridtable/index.js';
 
 describe('dereferences Tests', () => {
   it('dereferences images and links in tables', async () => {
@@ -98,17 +98,17 @@ describe('dereferences Tests', () => {
 
     imageReferences(mdast);
     // const md = await assertMD(mdast, 'gt-with-references.md', [gridTablePlugin]);
-    const md = mdast2md(mdast, [gridTablePlugin]);
+    const md = mdast2md(mdast, [remarkGridTable]);
 
     // reparse the md
     const actual = unified()
       .use(remark)
-      .use(gridTablePlugin, {})
+      .use(remarkGridTable, {})
       .parse(md);
 
     dereference(actual);
 
-    await assertMD(actual, 'gt-with-dereferenced.md', [gridTablePlugin]);
+    await assertMD(actual, 'gt-with-dereferenced.md', [remarkGridTable]);
   });
 
   it('dereferences images and links outside tables', async () => {
@@ -159,7 +159,7 @@ describe('dereferences Tests', () => {
     // reparse the md
     const actual = unified()
       .use(remark)
-      .use(gridTablePlugin, {})
+      .use(remarkGridTable, {})
       .parse(md);
 
     dereference(actual);
