@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { all } from 'mdast-util-to-hast';
+import { CONTINUE, SKIP, visit } from 'unist-util-visit';
 import {
   TYPE_BODY, TYPE_CELL, TYPE_FOOTER, TYPE_HEADER, TYPE_ROW,
 } from './types.js';
@@ -33,7 +34,24 @@ function handleRow(h, node, cellElementName) {
           props[p] = child[p];
         }
       }
-      cells.push(h(child, cellElementName, props, all(h, child)));
+      // if cell contains only 1 single paragraph, unwrap it
+      if (child.children?.length === 1 && child.children[0].type === 'paragraph') {
+        child.children = child.children[0].children;
+      }
+      const cell = h(child, cellElementName, props, all(h, child));
+      cells.push(cell);
+
+      // clean text elements
+      visit(cell, (n) => {
+        if (n.tagName === 'code') {
+          return SKIP;
+        }
+        if (n.type === 'text') {
+          // eslint-disable-next-line no-param-reassign
+          n.value = n.value.replace(/\r?\n/mg, ' ');
+        }
+        return CONTINUE;
+      });
     }
   }
 
