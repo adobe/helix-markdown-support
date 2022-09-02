@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/adobe/helix-markdown-support/compare/v4.0.0...v4.0.1) (2022-09-02)
+
+
+### Bug Fixes
+
+* clean cell contents ([#131](https://github.com/adobe/helix-markdown-support/issues/131)) ([f422e97](https://github.com/adobe/helix-markdown-support/commit/f422e97ac0094f0c3448eba88c68476c8f3415cd))
+
 # [4.0.0](https://github.com/adobe/helix-markdown-support/compare/v3.1.8...v4.0.0) (2022-09-02)
 
 
