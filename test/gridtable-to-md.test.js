@@ -11,6 +11,7 @@
  */
 
 /* eslint-env mocha */
+import { readFile } from 'fs/promises';
 import {
   brk, code,
   blockquote,
@@ -75,6 +76,14 @@ describe('gridtable to md', () => {
       heading(2, text('Single Cell Grid Table')),
       gridTable([
         gtCell(text('A1')),
+      ]),
+      heading(2, text('Empty cell')),
+      gridTable([
+        gtCell(text('')),
+      ]),
+      heading(2, text('Empty cell with align')),
+      gridTable([
+        gtCell(text(''), 'center', 'middle'),
       ]),
     ]);
     await assertMD(mdast, 'gt-single-cell.md', [remarkGridTable]);
@@ -447,5 +456,14 @@ describe('gridtable to md', () => {
       ]),
     ]);
     await assertMD(mdast, 'gt-code-with-delim.md', [remarkGridTable]);
+  });
+
+  /**
+   * spot test for edge cases detected in production. disabled by default.
+   * for debugging, create a broken.json of the mdast and a broken.md
+   */
+  it.skip('broken', async () => {
+    const mdast = JSON.parse(await readFile(new URL('./fixtures/broken.json', import.meta.url), 'utf-8'));
+    await assertMD(mdast, 'broken.md', [remarkGridTable]);
   });
 });
