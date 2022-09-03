@@ -173,7 +173,7 @@ class Table {
         let col = cols[x];
         if (!col) {
           col = {
-            width: 0,
+            width: 3,
           };
           cols[x] = col;
         }
@@ -219,6 +219,10 @@ class Table {
           for (const [avgColWidth, idx] of distribute(cell.width, cell.colSpan)) {
             const col = cols[x + idx];
             col.width = Math.max(col.width, avgColWidth);
+          }
+          // if valign, the col needs to be at least 4 (3 + delim) wide
+          if (cell.valign) {
+            cols[x].width = Math.max(4, cols[x].width);
           }
         }
       }

@@ -3,3 +3,15 @@
 +----+
 | A1 |
 +----+
+
+## Empty cell
+
++--+
+|  |
++--+
+
+## Empty cell with align
+
++:x:+
+|   |
++---+
