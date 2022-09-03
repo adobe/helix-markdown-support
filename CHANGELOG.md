@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/adobe/helix-markdown-support/compare/v4.0.1...v4.0.2) (2022-09-03)
+
+
+### Bug Fixes
+
+* empty cell with v-align throws ([#132](https://github.com/adobe/helix-markdown-support/issues/132)) ([14510b2](https://github.com/adobe/helix-markdown-support/commit/14510b27fbed96c2845527f3cb4c7e7896e1bf9c))
+
 ## [4.0.1](https://github.com/adobe/helix-markdown-support/compare/v4.0.0...v4.0.1) (2022-09-02)
 
 
