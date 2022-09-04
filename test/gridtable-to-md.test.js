@@ -176,6 +176,16 @@ describe('gridtable to md', () => {
           ]),
         ]),
       ]),
+      heading(2, text('Grid Table only header')),
+      gridTable([
+        gtHeader([
+          gtRow([
+            gtCell(text('A1')),
+            gtCell(text('B1')),
+            gtCell(text('C1')),
+          ]),
+        ]),
+      ]),
     ]);
     await assertMD(mdast, 'gt-header-no-footer.md', [remarkGridTable]);
   });
