@@ -458,6 +458,59 @@ describe('gridtable to md', () => {
     await assertMD(mdast, 'gt-code-with-delim.md', [remarkGridTable]);
   });
 
+  it('unbalanced tables', async () => {
+    const mdast = root([
+      heading(2, text('Table with larger colspan')),
+      gridTable([
+        gtRow([
+          gtCell(text('ABC0 (colspan=3)'), '', '', 1, 3),
+        ]),
+        gtRow([
+          gtCell(text('A1')),
+          gtCell(text('B1')),
+        ]),
+        gtRow([
+          gtCell(text('A2')),
+          gtCell(text('B2')),
+        ]),
+      ]),
+      heading(2, text('Table with unbalanced rows')),
+      gridTable([
+        gtRow([
+          gtCell(text('ABC0 (colspan=3)'), '', '', 1, 3),
+        ]),
+        gtRow([
+          gtCell(text('A1')),
+          gtCell(text('B1')),
+        ]),
+        gtRow([
+          gtCell(text('A2')),
+          gtCell(text('B2')),
+        ]),
+        gtRow([
+          gtCell(text('A3')),
+          gtCell(text('B3')),
+          gtCell(text('C3')),
+        ]),
+        gtRow([
+          gtCell(text('A4')),
+          gtCell(text('B4')),
+        ]),
+        gtRow([
+          gtCell(text('A5')),
+          gtCell(text('B5')),
+          gtCell(text('C5')),
+          gtCell(text('D5')),
+        ]),
+        gtRow([
+          gtCell(text('A6')),
+          gtCell(text('B6')),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-unbalanced.md', [remarkGridTable]);
+  });
+
   /**
    * spot test for edge cases detected in production. disabled by default.
    * for debugging, create a broken.json of the mdast and a broken.md

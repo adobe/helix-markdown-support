@@ -93,6 +93,10 @@ describe('html from markdown gridtable', () => {
     await testMD('gt-with-align');
   });
 
+  it('table with nbsp', async () => {
+    await testMD('gt-nbsp');
+  });
+
   it('table with no gtHead', async () => {
     const mdast = {
       type: 'root',
