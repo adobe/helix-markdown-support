@@ -511,6 +511,23 @@ describe('gridtable to md', () => {
     await assertMD(mdast, 'gt-unbalanced.md', [remarkGridTable]);
   });
 
+  it('non break space', async () => {
+    const mdast = root([
+      heading(2, text('Table with non break space')),
+      gridTable([
+        gtRow([
+          gtCell(text('A1')),
+          gtCell(text('B1')),
+        ]),
+        gtRow([
+          gtCell(text('A2')),
+          gtCell(text('B2 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022')),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-nbsp.md', [remarkGridTable]);
+  });
+
   /**
    * spot test for edge cases detected in production. disabled by default.
    * for debugging, create a broken.json of the mdast and a broken.md
