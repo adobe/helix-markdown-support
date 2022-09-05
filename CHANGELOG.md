@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/adobe/helix-markdown-support/compare/v4.0.2...v4.0.3) (2022-09-05)
+
+
+### Bug Fixes
+
+* more improvements ([7d348e0](https://github.com/adobe/helix-markdown-support/commit/7d348e0cfdde11ab04f26c40fa7f9739787b9030))
+
 ## [4.0.2](https://github.com/adobe/helix-markdown-support/compare/v4.0.1...v4.0.2) (2022-09-03)
 
 
