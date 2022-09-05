@@ -41,7 +41,7 @@ function spanWidth(cols, idx, cell) {
 export function lineWrapTextHandler(node, parent, context, safeOptions) {
   const textNode = {
     ...node,
-    value: node.value.replace(/\s/g, ' '),
+    value: node.value.replace(/[ \t\v\r\n]/g, ' '),
   };
   let value = textHandler(textNode, parent, context, safeOptions);
   const { lineWidth } = context.options;
@@ -123,11 +123,9 @@ class Table {
     row = row || this.lastRow;
     row.cells.push(cell);
     for (let i = 1; i < cell.colSpan; i += 1) {
-      row.cells.push({});
-    }
-    // remember align for last span
-    if (cell.colSpan > 1) {
-      row.cells[row.cells.length - 1].align = cell.align;
+      row.cells.push({
+        align: cell.align,
+      });
     }
   }
 
@@ -166,6 +164,7 @@ class Table {
   toMarkdown(context) {
     // populate the matrix with the rowspans and compute max width
     // (the empty cells for the colspans are already created during insert).
+    let realNumCols = 0;
     const cols = [];
     for (let y = 0; y < this.rows.length; y += 1) {
       const row = this.rows[y];
@@ -178,6 +177,9 @@ class Table {
           cols[x] = col;
         }
         const cell = row.cells[x];
+        if (cell.tree) {
+          realNumCols = Math.max(realNumCols, x + 1);
+        }
         if (cell.rowSpan > 1) {
           // insert colspan amount of null cells below
           for (let i = 1; i < cell.rowSpan; i += 1) {
@@ -190,6 +192,25 @@ class Table {
         }
       }
     }
+
+    // now trim tailing colspans
+    if (cols.length > realNumCols) {
+      cols.length = realNumCols;
+      for (const { cells } of this.rows) {
+        if (cells.length > realNumCols) {
+          cells.length = realNumCols;
+          // find trailing colspan
+          let x = cells.length - 1;
+          while (x >= 0 && !cells[x].tree) {
+            x -= 1;
+          }
+          if (x >= 0) {
+            cells[x].colSpan = realNumCols - x;
+          }
+        }
+      }
+    }
+
     const numCols = cols.length;
 
     // add empty cells if needed
@@ -385,17 +406,18 @@ class Table {
     }
 
     // add last grid line
+    const d = this.rows.length === this.headerSize ? '=' : '-'; // special case: only header
     const grid = [];
     const lastRow = this.rows[this.rows.length - 1];
     for (let x = 0; x < cols.length; x += 1) {
       const col = cols[x];
       // if the cell above was a colspan, and we are on the last line, don't draw the `+`
       const aboveCell = lastRow.cells[x];
-      let c = aboveCell.tree || aboveCell.linked ? gtVLineEnds : '-';
+      let c = aboveCell.tree || aboveCell.linked ? gtVLineEnds : d;
       if (x === 0) {
         c = '+';
       }
-      grid.push(`${c}${'-'.repeat(col.width - 1)}`);
+      grid.push(`${c}${d.repeat(col.width - 1)}`);
     }
     lines.push(`${grid.join('')}+`);
 

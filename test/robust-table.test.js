@@ -283,4 +283,22 @@ describe('mdast-robust-table Tests', () => {
     robustTables(mdast);
     await assertMD(mdast, 'table-with-html.md', [gfm, breaksAsSpaces]);
   });
+
+  it('non break space', async () => {
+    const mdast = root([
+      heading(2, text('Table with non break space')),
+      table(null, [
+        tableRow([
+          tableCell(text('A1')),
+          tableCell(text('B1')),
+        ]),
+        tableRow([
+          tableCell(text('A2')),
+          tableCell(text('B2 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022')),
+        ]),
+      ]),
+    ]);
+    robustTables(mdast);
+    await assertMD(mdast, 'table-with-nbsp.md', [gfm, breaksAsSpaces]);
+  });
 });
