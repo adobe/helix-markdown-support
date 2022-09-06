@@ -12,4 +12,23 @@ Adobe Stock Senior Director, Content, Sarah Casillas echoes Rivas’ sentiments.
 | something that does not really belong to us.”\                                                                      |
 | \                                                                                                                   |
 | Adobe Stock Senior Director, Content, Sarah Casillas echoes Rivas’ sentiments.                                      |
-+---------------------------------------------------------------------------------------------------------------------+
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with trailing <br>                                  | ## Educational environments                              |
+|                                                          |                                                          |
+|                                                          | -   Aerial images of college campuses and towns;         |
+|                                                          |     landscape of surrounding areas.                      |
+|                                                          | -   Specialized fields of study with contextual cues:    |
+|                                                          |     law, medicine, technology, social sciences           |
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with multiple <br>s                                 | Specialized fields of study with contextual cues: law,   |
+|                                                          | medicine, technology, social sciences                    |
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with non-lf escape                                  | Specialized fields of study with contextual cues: law,   |
+|                                                          | medicine, technology, social sciences\\                  |
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with a single break                                 |                                                          |
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with a break after image                            | ![][image0]                                              |
++----------------------------------------------------------+----------------------------------------------------------+
+
+[image0]: https://dummyimage.com/300

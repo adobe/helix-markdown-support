@@ -33,3 +33,9 @@ consectetur adipiscing elit.
 ## Removes empty text before images
 
 ![](https://dummyimage.com/300 "Dummy Image")
+
+---
+
+## trims trailing breaks
+
+Hello, world.
