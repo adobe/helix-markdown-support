@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/adobe/helix-markdown-support/compare/v4.0.3...v4.0.4) (2022-09-06)
+
+
+### Bug Fixes
+
+* trimm cells ([#134](https://github.com/adobe/helix-markdown-support/issues/134)) ([2112060](https://github.com/adobe/helix-markdown-support/commit/211206089eb5f815249788f395236037a23ef0d4))
+
 ## [4.0.3](https://github.com/adobe/helix-markdown-support/compare/v4.0.2...v4.0.3) (2022-09-05)
 
 
