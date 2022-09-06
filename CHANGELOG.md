@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/adobe/helix-markdown-support/compare/v5.0.0...v5.0.1) (2022-09-06)
+
+
+### Bug Fixes
+
+* remove trailing breaks ([d08b6fc](https://github.com/adobe/helix-markdown-support/commit/d08b6fcded991f054b30da04298a489091d38cf7))
+
 # [5.0.0](https://github.com/adobe/helix-markdown-support/compare/v4.0.4...v5.0.0) (2022-09-06)
 
 
