@@ -116,4 +116,8 @@ describe('html from markdown gridtable', () => {
     };
     await testMD('gt-lean', mdast);
   });
+
+  it('text with breaks', async () => {
+    await testMD('gt-with-breaks');
+  });
 });

@@ -108,4 +108,8 @@ describe('gridtable from markdown', () => {
   it('table with divider in content', async () => {
     await testMD('gt-divider-in-content');
   });
+
+  it('text with breaks', async () => {
+    await testMD('gt-with-breaks');
+  });
 });

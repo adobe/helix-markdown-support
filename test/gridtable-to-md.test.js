@@ -543,6 +543,33 @@ describe('gridtable to md', () => {
     await assertMD(mdast, 'gt-nbsp.md', [remarkGridTable]);
   });
 
+  it('text with breaks', async () => {
+    const p = paragraph([
+      text('“People use these things for their own needs,” says Rivas of stock imagery.\n'
+        + '“If they are using things that were not co-created in a process that was not\n'
+        + 'intentional, especially when it comes to Indigenous imagery, then we are\n'
+        + 'using something that does not really belong to us.”'),
+      brk,
+      brk,
+      text('Adobe Stock Senior Director, Content, Sarah Casillas echoes Rivas’ sentiments.'),
+    ]);
+
+    const mdast = root([
+      heading(2, text('Text with breaks')),
+      p,
+      gridTable([
+        gtRow([
+          gtCell(text('Left')),
+          gtCell(text('Right')),
+        ]),
+        gtRow([
+          gtCell(p, '', '', '', 2),
+        ]),
+      ]),
+    ]);
+    await assertMD(mdast, 'gt-with-breaks.md', [remarkGridTable]);
+  });
+
   /**
    * spot test for edge cases detected in production. disabled by default.
    * for debugging, create a broken.json of the mdast and a broken.md
