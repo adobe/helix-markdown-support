@@ -151,10 +151,20 @@ class Table {
 
     context.options.lineWidth = oldWidth;
     // calculate actual width and height of cell
-    cell.lines = cell.value.split('\n');
-    cell.height = cell.lines.length;
+    const lines = cell.value.split('\n');
+    // trim leading empty cells
+    while (lines.length > 1 && lines[0].match(/^\s*$/)) {
+      lines.shift();
+    }
+    // trim trailing empty cells
+    while (lines.length > 1 && lines[lines.length - 1].match(/^\s*$/)) {
+      lines.pop();
+    }
+
+    cell.lines = lines;
+    cell.height = lines.length;
     cell.width = 0;
-    for (const line of cell.lines) {
+    for (const line of lines) {
       cell.width = Math.max(cell.width, line.length);
     }
     cell.width += 3;
