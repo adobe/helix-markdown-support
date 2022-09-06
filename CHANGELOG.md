@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/adobe/helix-markdown-support/compare/v4.0.4...v5.0.0) (2022-09-06)
+
+
+### Bug Fixes
+
+* remove breaksAsSpaces ([e6bb665](https://github.com/adobe/helix-markdown-support/commit/e6bb665930ce39876228aff9cd9bec842ed5030b))
+
+
+### BREAKING CHANGES
+
+* breaksAsSpaces removed. no longer needed.
+
 ## [4.0.4](https://github.com/adobe/helix-markdown-support/compare/v4.0.3...v4.0.4) (2022-09-06)
 
 
