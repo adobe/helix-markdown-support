@@ -103,7 +103,12 @@ describe('gridtable to md', () => {
         gtBody([
           gtRow([
             gtCell(text('a2')),
-            gtCell(text('b2')),
+            gtCell([
+              // test trimming cell content
+              paragraph(text('')),
+              paragraph(text('b2')),
+              paragraph(text('')),
+            ]),
             gtCell(text('c2')),
           ]),
           gtRow([
