@@ -27,8 +27,10 @@ import {
 import gfm from 'remark-gfm';
 import { assertMD } from './utils.js';
 
-import { breaksAsSpaces } from '../src/index.js';
-
+/**
+ * Test if breaks are properly ignored inside GFM. this wasn't implemented by the default
+ * to-markdown but is now fixed, and we don't need the extra plugin anymore.
+ */
 describe('breaks-as-spaces Tests', () => {
   it('Uses spaces as softbreaks', async () => {
     const mdast = root([
@@ -39,7 +41,7 @@ describe('breaks-as-spaces Tests', () => {
         text('world!'),
       ]),
     ]);
-    await assertMD(mdast, 'simple-text.md', [breaksAsSpaces]);
+    await assertMD(mdast, 'simple-text.md', []);
   });
 
   it('table cell with breaks dont create new lines', async () => {
@@ -63,6 +65,6 @@ describe('breaks-as-spaces Tests', () => {
         ]),
       ]),
     ]);
-    await assertMD(mdast, 'simple-table-with-breaks.md', [gfm, breaksAsSpaces]);
+    await assertMD(mdast, 'simple-table-with-breaks.md', [gfm]);
   });
 });

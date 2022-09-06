@@ -16,11 +16,14 @@ import * as index from '../src/index.js';
 
 const MODS = [
   'robustTables',
-  'breaksAsSpaces',
   'sanitizeHeading',
   'suppressSpaceCode',
   'sanitizeFormats',
   'fixCodeFlow',
+  'sanitizeLinks',
+  'sanitizeText',
+  'imageReferences',
+  'dereference',
 ];
 
 describe('Index Tests', () => {
@@ -29,4 +32,9 @@ describe('Index Tests', () => {
       assert.ok(mod in index);
     });
   }
+
+  it('all mods tested', () => {
+    const missing = Object.keys(index).filter((m) => !MODS.includes(m));
+    assert.deepStrictEqual([], missing, `The following modules are not covered in this test: ${missing.join()}`);
+  });
 });

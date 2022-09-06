@@ -11,7 +11,6 @@
  */
 
 export { default as robustTables } from './mdast-robust-tables.js';
-export { default as breaksAsSpaces } from './remark-breaks-as-spaces.js';
 export { default as sanitizeHeading } from './mdast-sanitize-heading.js';
 export { default as suppressSpaceCode } from './mdast-suppress-spacecode.js';
 export { default as sanitizeFormats } from './mdast-sanitize-formats.js';
