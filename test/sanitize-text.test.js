@@ -33,6 +33,7 @@ const separator = () => ({
 const brk = () => ({
   type: 'break',
 });
+
 describe('sanitize-embeds Tests', () => {
   it('sanitize', async () => {
     const mdast = root([
@@ -84,6 +85,14 @@ describe('sanitize-embeds Tests', () => {
       paragraph([
         text('   '),
         image('https://dummyimage.com/300', 'Dummy Image'),
+      ]),
+      separator(),
+      heading(2, text('trims trailing breaks')),
+      paragraph([
+        text('Hello, world.'),
+        brk(),
+        brk(),
+        brk(),
       ]),
     ]);
     sanitizeText(mdast);

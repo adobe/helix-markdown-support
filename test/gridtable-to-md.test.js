@@ -13,9 +13,10 @@
 /* eslint-env mocha */
 import { readFile } from 'fs/promises';
 import {
-  brk, code,
+  code,
   blockquote,
-  heading, image,
+  heading,
+  image,
   paragraph,
   root,
   text,
@@ -29,6 +30,12 @@ import {
   assertMD, gridTable, gtBody, gtCell, gtFooter, gtHeader, gtRow,
 } from './utils.js';
 import { remarkGridTable } from '../src/gridtable/index.js';
+import { imageReferences } from '../src/index.js';
+import sanitizeText from '../src/mdast-sanitize-text.js';
+
+const brk = () => ({
+  type: 'break',
+});
 
 // eslint-disable-next-line no-unused-vars
 const LARUM_XL = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus elit nibh, sed vestibulum metus tincidunt a. Integer interdum tempus consectetur. Phasellus tristique auctor tortor, tincidunt semper odio blandit eu. Proin et aliquet est. Curabitur ac augue ornare, iaculis sem luctus, feugiat tellus.';
@@ -212,9 +219,9 @@ describe('gridtable to md', () => {
               heading(2, text('My Heading 1')),
               paragraph([
                 image('https://hlx.blob.core.windows.net/external/19c0cf25413106c81920d75078ee2ef30a55d52e7'),
-                brk,
+                brk(),
                 ...LARUM_MD,
-                brk,
+                brk(),
                 text(TEST_M),
               ]),
             ]),
@@ -339,7 +346,7 @@ describe('gridtable to md', () => {
             gtCell(text('top center'), 'center', 'top'),
             gtCell(text('top justify'), 'justify', 'top'),
             gtCell(text('top right'), 'right', 'top'),
-            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+            gtCell(paragraph([text('1'), brk(), text('2'), brk(), text('3')])),
           ]),
         ]),
         gtBody([
@@ -348,14 +355,14 @@ describe('gridtable to md', () => {
             gtCell(text('middle center'), 'center', 'middle'),
             gtCell(text('top justify'), 'justify', 'middle'),
             gtCell(text('middle right'), 'right', 'middle'),
-            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+            gtCell(paragraph([text('1'), brk(), text('2'), brk(), text('3')])),
           ]),
           gtRow([
             gtCell(text('bottom left'), 'left', 'bottom'),
             gtCell(text('bottom center'), 'center', 'bottom'),
             gtCell(text('top justify'), 'justify', 'bottom'),
             gtCell(text('bottom right'), 'right', 'bottom'),
-            gtCell(paragraph([text('1'), brk, text('2'), brk, text('3')])),
+            gtCell(paragraph([text('1'), brk(), text('2'), brk(), text('3')])),
           ]),
           gtRow([
             gtCell(text('middle center'), 'center', 'middle', 1, 4),
@@ -549,8 +556,8 @@ describe('gridtable to md', () => {
         + '“If they are using things that were not co-created in a process that was not\n'
         + 'intentional, especially when it comes to Indigenous imagery, then we are\n'
         + 'using something that does not really belong to us.”'),
-      brk,
-      brk,
+      brk(),
+      brk(),
       text('Adobe Stock Senior Director, Content, Sarah Casillas echoes Rivas’ sentiments.'),
     ]);
 
@@ -565,8 +572,59 @@ describe('gridtable to md', () => {
         gtRow([
           gtCell(p, '', '', '', 2),
         ]),
+        gtRow([
+          gtCell(text('Test with trailing <br>')),
+          gtCell([
+            heading(2, text('Educational environments')),
+            list('unordered', [
+              listItem(text('Aerial images of college campuses and towns; landscape of surrounding areas.')),
+              listItem(paragraph([
+                text('Specialized fields of study with contextual cues: law, medicine, technology, social sciences'),
+                brk(),
+              ])),
+            ]),
+          ]),
+        ]),
+        gtRow([
+          gtCell(text('Test with multiple <br>s')),
+          gtCell([
+            paragraph([
+              text('Specialized fields of study with contextual cues: law, medicine, technology, social sciences'),
+              brk(),
+              brk(),
+              brk(),
+            ]),
+          ]),
+        ]),
+        gtRow([
+          gtCell(text('Test with non-lf escape')),
+          gtCell([
+            paragraph([
+              text('Specialized fields of study with contextual cues: law, medicine, technology, social sciences\\'),
+            ]),
+          ]),
+        ]),
+        gtRow([
+          gtCell(text('Test with a single break')),
+          gtCell([
+            paragraph([
+              brk(),
+            ]),
+          ]),
+        ]),
+        gtRow([
+          gtCell(text('Test with a break after image')),
+          gtCell([
+            paragraph([
+              image('https://dummyimage.com/300'),
+              brk(),
+            ]),
+          ]),
+        ]),
       ]),
     ]);
+    sanitizeText(mdast);
+    imageReferences(mdast);
     await assertMD(mdast, 'gt-with-breaks.md', [remarkGridTable]);
   });
 

@@ -18,6 +18,8 @@ import { visit, CONTINUE } from 'unist-util-visit';
  * - trims ends of texts at the end
  * - moves leading and trailing whitespaces out of formats
  * - removes leading whitespaces before images
+ * - removes trailing breaks in containers
+ *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
@@ -92,8 +94,13 @@ export default function sanitizeText(tree) {
         return index - 1;
       }
     }
-    // remove trailing whitespace before break blocks
+    // remove trailing whitespace before break blocks and trailing breaks altogether
     if (node.type === 'break') {
+      if (index === siblings.length - 1) {
+        siblings.splice(index, 1);
+        return index - 1;
+      }
+
       // eslint-disable-next-line no-param-reassign
       delete node.value;
       if (index > 0) {
