@@ -23,8 +23,10 @@ import {
   text,
 } from 'mdast-builder';
 import gfm from 'remark-gfm';
+import { unified } from 'unified';
+import remark from 'remark-parse';
+import { sanitizeHeading, sanitizeText } from '../src/index.js';
 import { assertMD } from './utils.js';
-import { sanitizeText } from '../src/index.js';
 
 const separator = () => ({
   type: 'thematicBreak',
@@ -81,6 +83,11 @@ describe('sanitize-embeds Tests', () => {
         text('   '),
       ]),
       separator(),
+      heading(2, text('Removes empty paragraphs')),
+      paragraph([]),
+      paragraph([]),
+      paragraph([]),
+      separator(),
       heading(2, text('Removes empty text before images')),
       paragraph([
         text('   '),
@@ -95,7 +102,16 @@ describe('sanitize-embeds Tests', () => {
         brk(),
       ]),
     ]);
+    sanitizeHeading(mdast);
     sanitizeText(mdast);
-    await assertMD(mdast, 'sanitized-text.md', [gfm]);
+    const source = await assertMD(mdast, 'sanitized-text.md', [gfm]);
+
+    const actual = unified()
+      .use(remark)
+      .use(gfm)
+      .parse(source);
+
+    // convert back.
+    await assertMD(actual, 'sanitized-text.md', [gfm]);
   });
 });

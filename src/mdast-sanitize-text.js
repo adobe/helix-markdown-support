@@ -20,6 +20,7 @@ import { visit, CONTINUE } from 'unist-util-visit';
  * - removes leading whitespaces before images
  * - removes trailing breaks in containers
  *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
+ * - removes empty paragraphs
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
@@ -116,5 +117,15 @@ export default function sanitizeText(tree) {
     }
     return CONTINUE;
   });
+
+  // remove empty paragraphs
+  visit(tree, (node, index, parent) => {
+    if (node.type === 'paragraph' && node.children.length === 0) {
+      parent.children.splice(index, 1);
+      return index - 1;
+    }
+    return CONTINUE;
+  });
+
   return tree;
 }

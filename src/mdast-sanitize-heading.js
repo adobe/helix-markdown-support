@@ -51,18 +51,14 @@ export default function sanitizeHeading(tree, opts = {}) {
         }
       }
 
-      // move leading breaks before heading
+      // remove leading breaks
       while (children[0]?.type === 'break') {
-        const brk = children.shift();
-        siblings.splice(index, 0, brk);
-        // eslint-disable-next-line no-param-reassign
-        index += 1;
+        children.shift();
       }
-      // move trailing breaks after heading
+      // remove trailing breaks
       let last = children.length - 1;
       while (children[last]?.type === 'break') {
-        const brk = children.pop();
-        siblings.splice(index + 1, 0, brk);
+        children.pop();
         last -= 1;
       }
       // convert inline breaks to <br>

@@ -10,59 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-env mocha */
-import assert from 'assert';
-import { readFile, lstat } from 'fs/promises';
-import { unified } from 'unified';
-import remark from 'remark-parse';
-import { inspectNoColor as inspect } from 'unist-util-inspect';
-import { visit, CONTINUE } from 'unist-util-visit';
-import gfm from 'remark-gfm';
-import { remarkGridTable } from '../src/gridtable/index.js';
-import { assertMD } from './utils.js';
-
-function removePositions(tree) {
-  visit(tree, (node) => {
-    // eslint-disable-next-line no-param-reassign
-    delete node.position;
-    return CONTINUE;
-  });
-  return tree;
-}
-
-async function testMD(spec) {
-  const source = await readFile(new URL(`./fixtures/${spec}.md`, import.meta.url), 'utf-8');
-  let expectedTree;
-  try {
-    expectedTree = await readFile(new URL(`./fixtures/${spec}.txt`, import.meta.url), 'utf-8');
-    expectedTree = expectedTree.trim();
-  } catch (e) {
-    // ignore
-  }
-
-  const actual = unified()
-    .use(remark)
-    .use(remarkGridTable, {})
-    .parse(source);
-
-  removePositions(actual);
-  const actualTree = inspect(actual);
-  // eslint-disable-next-line no-console
-  // console.log(actualTree);
-
-  if (expectedTree) {
-    assert.strictEqual(actualTree, expectedTree);
-  }
-
-  // convert back. check if round-trip md exists
-  try {
-    await lstat(new URL(`./fixtures/${spec}.rt.md`, import.meta.url));
-    // eslint-disable-next-line no-param-reassign
-    spec += '.rt';
-  } catch {
-    // ignore
-  }
-  await assertMD(actual, `${spec}.md`, [gfm, remarkGridTable]);
-}
+import { testMD } from './utils.js';
 
 describe('gridtable from markdown', () => {
   it('test no tables', async () => {
