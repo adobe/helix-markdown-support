@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/adobe/helix-markdown-support/compare/v5.0.1...v5.0.2) (2022-09-07)
+
+
+### Bug Fixes
+
+* clean more breaks ([#137](https://github.com/adobe/helix-markdown-support/issues/137)) ([a6f9d37](https://github.com/adobe/helix-markdown-support/commit/a6f9d372eb040ad0980e681f7deb5dbe694ee7f4))
+
 ## [5.0.1](https://github.com/adobe/helix-markdown-support/compare/v5.0.0...v5.0.1) (2022-09-06)
 
 
