@@ -26,7 +26,9 @@ consectetur adipiscing elit.
 
 ---
 
+---
 
+## Removes empty paragraphs
 
 ---
 
