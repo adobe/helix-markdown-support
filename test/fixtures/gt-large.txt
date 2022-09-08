@@ -73,5 +73,7 @@ root[2]
             │   └─0 paragraph[1]
             │       └─0 text "b3"
             └─2 gtCell[1]
-                └─0 paragraph[1]
-                    └─0 text "c3"
+                └─0 paragraph[2]
+                    ├─0 strong[1]
+                    │   └─0 text "30 Years."
+                    └─1 text " That's a lot."

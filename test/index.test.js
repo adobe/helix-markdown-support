@@ -18,7 +18,6 @@ const MODS = [
   'robustTables',
   'sanitizeHeading',
   'suppressSpaceCode',
-  'sanitizeFormats',
   'fixCodeFlow',
   'sanitizeLinks',
   'sanitizeText',

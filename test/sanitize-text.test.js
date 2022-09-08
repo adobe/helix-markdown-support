@@ -11,6 +11,7 @@
  */
 
 /* eslint-env mocha */
+import assert from 'assert';
 import {
   emphasis,
   heading,
@@ -36,7 +37,7 @@ const brk = () => ({
   type: 'break',
 });
 
-describe('sanitize-embeds Tests', () => {
+describe('sanitize-text Tests', () => {
   it('sanitize', async () => {
     const mdast = root([
       heading(2, text('Consecutive Text Blocks')),
@@ -53,7 +54,7 @@ describe('sanitize-embeds Tests', () => {
         brk(),
         text('consectetur adipiscing elit.     '),
       ]),
-      heading(2, text('works with leading brekas')),
+      heading(2, text('works with leading breaks')),
       paragraph([
         brk(),
         text('    '),
@@ -101,6 +102,11 @@ describe('sanitize-embeds Tests', () => {
         brk(),
         brk(),
       ]),
+      separator(),
+      heading(2, text('removes empty texts')),
+      paragraph([
+        text(''),
+      ]),
     ]);
     sanitizeHeading(mdast);
     sanitizeText(mdast);
@@ -113,5 +119,185 @@ describe('sanitize-embeds Tests', () => {
 
     // convert back.
     await assertMD(actual, 'sanitized-text.md', [gfm]);
+  });
+
+  it('sanitize whitespace', async () => {
+    const mdast = root([
+      heading(2, text('Ensure surrounding whitespace')),
+      paragraph([
+        text('Lorem ipsum'),
+        strong(text('dolor')),
+        text('sit amet.'),
+      ]),
+      paragraph([
+        text('Lorem ipsum,'),
+        strong(text('dolor')),
+        text('sit amet.'),
+      ]),
+      paragraph([
+        text('Lorem ipsum'),
+        strong(text('dolor')),
+        text(',sit amet.'),
+      ]),
+      heading(2, text('Moves leading whitespace in inner text')),
+      paragraph([
+        text('Lorem ipsum'),
+        emphasis(text(' dolor')),
+        text('sit amet.'),
+      ]),
+      paragraph([
+        emphasis(text(' begin')),
+        text('sit amet.'),
+      ]),
+      heading(2, text('Moves trailing whitespace in inner text')),
+      paragraph([
+        text('Lorem ipsum'),
+        emphasis(text('dolor ')),
+        text('sit amet.'),
+      ]),
+      paragraph([
+        text('Lorem ipsum'),
+        emphasis(text('dolor. ')),
+      ]),
+      heading(2, text('Moves enclosing whitespace in inner text')),
+      paragraph([
+        text('Lorem ipsum'),
+        strike(text(' dolor ')),
+        text('sit amet.'),
+      ]),
+      heading(2, text('detects nested formats')),
+      paragraph([
+        text('Lorem ipsum'),
+        strong(emphasis(text('dolor'))),
+        text('sit amet.'),
+      ]),
+      paragraph([
+        text('Lorem ipsum'),
+        strong(emphasis(text(' dolor '))),
+        text('sit amet.'),
+      ]),
+    ]);
+    sanitizeText(mdast);
+    const source = await assertMD(mdast, 'sanitized-formats.md', [gfm]);
+
+    const actual = unified()
+      .use(remark)
+      .use(gfm)
+      .parse(source);
+
+    // convert back.
+    await assertMD(actual, 'sanitized-formats.md', [gfm]);
+  });
+
+  const specs = {
+    strong,
+    emphasis,
+    strike,
+  };
+
+  Object.entries(specs).forEach(([name, node]) => {
+    it(`Removes ${name} as first child if empty`, async () => {
+      const mdast = root([
+        paragraph([
+          node([]),
+          text('Hello, world.'),
+        ]),
+      ]);
+      const expected = root([
+        paragraph([
+          text('Hello, world.'),
+        ]),
+      ]);
+      sanitizeText(mdast);
+      assert.deepEqual(mdast, expected);
+    });
+
+    it(`Removes ${name} as 2nd child if empty`, async () => {
+      const mdast = root([
+        paragraph([
+          text('Hello, '),
+          node([]),
+          text('world.'),
+        ]),
+      ]);
+      const expected = root([
+        paragraph([
+          text('Hello, world.'),
+        ]),
+      ]);
+      sanitizeText(mdast);
+      assert.deepEqual(mdast, expected);
+    });
+
+    it(`Removes ${name} as last child if empty`, async () => {
+      const mdast = root([
+        paragraph([
+          text('Hello, world.'),
+          node([]),
+        ]),
+      ]);
+      const expected = root([
+        paragraph([
+          text('Hello, world.'),
+        ]),
+      ]);
+      sanitizeText(mdast);
+      assert.deepEqual(mdast, expected);
+    });
+
+    it(`Removes ${name} with empty text`, async () => {
+      const mdast = root([
+        paragraph([
+          text('Hello, '),
+          node(text('')),
+          text('world.'),
+        ]),
+      ]);
+      const expected = root([
+        paragraph([
+          text('Hello, '),
+          text('world.'),
+        ]),
+      ]);
+      sanitizeText(mdast);
+      assert.deepEqual(mdast, expected);
+    });
+
+    it(`Collapses consecutive ${name}`, async () => {
+      const mdast = root([
+        paragraph([
+          node(text('Hello, ')),
+          node(),
+          node(text('world.')),
+        ]),
+      ]);
+      const expected = root([
+        paragraph([
+          node([
+            text('Hello, world.'),
+          ]),
+        ]),
+      ]);
+      sanitizeText(mdast);
+      assert.deepEqual(mdast, expected);
+    });
+  });
+
+  it('Don\'t collapse mixed formats', async () => {
+    const mdast = root([
+      paragraph([
+        strong(text('Hello, ')),
+        strike(text('world.')),
+      ]),
+    ]);
+    const expected = root([
+      paragraph([
+        strong(text('Hello,')),
+        text(' '),
+        strike(text('world.')),
+      ]),
+    ]);
+    sanitizeText(mdast);
+    assert.deepEqual(mdast, expected);
   });
 });

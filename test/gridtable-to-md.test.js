@@ -228,8 +228,8 @@ describe('gridtable to md', () => {
             gtCell(code('js', CODE)),
             gtCell([
               blockquote([
-                text('My quote'),
-                text(LARUM_L),
+                paragraph(text('My quote')),
+                paragraph(text(LARUM_L)),
               ]),
               list(false, [
                 listItem(text('item one')),
@@ -241,11 +241,12 @@ describe('gridtable to md', () => {
           gtRow([
             gtCell(text('a3')),
             gtCell(text('b3')),
-            gtCell(text('c3')),
+            gtCell(paragraph([strong(text('30 Years. ')), text('That\'s a lot.')])),
           ]),
         ]),
       ]),
     ]);
+    sanitizeText(mdast);
     await assertMD(mdast, 'gt-large.md', [remarkGridTable]);
   });
 
