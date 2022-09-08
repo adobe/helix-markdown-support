@@ -1,3 +1,10 @@
+## [5.0.6](https://github.com/adobe/helix-markdown-support/compare/v5.0.5...v5.0.6) (2022-09-08)
+
+
+### Bug Fixes
+
+* also remove trailing blank lines ([#141](https://github.com/adobe/helix-markdown-support/issues/141)) ([d9dabaf](https://github.com/adobe/helix-markdown-support/commit/d9dabaf2ca8feab8f743583945730d307985aa26))
+
 ## [5.0.5](https://github.com/adobe/helix-markdown-support/compare/v5.0.4...v5.0.5) (2022-09-08)
 
 
