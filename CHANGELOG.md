@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/adobe/helix-markdown-support/compare/v5.0.3...v5.0.4) (2022-09-08)
+
+
+### Bug Fixes
+
+* also respect unicode punctuation ([#139](https://github.com/adobe/helix-markdown-support/issues/139)) ([367377e](https://github.com/adobe/helix-markdown-support/commit/367377ef303e5379b7c74f7a396516fb7a0389b6))
+
 ## [5.0.3](https://github.com/adobe/helix-markdown-support/compare/v5.0.2...v5.0.3) (2022-09-08)
 
 
