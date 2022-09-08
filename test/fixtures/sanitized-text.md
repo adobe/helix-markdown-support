@@ -8,7 +8,7 @@ Lorem ipsum dolor sit amet,\
 \
 consectetur adipiscing elit.
 
-## works with leading brekas
+## works with leading breaks
 
 \
 \
@@ -41,3 +41,7 @@ consectetur adipiscing elit.
 ## trims trailing breaks
 
 Hello, world.
+
+---
+
+## removes empty texts

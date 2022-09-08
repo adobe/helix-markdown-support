@@ -10,17 +10,23 @@
  * governing permissions and limitations under the License.
  */
 import { visit, CONTINUE } from 'unist-util-visit';
+import { asciiPunctuation, markdownSpace } from 'micromark-util-character';
+
+function isFormat(type) {
+  return type === 'strong' || type === 'emphasis' || type === 'delete';
+}
 
 /**
  * Sanitizes text:
+ * - collapses consecutive formats
  * - collapses consecutive text blocks
  * - trims ends of texts before break
  * - trims ends of texts at the end
  * - moves leading and trailing whitespaces out of formats
- * - removes leading whitespaces before images
+ * - ensures spaces after formats
  * - removes trailing breaks in containers
  *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
- * - removes empty paragraphs
+ * - removes empty text blocks, formats, paragraphs
  *
  * @param {object} tree
  * @returns {object} The modified (original) tree.
@@ -30,38 +36,45 @@ export default function sanitizeText(tree) {
     const { children: siblings = [] } = parent || {};
     const { children = [] } = node;
 
-    // collapse text blocks
-    if (index > 0 && node.type === 'text' && siblings[index - 1].type === 'text') {
-      siblings[index - 1].value += node.value;
-      siblings.splice(index, 1);
-      return index - 1;
-    }
+    if (isFormat(node.type)) {
+      // collapse consecutive formats
+      while (siblings[index + 1]?.type === node.type) {
+        children.push(...siblings[index + 1].children);
+        siblings.splice(index + 1, 1);
+      }
+      // remove empty formats
+      if (!children.length) {
+        siblings.splice(index, 1);
+        return index - 1;
+      }
 
-    if ((node.type === 'strong' || node.type === 'emphasis' || node.type === 'delete') && children.length) {
-      // check if last text block has a trailing whitespace
+      // check if last text block has trailing whitespace
       const last = children[children.length - 1];
-      if (last.type === 'text') {
+      if (last?.type === 'text') {
         const trimmed = last.value.trimEnd();
+        if (!trimmed) {
+          // if text is empty, discard
+          children.pop();
+        }
         if (trimmed !== last.value) {
           const newText = {
             type: 'text',
             value: last.value.substring(trimmed.length),
           };
-          if (!trimmed && children.length === 1) {
-            // if formatting block would now be empty, remove it
-            siblings.splice(index, 1, newText);
-            return index - 1;
-          } else {
-            // add space after
-            last.value = trimmed;
-            siblings.splice(index + 1, 0, newText);
+          if (!children.length) {
+            // if format is empty, discard
+            siblings[index] = newText;
+            return index;
           }
-          return index;
+          last.value = trimmed;
+          // add space after
+          siblings.splice(index + 1, 0, newText);
+          // return index;
         }
       }
       // check if the first text block has a leading whitespace
       const first = children[0];
-      if (first.type === 'text') {
+      if (first?.type === 'text') {
         const trimmed = first.value.trimStart();
         if (trimmed !== first.value) {
           const newText = {
@@ -69,33 +82,76 @@ export default function sanitizeText(tree) {
             value: first.value.substring(0, first.value.length - trimmed.length),
           };
           first.value = trimmed;
-          // insert before
-          siblings.splice(index, 0, newText);
-          return index;
+          if (isFormat(parent.type)) {
+            // special case for nested formats, discard the text
+            // ignore
+          } else {
+            // insert before
+            siblings.splice(index, 0, newText);
+            // eslint-disable-next-line no-param-reassign
+            index += 1;
+          }
+        }
+      }
+
+      // ensure that text before format has trailing whitespace
+      const prev = siblings[index - 1];
+      if (prev?.type === 'text') {
+        const code = prev.value.charCodeAt(prev.value.length - 1);
+        if (!asciiPunctuation(code) && !markdownSpace(code)) {
+          prev.value += ' ';
+        }
+      }
+
+      // ensure that text after format has leading whitespace
+      const next = siblings[index + 1];
+      if (children.length && next?.type === 'text') {
+        const code = next.value.charCodeAt(0);
+        if (!asciiPunctuation(code) && !markdownSpace(code)) {
+          next.value = ` ${next.value}`;
         }
       }
     }
+    return CONTINUE;
+  });
 
-    // remove leading whitespace in paragraphs
-    if (parent && index === 0 && parent.type === 'paragraph' && node.type === 'text') {
-      // eslint-disable-next-line no-param-reassign
-      node.value = node.value.trimStart();
-      if (!node.value) {
-        siblings.splice(index, 1);
-        return index;
-      }
-    }
+  visit(tree, (node, index, parent) => {
+    const { children: siblings = [] } = parent || {};
 
-    // remove trailing whitespace if last text block
-    if (node.type === 'text' && index === siblings.length - 1) {
-      // eslint-disable-next-line no-param-reassign
-      node.value = node.value.trimEnd();
+    if (node.type === 'text') {
+      // remove empty text nodes
       if (!node.value) {
         siblings.splice(index, 1);
         return index - 1;
       }
+
+      // collapse text blocks
+      if (index > 0 && siblings[index - 1].type === 'text') {
+        siblings[index - 1].value += node.value;
+        siblings.splice(index, 1);
+        return index - 1;
+      }
+
+      // remove leading whitespace in paragraphs
+      if (index === 0 && parent?.type === 'paragraph') {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimStart();
+      }
+
+      // remove trailing whitespace if last text block
+      if (index === siblings.length - 1) {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimEnd();
+      }
+
+      // remove trailing whitespace before break
+      if (siblings[index + 1]?.type === 'break') {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimEnd();
+      }
     }
-    // remove trailing whitespace before break blocks and trailing breaks altogether
+
+    // remove trailing breaks altogether
     if (node.type === 'break') {
       if (index === siblings.length - 1) {
         siblings.splice(index, 1);
@@ -104,28 +160,32 @@ export default function sanitizeText(tree) {
 
       // eslint-disable-next-line no-param-reassign
       delete node.value;
-      if (index > 0) {
-        const prev = siblings[index - 1];
-        if (prev.type === 'text') {
-          prev.value = prev.value.trimEnd();
-          if (!prev.value) {
-            siblings.splice(index - 1, 1);
-            return index - 1;
-          }
-        }
-      }
     }
+
     return CONTINUE;
   });
 
-  // remove empty paragraphs
-  visit(tree, (node, index, parent) => {
-    if (node.type === 'paragraph' && node.children.length === 0) {
-      parent.children.splice(index, 1);
-      return index - 1;
+  // remove text, formats and paragraphs
+  function prune(node) {
+    const { children, type } = node;
+    if (type === 'text') {
+      return !node.value;
     }
-    return CONTINUE;
-  });
+    if (!children) {
+      return false;
+    }
+    for (let i = 0; i < children.length; i += 1) {
+      if (prune(children[i])) {
+        children.splice(i, 1);
+        i -= 1;
+      }
+    }
+    if (type === 'paragraph' || isFormat(type)) {
+      return children.length === 0;
+    }
+    return false;
+  }
+  prune(tree);
 
   return tree;
 }
