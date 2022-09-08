@@ -139,6 +139,11 @@ describe('sanitize-text Tests', () => {
         strong(text('dolor')),
         text(',sit amet.'),
       ]),
+      paragraph([
+        text('“'),
+        emphasis(text('My favourite announcement this year has to be Photoshop for iPad.')),
+        text('“'),
+      ]),
       heading(2, text('Moves leading whitespace in inner text')),
       paragraph([
         text('Lorem ipsum'),

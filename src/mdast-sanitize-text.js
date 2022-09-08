@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { visit, CONTINUE } from 'unist-util-visit';
-import { asciiPunctuation, markdownSpace } from 'micromark-util-character';
+import { asciiPunctuation, markdownSpace, unicodePunctuation } from 'micromark-util-character';
 
 function isFormat(type) {
   return type === 'strong' || type === 'emphasis' || type === 'delete';
@@ -98,7 +98,7 @@ export default function sanitizeText(tree) {
       const prev = siblings[index - 1];
       if (prev?.type === 'text') {
         const code = prev.value.charCodeAt(prev.value.length - 1);
-        if (!asciiPunctuation(code) && !markdownSpace(code)) {
+        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           prev.value += ' ';
         }
       }
@@ -107,7 +107,7 @@ export default function sanitizeText(tree) {
       const next = siblings[index + 1];
       if (children.length && next?.type === 'text') {
         const code = next.value.charCodeAt(0);
-        if (!asciiPunctuation(code) && !markdownSpace(code)) {
+        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           next.value = ` ${next.value}`;
         }
       }

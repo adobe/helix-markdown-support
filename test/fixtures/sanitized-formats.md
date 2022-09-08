@@ -6,6 +6,8 @@ Lorem ipsum,**dolor** sit amet.
 
 Lorem ipsum **dolor**,sit amet.
 
+“_My favourite announcement this year has to be Photoshop for iPad._“
+
 ## Moves leading whitespace in inner text
 
 Lorem ipsum _dolor_ sit amet.
