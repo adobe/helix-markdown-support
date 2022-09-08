@@ -102,6 +102,14 @@ describe('sanitize-text Tests', () => {
         brk(),
         brk(),
       ]),
+      heading(2, text('trims trailing breaks with empty text')),
+      paragraph([
+        text('Hello, world.'),
+        brk(),
+        brk(),
+        brk(),
+        text('    '),
+      ]),
       separator(),
       heading(2, text('removes empty texts')),
       paragraph([

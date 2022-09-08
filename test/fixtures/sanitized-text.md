@@ -42,6 +42,10 @@ consectetur adipiscing elit.
 
 Hello, world.
 
+## trims trailing breaks with empty text
+
+Hello, world.
+
 ---
 
 ## removes empty texts

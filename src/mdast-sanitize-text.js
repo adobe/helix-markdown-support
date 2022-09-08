@@ -119,23 +119,11 @@ export default function sanitizeText(tree) {
     const { children: siblings = [] } = parent || {};
 
     if (node.type === 'text') {
-      // remove empty text nodes
-      if (!node.value) {
-        siblings.splice(index, 1);
-        return index - 1;
-      }
-
       // collapse text blocks
-      if (index > 0 && siblings[index - 1].type === 'text') {
-        siblings[index - 1].value += node.value;
-        siblings.splice(index, 1);
-        return index - 1;
-      }
-
-      // remove leading whitespace in paragraphs
-      if (index === 0 && parent?.type === 'paragraph') {
+      while (siblings[index + 1]?.type === 'text') {
         // eslint-disable-next-line no-param-reassign
-        node.value = node.value.trimStart();
+        node.value += siblings[index + 1].value;
+        siblings.splice(index + 1, 1);
       }
 
       // remove trailing whitespace if last text block
@@ -148,6 +136,18 @@ export default function sanitizeText(tree) {
       if (siblings[index + 1]?.type === 'break') {
         // eslint-disable-next-line no-param-reassign
         node.value = node.value.trimEnd();
+      }
+
+      // remove leading whitespace in paragraphs
+      if (index === 0 && parent?.type === 'paragraph') {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimStart();
+      }
+
+      // remove empty text nodes
+      if (!node.value) {
+        siblings.splice(index, 1);
+        return index - 1;
       }
     }
 
