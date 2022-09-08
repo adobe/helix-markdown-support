@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/adobe/helix-markdown-support/compare/v5.0.2...v5.0.3) (2022-09-08)
+
+
+### Bug Fixes
+
+* ensure text is properly sanitized ([#138](https://github.com/adobe/helix-markdown-support/issues/138)) ([0bb0328](https://github.com/adobe/helix-markdown-support/commit/0bb0328a3d87a780a3595267081f523bb47824bc))
+
 ## [5.0.2](https://github.com/adobe/helix-markdown-support/compare/v5.0.1...v5.0.2) (2022-09-07)
 
 
