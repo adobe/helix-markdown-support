@@ -622,6 +622,14 @@ describe('gridtable to md', () => {
             ]),
           ]),
         ]),
+        gtRow([
+          gtCell(text('Test with image with newline in alt text')),
+          gtCell(paragraph(image('about:blank', '', 'hello \nalt text.'))),
+        ]),
+        gtRow([
+          gtCell(text('Test with image with newline in title text')),
+          gtCell(paragraph(image('about:blank', 'hello \ntitle'))),
+        ]),
       ]),
     ]);
     sanitizeText(mdast);

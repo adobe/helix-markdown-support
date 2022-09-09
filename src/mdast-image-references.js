@@ -25,7 +25,7 @@ export default function imageReferences(tree) {
 
   visit(tree, (node) => {
     if (node.type === 'image') {
-      const { url, alt = '', title } = node;
+      const { url, alt = '', title = '' } = node;
       const key = `${url}\n${title}`;
       let identifier = images.get(key);
       if (!identifier) {
@@ -37,7 +37,7 @@ export default function imageReferences(tree) {
           url,
         };
         if (title) {
-          def.title = title;
+          def.title = title.replaceAll(/[\r\n ]+/gm, ' ').trim();
         }
         definitions.push(def);
       }
@@ -45,7 +45,7 @@ export default function imageReferences(tree) {
       node.type = 'imageReference';
       node.identifier = identifier;
       node.referenceType = 'full';
-      node.alt = alt.trim();
+      node.alt = alt.replaceAll(/[\r\n ]+/gm, ' ').trim();
     }
     return CONTINUE;
   });
