@@ -1,0 +1,191 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+import { visit, CONTINUE } from 'unist-util-visit';
+import { asciiPunctuation, markdownSpace, unicodePunctuation } from 'micromark-util-character';
+
+function isFormat(type) {
+  return type === 'strong' || type === 'emphasis' || type === 'delete';
+}
+
+/**
+ * Sanitizes text:
+ * - collapses consecutive formats
+ * - collapses consecutive text blocks
+ * - trims ends of texts before break
+ * - trims ends of texts at the end
+ * - moves leading and trailing whitespaces out of formats
+ * - ensures spaces after formats
+ * - removes trailing breaks in containers
+ *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
+ * - removes empty text blocks, formats, paragraphs
+ *
+ * @param {object} tree
+ * @returns {object} The modified (original) tree.
+ */
+export default function sanitizeTextAndFormats(tree) {
+  visit(tree, (node, index, parent) => {
+    const { children: siblings = [] } = parent || {};
+    const { children = [] } = node;
+
+    if (isFormat(node.type)) {
+      // collapse consecutive formats
+      while (siblings[index + 1]?.type === node.type) {
+        children.push(...siblings[index + 1].children);
+        siblings.splice(index + 1, 1);
+      }
+      // remove empty formats
+      if (!children.length) {
+        siblings.splice(index, 1);
+        return index - 1;
+      }
+
+      // check if last text block has trailing whitespace
+      const last = children[children.length - 1];
+      if (last?.type === 'text') {
+        const trimmed = last.value.trimEnd();
+        if (!trimmed) {
+          // if text is empty, discard
+          children.pop();
+        }
+        if (trimmed !== last.value) {
+          const newText = {
+            type: 'text',
+            value: last.value.substring(trimmed.length),
+          };
+          if (!children.length) {
+            // if format is empty, discard
+            siblings[index] = newText;
+            return index;
+          }
+          last.value = trimmed;
+          // add space after
+          siblings.splice(index + 1, 0, newText);
+          // return index;
+        }
+      }
+      // check if the first text block has a leading whitespace
+      const first = children[0];
+      if (first?.type === 'text') {
+        const trimmed = first.value.trimStart();
+        if (trimmed !== first.value) {
+          const newText = {
+            type: 'text',
+            value: first.value.substring(0, first.value.length - trimmed.length),
+          };
+          first.value = trimmed;
+          if (isFormat(parent.type)) {
+            // special case for nested formats, discard the text
+            // ignore
+          } else {
+            // insert before
+            siblings.splice(index, 0, newText);
+            // eslint-disable-next-line no-param-reassign
+            index += 1;
+          }
+        }
+      }
+
+      // ensure that text before format has trailing whitespace
+      const prev = siblings[index - 1];
+      if (prev?.type === 'text') {
+        const code = prev.value.charCodeAt(prev.value.length - 1);
+        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
+          prev.value += ' ';
+        }
+      }
+
+      // ensure that text after format has leading whitespace
+      const next = siblings[index + 1];
+      if (children.length && next?.type === 'text') {
+        const code = next.value.charCodeAt(0);
+        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
+          next.value = ` ${next.value}`;
+        }
+      }
+    }
+    return CONTINUE;
+  });
+
+  visit(tree, (node, index, parent) => {
+    const { children: siblings = [] } = parent || {};
+
+    if (node.type === 'text') {
+      // collapse text blocks
+      while (siblings[index + 1]?.type === 'text') {
+        // eslint-disable-next-line no-param-reassign
+        node.value += siblings[index + 1].value;
+        siblings.splice(index + 1, 1);
+      }
+
+      // remove trailing whitespace if last text block
+      if (index === siblings.length - 1) {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimEnd();
+      }
+
+      // remove trailing whitespace before break
+      if (siblings[index + 1]?.type === 'break') {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimEnd();
+      }
+
+      // remove leading whitespace in paragraphs
+      if (index === 0 && parent?.type === 'paragraph') {
+        // eslint-disable-next-line no-param-reassign
+        node.value = node.value.trimStart();
+      }
+
+      // remove empty text nodes
+      if (!node.value) {
+        siblings.splice(index, 1);
+        return index - 1;
+      }
+    }
+
+    // remove trailing breaks altogether
+    if (node.type === 'break') {
+      if (index === siblings.length - 1) {
+        siblings.splice(index, 1);
+        return index - 1;
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      delete node.value;
+    }
+
+    return CONTINUE;
+  });
+
+  // remove text, formats and paragraphs
+  function prune(node) {
+    const { children, type } = node;
+    if (type === 'text') {
+      return !node.value;
+    }
+    if (!children) {
+      return false;
+    }
+    for (let i = 0; i < children.length; i += 1) {
+      if (prune(children[i])) {
+        children.splice(i, 1);
+        i -= 1;
+      }
+    }
+    if (type === 'paragraph' || isFormat(type)) {
+      return children.length === 0;
+    }
+    return false;
+  }
+  prune(tree);
+
+  return tree;
+}

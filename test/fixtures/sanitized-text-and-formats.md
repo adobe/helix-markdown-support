@@ -8,7 +8,7 @@ Lorem ipsum dolor sit amet,\
 \
 consectetur adipiscing elit.
 
-## works with leading brekas
+## works with leading breaks
 
 \
 \
@@ -26,10 +26,26 @@ consectetur adipiscing elit.
 
 ---
 
+---
 
+## Removes empty paragraphs
 
 ---
 
 ## Removes empty text before images
 
 ![](https://dummyimage.com/300 "Dummy Image")
+
+---
+
+## trims trailing breaks
+
+Hello, world.
+
+## trims trailing breaks with empty text
+
+Hello, world.
+
+---
+
+## removes empty texts

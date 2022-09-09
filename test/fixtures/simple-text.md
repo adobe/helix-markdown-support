@@ -1,4 +1,4 @@
 ## Simple Text
 
-Hello,\
+Hello,  
 world!

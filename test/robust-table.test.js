@@ -24,7 +24,7 @@ import {
 import gfm from 'remark-gfm';
 
 import { assertMD } from './utils.js';
-import { robustTables } from '../src/index.js';
+import { robustTables, breaksAsSpaces } from '../src/index.js';
 
 function tableCell(children, align, verticalAlign) {
   const node = originalCell(children);
@@ -55,7 +55,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'simple-table.md', [gfm]);
+    await assertMD(mdast, 'simple-table.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with multiple lines converts to html', async () => {
@@ -79,7 +79,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-lines.md', [gfm]);
+    await assertMD(mdast, 'table-with-lines.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with inline code breaks converts to html', async () => {
@@ -101,7 +101,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-code.md', [gfm]);
+    await assertMD(mdast, 'table-with-code.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with inline images converts to html', async () => {
@@ -123,7 +123,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-images.md', [gfm]);
+    await assertMD(mdast, 'table-with-images.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with single paragraph converts correctly', async () => {
@@ -148,7 +148,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-paragraph.md', [gfm]);
+    await assertMD(mdast, 'table-with-paragraph.md', [gfm, breaksAsSpaces]);
   });
 
   it('table cell with multiple paragraph converts correctly', async () => {
@@ -174,7 +174,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm]);
+    await assertMD(mdast, 'table-with-multiple-paragraph.md', [gfm, breaksAsSpaces]);
   });
 
   it('table alignments converts correctly', async () => {
@@ -205,7 +205,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-align.md', [gfm]);
+    await assertMD(mdast, 'table-with-align.md', [gfm, breaksAsSpaces]);
   });
 
   it('table spans converts correctly', async () => {
@@ -240,7 +240,7 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-spans.md', [gfm]);
+    await assertMD(mdast, 'table-with-spans.md', [gfm, breaksAsSpaces]);
   });
 
   it('Table with html items should not produce error', async () => {
@@ -281,24 +281,6 @@ describe('mdast-robust-table Tests', () => {
       ]),
     ]);
     robustTables(mdast);
-    await assertMD(mdast, 'table-with-html.md', [gfm]);
-  });
-
-  it('non break space', async () => {
-    const mdast = root([
-      heading(2, text('Table with non break space')),
-      table(null, [
-        tableRow([
-          tableCell(text('A1')),
-          tableCell(text('B1')),
-        ]),
-        tableRow([
-          tableCell(text('A2')),
-          tableCell(text('B2 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022')),
-        ]),
-      ]),
-    ]);
-    robustTables(mdast);
-    await assertMD(mdast, 'table-with-nbsp.md', [gfm]);
+    await assertMD(mdast, 'table-with-html.md', [gfm, breaksAsSpaces]);
   });
 });

@@ -20,7 +20,10 @@ const MODS = [
   'suppressSpaceCode',
   'fixCodeFlow',
   'sanitizeLinks',
+  'breaksAsSpaces',
+  'sanitizeFormats',
   'sanitizeText',
+  'sanitizeTextAndFormats',
   'imageReferences',
   'dereference',
 ];

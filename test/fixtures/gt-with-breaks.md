@@ -30,5 +30,13 @@ Adobe Stock Senior Director, Content, Sarah Casillas echoes Rivas’ sentiments.
 +----------------------------------------------------------+----------------------------------------------------------+
 | Test with a break after image                            | ![][image0]                                              |
 +----------------------------------------------------------+----------------------------------------------------------+
+| Test with image with newline in alt text                 | ![hello alt text.][image1]                               |
++----------------------------------------------------------+----------------------------------------------------------+
+| Test with image with newline in title text               | ![][image2]                                              |
++----------------------------------------------------------+----------------------------------------------------------+
 
 [image0]: https://dummyimage.com/300
+
+[image1]: about:blank
+
+[image2]: about:blank "hello title"
