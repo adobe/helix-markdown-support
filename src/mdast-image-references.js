@@ -37,7 +37,7 @@ export default function imageReferences(tree) {
           url,
         };
         if (title) {
-          def.title = title.replaceAll(/[\r\n ]+/gm, ' ').trim();
+          def.title = title.replace(/[\r\n ]+/gm, ' ').trim();
         }
         definitions.push(def);
       }
@@ -45,7 +45,7 @@ export default function imageReferences(tree) {
       node.type = 'imageReference';
       node.identifier = identifier;
       node.referenceType = 'full';
-      node.alt = alt.replaceAll(/[\r\n ]+/gm, ' ').trim();
+      node.alt = alt.replace(/[\r\n ]+/gm, ' ').trim();
     }
     return CONTINUE;
   });
