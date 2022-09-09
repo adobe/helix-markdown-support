@@ -30,8 +30,7 @@ import {
   assertMD, gridTable, gtBody, gtCell, gtFooter, gtHeader, gtRow,
 } from './utils.js';
 import { remarkGridTable } from '../src/gridtable/index.js';
-import { imageReferences } from '../src/index.js';
-import sanitizeText from '../src/mdast-sanitize-text.js';
+import { imageReferences, sanitizeTextAndFormats } from '../src/index.js';
 
 const brk = () => ({
   type: 'break',
@@ -246,7 +245,7 @@ describe('gridtable to md', () => {
         ]),
       ]),
     ]);
-    sanitizeText(mdast);
+    sanitizeTextAndFormats(mdast);
     await assertMD(mdast, 'gt-large.md', [remarkGridTable]);
   });
 
@@ -632,7 +631,7 @@ describe('gridtable to md', () => {
         ]),
       ]),
     ]);
-    sanitizeText(mdast);
+    sanitizeTextAndFormats(mdast);
     imageReferences(mdast);
     await assertMD(mdast, 'gt-with-breaks.md', [remarkGridTable]);
   });
