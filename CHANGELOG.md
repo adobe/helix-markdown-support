@@ -1,3 +1,11 @@
+## [5.0.7](https://github.com/adobe/helix-markdown-support/compare/v5.0.6...v5.0.7) (2022-09-09)
+
+
+### Bug Fixes
+
+* make node 14 combatible ([c552339](https://github.com/adobe/helix-markdown-support/commit/c552339d74f4c82d3ac071cfd6514e9901acdb50))
+* revert major changes ([#142](https://github.com/adobe/helix-markdown-support/issues/142)) ([fc5d95c](https://github.com/adobe/helix-markdown-support/commit/fc5d95c9b8e2c8b62674a17544c639cd2713c2ce))
+
 ## [5.0.6](https://github.com/adobe/helix-markdown-support/compare/v5.0.5...v5.0.6) (2022-09-08)
 
 
