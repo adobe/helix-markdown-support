@@ -29,7 +29,7 @@
     "hast-util-to-html": "8.0.3",
     "js-yaml": "4.1.0",
     "mdast-util-from-markdown": "1.2.0",
-    "mdast-util-to-hast": "12.2.2",
+    "mdast-util-to-hast": "12.2.3",
     "mdast-util-to-markdown": "1.3.0",
     "micromark-util-character": "1.1.0",
     "micromark-util-symbol": "1.0.1",
