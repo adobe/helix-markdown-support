@@ -1,3 +1,10 @@
+## [5.0.9](https://github.com/adobe/helix-markdown-support/compare/v5.0.8...v5.0.9) (2022-09-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-to-hast to v12.2.4 ([#146](https://github.com/adobe/helix-markdown-support/issues/146)) ([db9fd20](https://github.com/adobe/helix-markdown-support/commit/db9fd20ff6c435b6e685741800a20d8ee1aad621))
+
 ## [5.0.8](https://github.com/adobe/helix-markdown-support/compare/v5.0.7...v5.0.8) (2022-09-28)
 
 
