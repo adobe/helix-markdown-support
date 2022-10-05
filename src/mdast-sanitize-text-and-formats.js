@@ -82,6 +82,10 @@ export default function sanitizeTextAndFormats(tree) {
             value: first.value.substring(0, first.value.length - trimmed.length),
           };
           first.value = trimmed;
+          if (!trimmed) {
+            // remove
+            children.shift();
+          }
           if (isFormat(parent.type)) {
             // special case for nested formats, discard the text
             // ignore
