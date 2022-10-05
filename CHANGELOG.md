@@ -1,3 +1,10 @@
+## [5.0.10](https://github.com/adobe/helix-markdown-support/compare/v5.0.9...v5.0.10) (2022-10-05)
+
+
+### Bug Fixes
+
+* endless loop with space before nested formats ([#148](https://github.com/adobe/helix-markdown-support/issues/148)) ([80072a1](https://github.com/adobe/helix-markdown-support/commit/80072a12b94a703613d2a2930f8c03f800f744d0)), closes [#147](https://github.com/adobe/helix-markdown-support/issues/147)
+
 ## [5.0.9](https://github.com/adobe/helix-markdown-support/compare/v5.0.8...v5.0.9) (2022-09-28)
 
 
