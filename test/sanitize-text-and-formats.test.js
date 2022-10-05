@@ -16,7 +16,7 @@ import {
   emphasis,
   heading,
   image,
-  inlineCode,
+  inlineCode, link,
   paragraph,
   root,
   strike,
@@ -157,6 +157,15 @@ describe('sanitize-text Tests', () => {
         text('Lorem ipsum'),
         emphasis(text(' dolor')),
         text('sit amet.'),
+      ]),
+      heading(2, text('Moves leading whitespace in inner text of link')),
+      paragraph([
+        link('https://www.adobe.com', 'adobe', [
+          emphasis([
+            text(' '),
+            strong(text('dolor')),
+          ]),
+        ]),
       ]),
       paragraph([
         emphasis(text(' begin')),

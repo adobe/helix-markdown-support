@@ -12,6 +12,10 @@ Lorem ipsum **dolor**,sit amet.
 
 Lorem ipsum _dolor_ sit amet.
 
+## Moves leading whitespace in inner text of link
+
+[ _**dolor**_](https://www.adobe.com "adobe")
+
 _begin_ sit amet.
 
 ## Moves trailing whitespace in inner text
