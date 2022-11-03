@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/adobe/helix-markdown-support/compare/v5.0.10...v6.0.0) (2022-11-03)
+
+
+### Bug Fixes
+
+* remove gridtables export ([#153](https://github.com/adobe/helix-markdown-support/issues/153)) ([90d610b](https://github.com/adobe/helix-markdown-support/commit/90d610b06c92a61279f9641fcda321553e24cfc3))
+
+
+### BREAKING CHANGES
+
+* gridtables export (re)moved. use @adobe/remark-gridtables and @adobe/mdast-util-gridtables instead.
+
 ## [5.0.10](https://github.com/adobe/helix-markdown-support/compare/v5.0.9...v5.0.10) (2022-10-05)
 
 
