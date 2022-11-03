@@ -16,6 +16,7 @@ import {
 } from 'mdast-builder';
 import { unified } from 'unified';
 import remark from 'remark-parse';
+import remarkGridTable from '@adobe/remark-gridtables';
 import {
   assertMD,
   gridTable,
@@ -26,7 +27,6 @@ import {
   mdast2md,
 } from './utils.js';
 import { imageReferences, dereference } from '../src/index.js';
-import { remarkGridTable } from '../src/gridtable/index.js';
 
 describe('dereferences Tests', () => {
   it('dereferences images and links in tables', async () => {

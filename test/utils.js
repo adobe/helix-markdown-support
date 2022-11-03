@@ -12,15 +12,11 @@
 
 /* eslint-env mocha */
 import assert from 'assert';
-import { lstat, readFile } from 'fs/promises';
+import { readFile } from 'fs/promises';
 import stringify from 'remark-stringify';
 import { visit, CONTINUE } from 'unist-util-visit';
 import { unified } from 'unified';
 import { blockquote, tableCell, tableRow } from 'mdast-builder';
-import { inspectNoColor as inspect } from 'unist-util-inspect';
-import gfm from 'remark-gfm';
-import remark from 'remark-parse';
-import { remarkGridTable } from '../src/gridtable/index.js';
 
 export function removePositions(tree) {
   visit(tree, (node) => {
@@ -65,41 +61,6 @@ export async function assertMD(mdast, fixture, plugins, opts) {
   // console.log(actual);
   assert.strictEqual(actual, expected);
   return actual;
-}
-
-export async function testMD(spec) {
-  const source = await readFile(new URL(`./fixtures/${spec}.md`, import.meta.url), 'utf-8');
-  let expectedTree;
-  try {
-    expectedTree = await readFile(new URL(`./fixtures/${spec}.txt`, import.meta.url), 'utf-8');
-    expectedTree = expectedTree.trim();
-  } catch (e) {
-    // ignore
-  }
-
-  const actual = unified()
-    .use(remark)
-    .use(remarkGridTable, {})
-    .parse(source);
-
-  removePositions(actual);
-  const actualTree = inspect(actual);
-  // eslint-disable-next-line no-console
-  // console.log(actualTree);
-
-  if (expectedTree) {
-    assert.strictEqual(actualTree, expectedTree);
-  }
-
-  // convert back. check if round-trip md exists
-  try {
-    await lstat(new URL(`./fixtures/${spec}.rt.md`, import.meta.url));
-    // eslint-disable-next-line no-param-reassign
-    spec += '.rt';
-  } catch {
-    // ignore
-  }
-  await assertMD(actual, `${spec}.md`, [gfm, remarkGridTable]);
 }
 
 export function gtCell(children, align, verticalAlign, rowSpan, colSpan) {
