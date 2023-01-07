@@ -27,7 +27,7 @@
   "dependencies": {
     "hast-util-to-html": "8.0.3",
     "js-yaml": "4.1.0",
-    "mdast-util-to-hast": "12.2.4",
+    "mdast-util-to-hast": "12.2.5",
     "micromark-util-character": "1.1.0",
     "micromark-util-symbol": "1.0.1",
     "unist-util-find": "1.0.2",
@@ -55,7 +55,7 @@
     "eslint": "8.31.0",
     "eslint-plugin-header": "3.1.1",
     "eslint-plugin-import": "2.26.0",
-    "husky": "8.0.2",
+    "husky": "8.0.3",
     "junit-report-builder": "3.0.1",
     "lint-staged": "13.1.0",
     "mdast-builder": "1.1.1",
