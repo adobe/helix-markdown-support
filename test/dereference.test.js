@@ -12,7 +12,7 @@
 
 /* eslint-env mocha */
 import {
-  heading, image, root, text,
+  heading, image, paragraph, root, text,
 } from 'mdast-builder';
 import { unified } from 'unified';
 import remark from 'remark-parse';
@@ -63,35 +63,35 @@ describe('dereferences Tests', () => {
         gtBody([
           gtRow([
             gtCell(text('a2')),
-            gtCell(image('https://dummyimage.com/300')),
+            gtCell(paragraph(image('https://dummyimage.com/300'))),
           ]),
           gtRow([
             gtCell(text('a3')),
-            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross')),
+            gtCell(paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross'))),
           ]),
           gtRow([
             gtCell(text('a4')),
-            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross either.')),
+            gtCell(paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross either.'))),
           ]),
           gtRow([
             gtCell(text('a5')),
-            gtCell(image('https://dummyimage.com/300', undefined, 'A example 300x300 image')),
+            gtCell(paragraph(image('https://dummyimage.com/300', undefined, 'A example 300x300 image'))),
           ]),
           gtRow([
             gtCell(text('a6')),
-            gtCell(image('https://dummyimage.com/200', undefined, '  A example 200x200 image  ')),
+            gtCell(paragraph(image('https://dummyimage.com/200', undefined, '  A example 200x200 image  '))),
           ]),
           gtRow([
             gtCell(text('a7')),
-            gtCell(image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300')),
+            gtCell(paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300'))),
           ]),
           gtRow([
             gtCell(text('a8')),
-            gtCell(link1),
+            gtCell(paragraph(link1)),
           ]),
         ]),
       ]),
-      link1,
+      paragraph(link1),
       def1,
       def2,
     ]);
@@ -135,19 +135,19 @@ describe('dereferences Tests', () => {
 
     const mdast = root([
       heading(2, text('No alt text no title')),
-      image('https://dummyimage.com/300'),
+      paragraph(image('https://dummyimage.com/300')),
       heading(2, text('No alt text but title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross')),
       heading(2, text('No alt text but different title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross either.'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross either.')),
       heading(2, text('Same image with alt text')),
-      image('https://dummyimage.com/300', undefined, 'A example 300x300 image'),
+      paragraph(image('https://dummyimage.com/300', undefined, 'A example 300x300 image')),
       heading(2, text('Different image with alt text')),
-      image('https://dummyimage.com/200', undefined, '  A example 200x200 image  '),
+      paragraph(image('https://dummyimage.com/200', undefined, '  A example 200x200 image  ')),
       heading(2, text('Same image with title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300')),
       heading(2, text('Links refs')),
-      link1,
+      paragraph(link1),
       def1,
       def2,
     ]);
