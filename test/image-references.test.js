@@ -12,7 +12,7 @@
 
 /* eslint-env mocha */
 import {
-  heading, image, root, text,
+  heading, image, root, text, paragraph,
 } from 'mdast-builder';
 import { assertMD } from './utils.js';
 import { imageReferences } from '../src/index.js';
@@ -35,19 +35,19 @@ describe('image-references Tests', () => {
 
     const mdast = root([
       heading(2, text('No alt text no title')),
-      image('https://dummyimage.com/300'),
+      paragraph(image('https://dummyimage.com/300')),
       heading(2, text('No alt text but title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross')),
       heading(2, text('No alt text but different title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross either.'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross either.')),
       heading(2, text('Same image with alt text')),
-      image('https://dummyimage.com/300', undefined, 'A example 300x300 image'),
+      paragraph(image('https://dummyimage.com/300', undefined, 'A example 300x300 image')),
       heading(2, text('Different image with alt text')),
-      image('https://dummyimage.com/200', undefined, '  A example 200x200 image  '),
+      paragraph(image('https://dummyimage.com/200', undefined, '  A example 200x200 image  ')),
       heading(2, text('Same image with title')),
-      image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300'),
+      paragraph(image('https://dummyimage.com/300', 'This is no Bob Ross', 'This is 300x300')),
       heading(2, text('Links refs')),
-      link1,
+      paragraph(link1),
       def1,
     ]);
     imageReferences(mdast);
