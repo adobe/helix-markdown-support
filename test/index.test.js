@@ -19,6 +19,7 @@ const MODS = [
   'sanitizeHeading',
   'suppressSpaceCode',
   'fixCodeFlow',
+  'fixRootPhrasing',
   'sanitizeLinks',
   'breaksAsSpaces',
   'sanitizeFormats',
