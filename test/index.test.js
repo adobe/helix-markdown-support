@@ -27,6 +27,7 @@ const MODS = [
   'sanitizeTextAndFormats',
   'imageReferences',
   'dereference',
+  'remarkGfmNoLink',
 ];
 
 describe('Index Tests', () => {

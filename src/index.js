@@ -22,3 +22,4 @@ export { default as sanitizeText } from './mdast-sanitize-text.js';
 export { default as sanitizeTextAndFormats } from './mdast-sanitize-text-and-formats.js';
 export { default as imageReferences } from './mdast-image-references.js';
 export { default as dereference } from './mdast-dereference.js';
+export { default as remarkGfmNoLink } from './remark-gfm-nolink.js';

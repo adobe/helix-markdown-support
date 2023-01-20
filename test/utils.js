@@ -17,6 +17,9 @@ import stringify from 'remark-stringify';
 import { visit, CONTINUE } from 'unist-util-visit';
 import { unified } from 'unified';
 import { blockquote, tableCell, tableRow } from 'mdast-builder';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import rehypeStringify from 'rehype-stringify';
 
 export function removePositions(tree) {
   visit(tree, (node) => {
@@ -60,6 +63,33 @@ export async function assertMD(mdast, fixture, plugins, opts) {
   const actual = mdast2md(mdast, plugins, opts);
   // console.log(actual);
   assert.strictEqual(actual, expected);
+  return actual;
+}
+
+export async function assertHTML(fixture, plugins, opts) {
+  // console.log(require('unist-util-inspect')(mdast));
+  const source = await readFile(new URL(`./fixtures/${fixture}.md`, import.meta.url), 'utf-8');
+  const expected = await readFile(new URL(`./fixtures/${fixture}.html`, import.meta.url), 'utf-8');
+  let processor = unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeStringify, {
+      strong: '*',
+      emphasis: '_',
+      bullet: '-',
+      fence: '`',
+      fences: true,
+      incrementListMarker: true,
+      rule: '-',
+      ruleRepetition: 3,
+      ruleSpaces: false,
+      setext: false,
+      ...opts,
+    });
+  processor = plugins.reduce((proc, plug) => (proc.use(plug)), processor);
+  const actual = String(await processor.process(source));
+  // console.log(actual);
+  assert.strictEqual(actual.trim(), expected.trim());
   return actual;
 }
 
