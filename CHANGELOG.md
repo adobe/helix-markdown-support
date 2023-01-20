@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/adobe/helix-markdown-support/compare/v6.0.2...v6.1.0) (2023-01-20)
+
+
+### Features
+
+* add remark-gfm-nolink ([#167](https://github.com/adobe/helix-markdown-support/issues/167)) ([f10fa62](https://github.com/adobe/helix-markdown-support/commit/f10fa627d8a844c0d01a5727a01ecdea4177f36e))
+
 ## [6.0.2](https://github.com/adobe/helix-markdown-support/compare/v6.0.1...v6.0.2) (2023-01-20)
 
 
