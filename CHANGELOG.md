@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/adobe/helix-markdown-support/compare/v6.0.1...v6.0.2) (2023-01-20)
+
+
+### Bug Fixes
+
+* add root phrasing helper ([#166](https://github.com/adobe/helix-markdown-support/issues/166)) ([4a875b5](https://github.com/adobe/helix-markdown-support/commit/4a875b545e191ad7a10e749256c1955972c5a08e))
+
 ## [6.0.1](https://github.com/adobe/helix-markdown-support/compare/v6.0.0...v6.0.1) (2023-01-18)
 
 
