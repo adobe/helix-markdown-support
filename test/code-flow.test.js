@@ -17,7 +17,7 @@ import {
 import { assertMD } from './utils.js';
 import { fixCodeFlow } from '../src/index.js';
 
-describe('fix-code=flow Tests', () => {
+describe('fix-code-flow Tests', () => {
   it('Keeps code as paragraph sibling', async () => {
     const mdast = root([
       heading(2, text('Ensure proper code flow')),
