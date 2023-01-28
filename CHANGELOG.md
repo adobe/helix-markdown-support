@@ -1,3 +1,10 @@
+## [6.1.1](https://github.com/adobe/helix-markdown-support/compare/v6.1.0...v6.1.1) (2023-01-28)
+
+
+### Bug Fixes
+
+* **deps:** update external fixes ([060a182](https://github.com/adobe/helix-markdown-support/commit/060a18218b0a99b3e2482308debd51d25bdeedc7))
+
 # [6.1.0](https://github.com/adobe/helix-markdown-support/compare/v6.0.2...v6.1.0) (2023-01-20)
 
 
