@@ -1,3 +1,10 @@
+## [6.1.2](https://github.com/adobe/helix-markdown-support/compare/v6.1.1...v6.1.2) (2023-05-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency micromark-extension-gfm-table to v1.0.6 ([961df24](https://github.com/adobe/helix-markdown-support/commit/961df243ab13bb9b3b1a726aa6f0675d6d9d5f07))
+
 ## [6.1.1](https://github.com/adobe/helix-markdown-support/compare/v6.1.0...v6.1.1) (2023-01-28)
 
 
