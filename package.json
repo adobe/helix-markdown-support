@@ -76,7 +76,7 @@
     "remark-parse": "10.0.2",
     "remark-rehype": "10.1.0",
     "remark-stringify": "10.0.3",
-    "semantic-release": "21.0.3",
+    "semantic-release": "21.0.5",
     "unified": "10.1.2",
     "unist-util-inspect": "7.0.2"
   },
