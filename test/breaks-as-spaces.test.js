@@ -24,10 +24,8 @@ import {
   text,
 } from 'mdast-builder';
 
-import gfm from 'remark-gfm';
+import { remarkGfmNoLink as gfm, breaksAsSpaces } from '../src/index.js';
 import { assertMD } from './utils.js';
-
-import { breaksAsSpaces } from '../src/index.js';
 
 describe('breaks-as-spaces Tests', () => {
   it('Uses spaces as softbreaks', async () => {

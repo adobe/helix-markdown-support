@@ -22,9 +22,8 @@ import {
   strong,
   text,
 } from 'mdast-builder';
-import gfm from 'remark-gfm';
 import { assertMD } from './utils.js';
-import { sanitizeText } from '../src/index.js';
+import { remarkGfmNoLink as gfm, sanitizeText } from '../src/index.js';
 
 const separator = () => ({
   type: 'thematicBreak',

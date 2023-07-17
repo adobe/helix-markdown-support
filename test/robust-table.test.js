@@ -21,10 +21,9 @@ import {
   tableRow,
   text,
 } from 'mdast-builder';
-import gfm from 'remark-gfm';
 
 import { assertMD } from './utils.js';
-import { robustTables, breaksAsSpaces } from '../src/index.js';
+import { remarkGfmNoLink as gfm, robustTables, breaksAsSpaces } from '../src/index.js';
 
 function tableCell(children, align, verticalAlign) {
   const node = originalCell(children);

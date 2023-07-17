@@ -23,10 +23,9 @@ import {
   strong,
   text,
 } from 'mdast-builder';
-import gfm from 'remark-gfm';
 import { unified } from 'unified';
 import remark from 'remark-parse';
-import { sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
+import { remarkGfmNoLink as gfm, sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
 import { assertMD } from './utils.js';
 
 const separator = () => ({
