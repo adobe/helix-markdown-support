@@ -12,8 +12,13 @@
 import { visit, CONTINUE } from 'unist-util-visit';
 import { asciiPunctuation, markdownSpace, unicodePunctuation } from 'micromark-util-character';
 
-function isFormat(type) {
-  return type === 'strong' || type === 'emphasis' || type === 'delete';
+export function isFormat(type) {
+  return type === 'strong'
+    || type === 'emphasis'
+    || type === 'delete'
+    || type === 'superscript'
+    || type === 'subscript'
+    || type === 'underline';
 }
 
 /**
