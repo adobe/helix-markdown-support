@@ -1,3 +1,10 @@
+## [6.2.1](https://github.com/adobe/helix-markdown-support/compare/v6.2.0...v6.2.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* no whitespace around sub/sup ([1754c65](https://github.com/adobe/helix-markdown-support/commit/1754c65ef5990c5fc76ae4fe4c6308d9ed58f930))
+
 # [6.2.0](https://github.com/adobe/helix-markdown-support/compare/v6.1.3...v6.2.0) (2023-07-18)
 
 
