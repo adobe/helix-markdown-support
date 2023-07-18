@@ -1,3 +1,10 @@
+# [6.2.0](https://github.com/adobe/helix-markdown-support/compare/v6.1.3...v6.2.0) (2023-07-18)
+
+
+### Features
+
+* support extended formats ([b1561dd](https://github.com/adobe/helix-markdown-support/commit/b1561ddfc13ddd8aae22a6f396d2d956afcd0a09))
+
 ## [6.1.3](https://github.com/adobe/helix-markdown-support/compare/v6.1.2...v6.1.3) (2023-06-27)
 
 
