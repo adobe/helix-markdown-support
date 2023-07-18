@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { visit, CONTINUE } from 'unist-util-visit';
+import { isFormat } from './mdast-sanitize-text-and-formats.js';
 
 /**
  * Sanitizes text:
@@ -23,7 +24,7 @@ export default function sanitizeFormats(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
     const { children } = node;
-    if (node.type === 'strong' || node.type === 'emphasis' || node.type === 'delete') {
+    if (isFormat(node.type)) {
       // remove empty nodes
       if (!children || !children.length) {
         siblings.splice(index, 1);
