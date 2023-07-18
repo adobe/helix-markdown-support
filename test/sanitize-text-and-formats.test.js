@@ -26,7 +26,7 @@ import {
 import gfm from 'remark-gfm';
 import { unified } from 'unified';
 import remark from 'remark-parse';
-import { sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
+import { renderHtmlFormats, sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
 import { assertMD } from './utils.js';
 
 const separator = () => ({
@@ -36,6 +36,16 @@ const separator = () => ({
 const brk = () => ({
   type: 'break',
 });
+
+const nodeWithChildren = (type) => (...args) => {
+  const node = strong(...args);
+  node.type = type;
+  return node;
+};
+
+const superscript = nodeWithChildren('superscript');
+const subscript = nodeWithChildren('subscript');
+const underline = nodeWithChildren('underline');
 
 describe('sanitize-text Tests', () => {
   it('sanitize', async () => {
@@ -148,6 +158,21 @@ describe('sanitize-text Tests', () => {
         text(',sit amet.'),
       ]),
       paragraph([
+        text('Water is H'),
+        subscript(text('2')),
+        text('O.'),
+      ]),
+      paragraph([
+        text('We ranked the 4'),
+        superscript(text('th')),
+        text(' place'),
+      ]),
+      paragraph([
+        text('We are very'),
+        underline(text('pleased')),
+        text('with the outcome.'),
+      ]),
+      paragraph([
         text('“'),
         emphasis(text('My favourite announcement this year has to be Photoshop for iPad.')),
         text('“'),
@@ -200,6 +225,8 @@ describe('sanitize-text Tests', () => {
       ]),
     ]);
     sanitizeTextAndFormats(mdast);
+    renderHtmlFormats(mdast);
+
     const source = await assertMD(mdast, 'sanitized-whitespace.md', [gfm]);
 
     const actual = unified()
