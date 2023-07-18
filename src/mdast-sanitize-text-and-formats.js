@@ -21,6 +21,10 @@ export function isFormat(type) {
     || type === 'underline';
 }
 
+function isSnug(type) {
+  return type === 'superscript' || type === 'subscript';
+}
+
 /**
  * Sanitizes text:
  * - collapses consecutive formats
@@ -105,7 +109,7 @@ export default function sanitizeTextAndFormats(tree) {
 
       // ensure that text before format has trailing whitespace
       const prev = siblings[index - 1];
-      if (prev?.type === 'text') {
+      if (prev?.type === 'text' && !isSnug(node.type)) {
         const code = prev.value.charCodeAt(prev.value.length - 1);
         if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           prev.value += ' ';
@@ -114,7 +118,7 @@ export default function sanitizeTextAndFormats(tree) {
 
       // ensure that text after format has leading whitespace
       const next = siblings[index + 1];
-      if (children.length && next?.type === 'text') {
+      if (children.length && next?.type === 'text' && !isSnug(node.type)) {
         const code = next.value.charCodeAt(0);
         if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           next.value = ` ${next.value}`;
