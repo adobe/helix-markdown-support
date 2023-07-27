@@ -395,6 +395,14 @@ describe('sanitize-text Tests', () => {
           ),
         ),
       ]),
+      paragraph([
+        strong([
+          emphasis(
+            text('bold and italic'),
+          ),
+          text(' only bold'),
+        ]),
+      ]),
     ]);
     sort(mdast);
     renderHtmlFormats(mdast);

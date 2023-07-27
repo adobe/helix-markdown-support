@@ -5,3 +5,5 @@
 _emphasis~~**deleted_[<u>important</u>](about:blank "title")_**~~_
 
 **_[](about:blank "Empty")_**
+
+**_bold and italic_ only bold**
