@@ -28,6 +28,7 @@ import { unified } from 'unified';
 import remark from 'remark-parse';
 import { renderHtmlFormats, sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
 import { assertMD } from './utils.js';
+import { sort } from '../src/mdast-sanitize-text-and-formats.js';
 
 const separator = () => ({
   type: 'thematicBreak',
@@ -348,5 +349,55 @@ describe('sanitize-text Tests', () => {
     ]);
     sanitizeTextAndFormats(mdast);
     assert.deepEqual(mdast, expected);
+  });
+
+  it('sorts a complex tree', async () => {
+    const mdast = root([
+      heading(1, text('Sort Formats')),
+      paragraph([
+        underline(
+          strike(
+            subscript(
+              emphasis(
+                link(
+                  'about:blank',
+                  'Title',
+                  strong(
+                    text('inner text'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+      paragraph([
+        emphasis([
+          text('emphasis'),
+          strong(strike([
+            text('deleted'),
+            underline(
+              link(
+                'about:blank',
+                'title',
+                emphasis(
+                  text('important'),
+                ),
+              ),
+            ),
+          ])),
+        ]),
+      ]),
+      paragraph([
+        strong(
+          emphasis(
+            link('about:blank', 'Empty'),
+          ),
+        ),
+      ]),
+    ]);
+    sort(mdast);
+    renderHtmlFormats(mdast);
+    await assertMD(mdast, 'sort-formats.md', [gfm]);
   });
 });

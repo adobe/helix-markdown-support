@@ -25,6 +25,57 @@ function isSnug(type) {
   return type === 'superscript' || type === 'subscript';
 }
 
+const FLOW_SORT_ORDER = [
+  'delete',
+  'strong',
+  'emphasis',
+  'link',
+  'underline',
+  'subscript',
+  'superscript',
+];
+
+export function sort(tree) {
+  if (!tree.children) {
+    return;
+  }
+  // find flow chain
+  for (let i = 0; i < tree.children.length; i += 1) {
+    const node = tree.children[i];
+    const idx = FLOW_SORT_ORDER.indexOf(node.type);
+    if (idx >= 0) {
+      const chain = [];
+      let next = node;
+      let nextIdx = idx;
+      while (nextIdx >= 0) {
+        chain.push({ node: next, idx: nextIdx });
+        next = next.children?.[0];
+        nextIdx = FLOW_SORT_ORDER.indexOf(next?.type);
+      }
+      if (chain.length > 1) {
+        // remember children of last node in chain
+        const lastChildren = chain[chain.length - 1].node.children;
+
+        // sort chain
+        chain.sort((n0, n1) => (n0.idx - n1.idx));
+
+        // relink chain
+        for (let j = 0; j < chain.length - 1; j += 1) {
+          chain[j].node.children = [chain[j + 1].node];
+        }
+        chain[chain.length - 1].node.children = lastChildren;
+
+        // eslint-disable-next-line no-param-reassign
+        tree.children[i] = chain[0].node;
+      }
+      // continue on last node
+      sort(chain[chain.length - 1].node);
+    } else {
+      sort(node);
+    }
+  }
+}
+
 /**
  * Sanitizes text:
  * - collapses consecutive formats
@@ -199,6 +250,6 @@ export default function sanitizeTextAndFormats(tree) {
     return false;
   }
   prune(tree);
-
+  sort(tree);
   return tree;
 }
