@@ -1,3 +1,10 @@
+# [6.3.0](https://github.com/adobe/helix-markdown-support/compare/v6.2.1...v6.3.0) (2023-07-27)
+
+
+### Features
+
+* sort formats ([#206](https://github.com/adobe/helix-markdown-support/issues/206)) ([b734a35](https://github.com/adobe/helix-markdown-support/commit/b734a359e764ac4630b7b2418c0e71e342ad52b6))
+
 ## [6.2.1](https://github.com/adobe/helix-markdown-support/compare/v6.2.0...v6.2.1) (2023-07-18)
 
 
