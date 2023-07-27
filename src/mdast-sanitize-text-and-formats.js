@@ -25,6 +25,55 @@ function isSnug(type) {
   return type === 'superscript' || type === 'subscript';
 }
 
+const FLOW_SORT_ORDER = [
+  'delete',
+  'strong',
+  'emphasis',
+  'link',
+  'underline',
+  'subscript',
+  'superscript',
+];
+
+export function sort(tree) {
+  if (!tree.children) {
+    return;
+  }
+  for (let i = 0; i < tree.children.length; i += 1) {
+    let node = tree.children[i];
+    let key = FLOW_SORT_ORDER.indexOf(node.type);
+    if (key >= 0) {
+      // find the longest chain of formats
+      const chain = [];
+      while (key >= 0) {
+        chain.push({ node, key });
+        node = node.children?.length === 1 ? node.children[0] : null;
+        key = node ? FLOW_SORT_ORDER.indexOf(node?.type) : -1;
+      }
+      if (chain.length > 1) {
+        // remember children of last node in chain
+        const lastChildren = chain[chain.length - 1].node.children;
+
+        // sort chain
+        chain.sort((n0, n1) => (n0.key - n1.key));
+
+        // relink chain
+        for (let j = 0; j < chain.length - 1; j += 1) {
+          chain[j].node.children = [chain[j + 1].node];
+        }
+        chain[chain.length - 1].node.children = lastChildren;
+
+        // eslint-disable-next-line no-param-reassign
+        tree.children[i] = chain[0].node;
+      }
+      // continue on last node
+      sort(chain[chain.length - 1].node);
+    } else {
+      sort(node);
+    }
+  }
+}
+
 /**
  * Sanitizes text:
  * - collapses consecutive formats
@@ -199,6 +248,6 @@ export default function sanitizeTextAndFormats(tree) {
     return false;
   }
   prune(tree);
-
+  sort(tree);
   return tree;
 }
