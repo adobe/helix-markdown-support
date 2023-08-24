@@ -74,22 +74,7 @@ export function sort(tree) {
   }
 }
 
-/**
- * Sanitizes text:
- * - collapses consecutive formats
- * - collapses consecutive text blocks
- * - trims ends of texts before break
- * - trims ends of texts at the end
- * - moves leading and trailing whitespaces out of formats
- * - ensures spaces after formats
- * - removes trailing breaks in containers
- *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
- * - removes empty text blocks, formats, paragraphs
- *
- * @param {object} tree
- * @returns {object} The modified (original) tree.
- */
-export default function sanitizeTextAndFormats(tree) {
+function collapse(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
     const { children = [] } = node;
@@ -105,7 +90,17 @@ export default function sanitizeTextAndFormats(tree) {
         siblings.splice(index, 1);
         return index - 1;
       }
+    }
+    return CONTINUE;
+  });
+}
 
+function whitespace(tree) {
+  visit(tree, (node, index, parent) => {
+    const { children: siblings = [] } = parent || {};
+    const { children = [] } = node;
+
+    if (isFormat(node.type)) {
       // check if last text block has trailing whitespace
       const last = children[children.length - 1];
       if (last?.type === 'text') {
@@ -176,7 +171,9 @@ export default function sanitizeTextAndFormats(tree) {
     }
     return CONTINUE;
   });
+}
 
+function cleanup(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
 
@@ -226,28 +223,56 @@ export default function sanitizeTextAndFormats(tree) {
 
     return CONTINUE;
   });
+}
 
-  // remove text, formats and paragraphs
-  function prune(node) {
-    const { children, type } = node;
-    if (type === 'text') {
-      return !node.value;
-    }
-    if (!children) {
-      return false;
-    }
-    for (let i = 0; i < children.length; i += 1) {
-      if (prune(children[i])) {
-        children.splice(i, 1);
-        i -= 1;
-      }
-    }
-    if (type === 'paragraph' || isFormat(type)) {
-      return children.length === 0;
-    }
+/**
+ * remove empty text, formats, paragraphs
+ * @param node
+ * @return {boolean}
+ */
+function prune(node) {
+  const { children, type } = node;
+  if (type === 'text') {
+    return !node.value;
+  }
+  if (!children) {
     return false;
   }
+  for (let i = 0; i < children.length; i += 1) {
+    if (prune(children[i])) {
+      children.splice(i, 1);
+      i -= 1;
+    }
+  }
+  if (type === 'paragraph' || isFormat(type)) {
+    return children.length === 0;
+  }
+  return false;
+}
+
+/**
+ * Sanitizes text:
+ * - collapses consecutive formats
+ * - collapses consecutive text blocks
+ * - trims ends of texts before break
+ * - trims ends of texts at the end
+ * - moves leading and trailing whitespaces out of formats
+ * - ensures spaces after formats
+ * - removes trailing breaks in containers
+ *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
+ * - removes empty text blocks, formats, paragraphs
+ *
+ * @param {object} tree
+ * @returns {object} The modified (original) tree.
+ */
+export default function sanitizeTextAndFormats(tree) {
+  collapse(tree);
   prune(tree);
   sort(tree);
+  // collapse again, because sorting the nodes might have produce new collapsable siblings
+  collapse(tree);
+  whitespace(tree);
+  cleanup(tree);
+  prune(tree);
   return tree;
 }
