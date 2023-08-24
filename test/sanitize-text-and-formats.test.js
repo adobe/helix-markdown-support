@@ -221,7 +221,10 @@ describe('sanitize-text Tests', () => {
       ]),
       paragraph([
         text('Lorem ipsum'),
-        strong(emphasis(text(' dolor '))),
+        strong(emphasis([
+          text(' '),
+          text('dolor '),
+        ])),
         text('sit amet.'),
       ]),
     ]);
@@ -305,8 +308,7 @@ describe('sanitize-text Tests', () => {
       ]);
       const expected = root([
         paragraph([
-          text('Hello, '),
-          text('world.'),
+          text('Hello, world.'),
         ]),
       ]);
       sanitizeTextAndFormats(mdast);
