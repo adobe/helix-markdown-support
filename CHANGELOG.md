@@ -1,3 +1,10 @@
+## [6.3.1](https://github.com/adobe/helix-markdown-support/compare/v6.3.0...v6.3.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* properly handle whitespace after sort ([#211](https://github.com/adobe/helix-markdown-support/issues/211)) ([03bf02a](https://github.com/adobe/helix-markdown-support/commit/03bf02a249f594e03c5d523d876e0b6522ad6ed5))
+
 # [6.3.0](https://github.com/adobe/helix-markdown-support/compare/v6.2.1...v6.3.0) (2023-07-27)
 
 
