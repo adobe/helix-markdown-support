@@ -63,7 +63,7 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "c8": "8.0.1",
-    "eslint": "8.47.0",
+    "eslint": "8.48.0",
     "husky": "8.0.3",
     "junit-report-builder": "3.0.1",
     "lint-staged": "13.3.0",
@@ -76,7 +76,7 @@
     "remark-parse": "10.0.2",
     "remark-rehype": "10.1.0",
     "remark-stringify": "10.0.3",
-    "semantic-release": "21.0.7",
+    "semantic-release": "21.1.1",
     "unified": "10.1.2",
     "unist-util-inspect": "7.0.2"
   },
