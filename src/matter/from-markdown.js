@@ -20,7 +20,7 @@ function open(token) {
 function createClose(options) {
   function close(token) {
     const data = this.resume();
-    const node = this.exit(token);
+    const node = this.stack[this.stack.length - 1];
     // todo: avoid double parsing
     node.payload = jsYaml.load(data);
     if (options.yamlDump) {
@@ -28,6 +28,7 @@ function createClose(options) {
     } else {
       delete node.value;
     }
+    this.exit(token);
   }
 
   return close;

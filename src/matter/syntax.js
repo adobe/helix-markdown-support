@@ -11,8 +11,7 @@
  */
 /* eslint-disable no-use-before-define */
 import jsYaml from 'js-yaml';
-import { codes } from 'micromark-util-symbol/codes.js';
-import { types } from 'micromark-util-symbol/types.js';
+import { codes, types } from 'micromark-util-symbol';
 import { markdownLineEnding, markdownSpace } from 'micromark-util-character';
 import { TYPE_YAML } from './types.js';
 

@@ -22,9 +22,8 @@ import {
   text,
   brk,
 } from 'mdast-builder';
-import gfm from 'remark-gfm';
 import { assertMD } from './utils.js';
-import { sanitizeLinks } from '../src/index.js';
+import { remarkGfmNoLink as gfm, sanitizeLinks } from '../src/index.js';
 
 describe('sanitize-links Tests', () => {
   it('unwraps formatting', async () => {

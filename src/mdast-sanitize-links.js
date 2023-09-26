@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { visit, CONTINUE } from 'unist-util-visit';
-import find from 'unist-util-find';
+import { find } from 'unist-util-find';
 
 /**
  * Sanitizes links:

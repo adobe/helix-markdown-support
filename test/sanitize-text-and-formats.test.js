@@ -23,10 +23,11 @@ import {
   strong,
   text,
 } from 'mdast-builder';
-import gfm from 'remark-gfm';
 import { unified } from 'unified';
 import remark from 'remark-parse';
-import { renderHtmlFormats, sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
+import {
+  remarkGfmNoLink as gfm, renderHtmlFormats, sanitizeHeading, sanitizeTextAndFormats,
+} from '../src/index.js';
 import { assertMD } from './utils.js';
 import { sort } from '../src/mdast-sanitize-text-and-formats.js';
 

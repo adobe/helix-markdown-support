@@ -12,37 +12,14 @@
 
 /*
 copied from
-https://github.com/micromark/micromark-extension-gfm/blob/942585eba9ec22fd9818638d42a7c8e62a7208b0/index.js
-
-(The MIT License)
-
-Copyright (c) 2020 Titus Wormer <tituswormer@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+https://github.com/micromark/micromark-extension-gfm/blob/main/index.js
+*/
 
 /**
+ * @typedef {import('micromark-extension-gfm-footnote').HtmlOptions} HtmlOptions
+ * @typedef {import('micromark-extension-gfm-strikethrough').Options} Options
  * @typedef {import('micromark-util-types').Extension} Extension
  * @typedef {import('micromark-util-types').HtmlExtension} HtmlExtension
- * @typedef {import('micromark-extension-gfm-strikethrough').Options} Options
- * @typedef {import('micromark-extension-gfm-footnote').HtmlOptions} HtmlOptions
  */
 
 import {
@@ -51,8 +28,8 @@ import {
 } from 'micromark-util-combine-extensions';
 // import {
 //   gfmAutolinkLiteral,
-//   gfmAutolinkLiteralHtml,
-// } from 'micromark-extension-gfm-autolink-literal';
+//   gfmAutolinkLiteralHtml
+// } from 'micromark-extension-gfm-autolink-literal'
 import { gfmFootnote, gfmFootnoteHtml } from 'micromark-extension-gfm-footnote';
 import {
   gfmStrikethrough,
@@ -66,47 +43,45 @@ import {
 } from 'micromark-extension-gfm-task-list-item';
 
 /**
- * Add support for parsing GFM in markdown.
+ * Create an extension for `micromark` to enable GFM syntax.
  *
- * Function that can be called to get a syntax extension for micromark (passed
- * in `extensions`).
- *
- * @param {Options} [options]
+ * @param {Options | null | undefined} [options]
  *   Configuration (optional).
+ *
  *   Passed to `micromark-extens-gfm-strikethrough`.
  * @returns {Extension}
- *   Syntax extension for micromark (passed in `extensions`).
+ *   Extension for `micromark` that can be passed in `extensions` to enable GFM
+ *   syntax.
  */
 export function gfm(options) {
   return combineExtensions([
-    // gfmAutolinkLiteral,
+    // gfmAutolinkLiteral(),
     gfmFootnote(),
     gfmStrikethrough(options),
-    gfmTable,
-    gfmTaskListItem,
+    gfmTable(),
+    gfmTaskListItem(),
   ]);
 }
 
 /**
- * Add support for turning GFM in markdown to HTML.
+ * Create an extension for `micromark` to support GFM when serializing to HTML.
  *
- * Function that can be called to get an HTML extension for micromark (passed
- * in `htmlExtensions`).
- *
- * @param {HtmlOptions} [options]
+ * @param {HtmlOptions | null | undefined} [options]
  *   Configuration (optional).
+ *
  *   Passed to `micromark-extens-gfm-footnote`.
  * @returns {HtmlExtension}
- *   HTML extension for micromark (passed in `htmlExtensions`).
+ *   Extension for `micromark` that can be passed in `htmlExtensions` to
+ *   support GFM when serializing to HTML.
  */
 /* c8 ignore next 10 */
 export function gfmHtml(options) {
   return combineHtmlExtensions([
-    // gfmAutolinkLiteralHtml,
+    // gfmAutolinkLiteralHtml(),
     gfmFootnoteHtml(options),
-    gfmStrikethroughHtml,
-    gfmTableHtml,
-    gfmTagfilterHtml,
-    gfmTaskListItemHtml,
+    gfmStrikethroughHtml(),
+    gfmTableHtml(),
+    gfmTagfilterHtml(),
+    gfmTaskListItemHtml(),
   ]);
 }
