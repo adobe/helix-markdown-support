@@ -28,6 +28,7 @@ const MODS = [
   'imageReferences',
   'dereference',
   'remarkGfmNoLink',
+  'renderHtmlFormats',
 ];
 
 describe('Index Tests', () => {

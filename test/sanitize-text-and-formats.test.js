@@ -25,8 +25,11 @@ import {
 } from 'mdast-builder';
 import { unified } from 'unified';
 import remark from 'remark-parse';
-import { remarkGfmNoLink as gfm, sanitizeHeading, sanitizeTextAndFormats } from '../src/index.js';
+import {
+  remarkGfmNoLink as gfm, renderHtmlFormats, sanitizeHeading, sanitizeTextAndFormats,
+} from '../src/index.js';
 import { assertMD } from './utils.js';
+import { sort } from '../src/mdast-sanitize-text-and-formats.js';
 
 const separator = () => ({
   type: 'thematicBreak',
@@ -35,6 +38,16 @@ const separator = () => ({
 const brk = () => ({
   type: 'break',
 });
+
+const nodeWithChildren = (type) => (...args) => {
+  const node = strong(...args);
+  node.type = type;
+  return node;
+};
+
+const superscript = nodeWithChildren('superscript');
+const subscript = nodeWithChildren('subscript');
+const underline = nodeWithChildren('underline');
 
 describe('sanitize-text Tests', () => {
   it('sanitize', async () => {
@@ -147,6 +160,21 @@ describe('sanitize-text Tests', () => {
         text(',sit amet.'),
       ]),
       paragraph([
+        text('Water is H'),
+        subscript(text('2')),
+        text('O.'),
+      ]),
+      paragraph([
+        text('We ranked the 4'),
+        superscript(text('th')),
+        text(' place'),
+      ]),
+      paragraph([
+        text('We are very'),
+        underline(text('pleased')),
+        text('with the outcome.'),
+      ]),
+      paragraph([
         text('“'),
         emphasis(text('My favourite announcement this year has to be Photoshop for iPad.')),
         text('“'),
@@ -194,11 +222,16 @@ describe('sanitize-text Tests', () => {
       ]),
       paragraph([
         text('Lorem ipsum'),
-        strong(emphasis(text(' dolor '))),
+        strong(emphasis([
+          text(' '),
+          text('dolor '),
+        ])),
         text('sit amet.'),
       ]),
     ]);
     sanitizeTextAndFormats(mdast);
+    renderHtmlFormats(mdast);
+
     const source = await assertMD(mdast, 'sanitized-whitespace.md', [gfm]);
 
     const actual = unified()
@@ -276,8 +309,7 @@ describe('sanitize-text Tests', () => {
       ]);
       const expected = root([
         paragraph([
-          text('Hello, '),
-          text('world.'),
+          text('Hello, world.'),
         ]),
       ]);
       sanitizeTextAndFormats(mdast);
@@ -320,5 +352,63 @@ describe('sanitize-text Tests', () => {
     ]);
     sanitizeTextAndFormats(mdast);
     assert.deepEqual(mdast, expected);
+  });
+
+  it('sorts a complex tree', async () => {
+    const mdast = root([
+      heading(1, text('Sort Formats')),
+      paragraph([
+        underline(
+          strike(
+            subscript(
+              emphasis(
+                link(
+                  'about:blank',
+                  'Title',
+                  strong(
+                    text('inner text'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+      paragraph([
+        emphasis([
+          text('emphasis'),
+          strong(strike([
+            text('deleted'),
+            underline(
+              link(
+                'about:blank',
+                'title',
+                emphasis(
+                  text('important'),
+                ),
+              ),
+            ),
+          ])),
+        ]),
+      ]),
+      paragraph([
+        strong(
+          emphasis(
+            link('about:blank', 'Empty'),
+          ),
+        ),
+      ]),
+      paragraph([
+        strong([
+          emphasis(
+            text('bold and italic'),
+          ),
+          text(' only bold'),
+        ]),
+      ]),
+    ]);
+    sort(mdast);
+    renderHtmlFormats(mdast);
+    await assertMD(mdast, 'sort-formats.md', [gfm]);
   });
 });

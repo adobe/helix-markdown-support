@@ -12,26 +12,69 @@
 import { visit, CONTINUE } from 'unist-util-visit';
 import { asciiPunctuation, markdownSpace, unicodePunctuation } from 'micromark-util-character';
 
-function isFormat(type) {
-  return type === 'strong' || type === 'emphasis' || type === 'delete';
+export function isFormat(type) {
+  return type === 'strong'
+    || type === 'emphasis'
+    || type === 'delete'
+    || type === 'superscript'
+    || type === 'subscript'
+    || type === 'underline';
 }
 
-/**
- * Sanitizes text:
- * - collapses consecutive formats
- * - collapses consecutive text blocks
- * - trims ends of texts before break
- * - trims ends of texts at the end
- * - moves leading and trailing whitespaces out of formats
- * - ensures spaces after formats
- * - removes trailing breaks in containers
- *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
- * - removes empty text blocks, formats, paragraphs
- *
- * @param {object} tree
- * @returns {object} The modified (original) tree.
- */
-export default function sanitizeTextAndFormats(tree) {
+function isSnug(type) {
+  return type === 'superscript' || type === 'subscript';
+}
+
+const FLOW_SORT_ORDER = [
+  'delete',
+  'strong',
+  'emphasis',
+  'link',
+  'underline',
+  'subscript',
+  'superscript',
+];
+
+export function sort(tree) {
+  if (!tree.children) {
+    return;
+  }
+  for (let i = 0; i < tree.children.length; i += 1) {
+    let node = tree.children[i];
+    let key = FLOW_SORT_ORDER.indexOf(node.type);
+    if (key >= 0) {
+      // find the longest chain of formats
+      const chain = [];
+      while (key >= 0) {
+        chain.push({ node, key });
+        node = node.children?.length === 1 ? node.children[0] : null;
+        key = node ? FLOW_SORT_ORDER.indexOf(node?.type) : -1;
+      }
+      if (chain.length > 1) {
+        // remember children of last node in chain
+        const lastChildren = chain[chain.length - 1].node.children;
+
+        // sort chain
+        chain.sort((n0, n1) => (n0.key - n1.key));
+
+        // relink chain
+        for (let j = 0; j < chain.length - 1; j += 1) {
+          chain[j].node.children = [chain[j + 1].node];
+        }
+        chain[chain.length - 1].node.children = lastChildren;
+
+        // eslint-disable-next-line no-param-reassign
+        tree.children[i] = chain[0].node;
+      }
+      // continue on last node
+      sort(chain[chain.length - 1].node);
+    } else {
+      sort(node);
+    }
+  }
+}
+
+function collapse(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
     const { children = [] } = node;
@@ -47,7 +90,17 @@ export default function sanitizeTextAndFormats(tree) {
         siblings.splice(index, 1);
         return index - 1;
       }
+    }
+    return CONTINUE;
+  });
+}
 
+function whitespace(tree) {
+  visit(tree, (node, index, parent) => {
+    const { children: siblings = [] } = parent || {};
+    const { children = [] } = node;
+
+    if (isFormat(node.type)) {
       // check if last text block has trailing whitespace
       const last = children[children.length - 1];
       if (last?.type === 'text') {
@@ -100,7 +153,7 @@ export default function sanitizeTextAndFormats(tree) {
 
       // ensure that text before format has trailing whitespace
       const prev = siblings[index - 1];
-      if (prev?.type === 'text') {
+      if (prev?.type === 'text' && !isSnug(node.type)) {
         const code = prev.value.charCodeAt(prev.value.length - 1);
         if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           prev.value += ' ';
@@ -109,7 +162,7 @@ export default function sanitizeTextAndFormats(tree) {
 
       // ensure that text after format has leading whitespace
       const next = siblings[index + 1];
-      if (children.length && next?.type === 'text') {
+      if (children.length && next?.type === 'text' && !isSnug(node.type)) {
         const code = next.value.charCodeAt(0);
         if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
           next.value = ` ${next.value}`;
@@ -118,7 +171,9 @@ export default function sanitizeTextAndFormats(tree) {
     }
     return CONTINUE;
   });
+}
 
+function cleanup(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
 
@@ -168,28 +223,56 @@ export default function sanitizeTextAndFormats(tree) {
 
     return CONTINUE;
   });
+}
 
-  // remove text, formats and paragraphs
-  function prune(node) {
-    const { children, type } = node;
-    if (type === 'text') {
-      return !node.value;
-    }
-    if (!children) {
-      return false;
-    }
-    for (let i = 0; i < children.length; i += 1) {
-      if (prune(children[i])) {
-        children.splice(i, 1);
-        i -= 1;
-      }
-    }
-    if (type === 'paragraph' || isFormat(type)) {
-      return children.length === 0;
-    }
+/**
+ * remove empty text, formats, paragraphs
+ * @param node
+ * @return {boolean}
+ */
+function prune(node) {
+  const { children, type } = node;
+  if (type === 'text') {
+    return !node.value;
+  }
+  if (!children) {
     return false;
   }
-  prune(tree);
+  for (let i = 0; i < children.length; i += 1) {
+    if (prune(children[i])) {
+      children.splice(i, 1);
+      i -= 1;
+    }
+  }
+  if (type === 'paragraph' || isFormat(type)) {
+    return children.length === 0;
+  }
+  return false;
+}
 
+/**
+ * Sanitizes text:
+ * - collapses consecutive formats
+ * - collapses consecutive text blocks
+ * - trims ends of texts before break
+ * - trims ends of texts at the end
+ * - moves leading and trailing whitespaces out of formats
+ * - ensures spaces after formats
+ * - removes trailing breaks in containers
+ *   see https://github.com/micromark/micromark/issues/118#issuecomment-1238225086
+ * - removes empty text blocks, formats, paragraphs
+ *
+ * @param {object} tree
+ * @returns {object} The modified (original) tree.
+ */
+export default function sanitizeTextAndFormats(tree) {
+  collapse(tree);
+  prune(tree);
+  sort(tree);
+  // collapse again, because sorting the nodes might have produce new collapsable siblings
+  collapse(tree);
+  whitespace(tree);
+  cleanup(tree);
+  prune(tree);
   return tree;
 }

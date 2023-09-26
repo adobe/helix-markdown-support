@@ -1,3 +1,31 @@
+## [6.3.1](https://github.com/adobe/helix-markdown-support/compare/v6.3.0...v6.3.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* properly handle whitespace after sort ([#211](https://github.com/adobe/helix-markdown-support/issues/211)) ([03bf02a](https://github.com/adobe/helix-markdown-support/commit/03bf02a249f594e03c5d523d876e0b6522ad6ed5))
+
+# [6.3.0](https://github.com/adobe/helix-markdown-support/compare/v6.2.1...v6.3.0) (2023-07-27)
+
+
+### Features
+
+* sort formats ([#206](https://github.com/adobe/helix-markdown-support/issues/206)) ([b734a35](https://github.com/adobe/helix-markdown-support/commit/b734a359e764ac4630b7b2418c0e71e342ad52b6))
+
+## [6.2.1](https://github.com/adobe/helix-markdown-support/compare/v6.2.0...v6.2.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* no whitespace around sub/sup ([1754c65](https://github.com/adobe/helix-markdown-support/commit/1754c65ef5990c5fc76ae4fe4c6308d9ed58f930))
+
+# [6.2.0](https://github.com/adobe/helix-markdown-support/compare/v6.1.3...v6.2.0) (2023-07-18)
+
+
+### Features
+
+* support extended formats ([b1561dd](https://github.com/adobe/helix-markdown-support/commit/b1561ddfc13ddd8aae22a6f396d2d956afcd0a09))
+
 ## [6.1.3](https://github.com/adobe/helix-markdown-support/compare/v6.1.2...v6.1.3) (2023-06-27)
 
 

@@ -17,11 +17,24 @@ import {
 } from 'mdast-builder';
 import { sanitizeFormats } from '../src/index.js';
 
+const nodeWithChildren = (type) => (...args) => {
+  const node = strong(...args);
+  node.type = type;
+  return node;
+};
+
+const superscript = nodeWithChildren('superscript');
+const subscript = nodeWithChildren('subscript');
+const underline = nodeWithChildren('underline');
+
 describe('sanitize-formats tests', () => {
   const specs = {
     strong,
     emphasis,
     strike,
+    superscript,
+    subscript,
+    underline,
   };
 
   Object.entries(specs).forEach(([name, node]) => {
