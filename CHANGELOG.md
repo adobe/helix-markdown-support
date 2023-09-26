@@ -1,3 +1,15 @@
+# [7.0.0](https://github.com/adobe/helix-markdown-support/compare/v6.3.1...v7.0.0) (2023-09-26)
+
+
+### Bug Fixes
+
+* **deps:** update micromark to 4.x ([f651a31](https://github.com/adobe/helix-markdown-support/commit/f651a3176c0458af230f8145cc3caa21a5e282f7))
+
+
+### BREAKING CHANGES
+
+* **deps:** micromark 4.x required
+
 ## [6.3.1](https://github.com/adobe/helix-markdown-support/compare/v6.3.0...v6.3.1) (2023-08-24)
 
 
