@@ -10,14 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-/**
+/*
 copied from
 https://github.com/micromark/micromark-extension-gfm/blob/main/index.js
+*/
 
+/**
+ * @typedef {import('micromark-extension-gfm-footnote').HtmlOptions} HtmlOptions
+ * @typedef {import('micromark-extension-gfm-strikethrough').Options} Options
  * @typedef {import('micromark-util-types').Extension} Extension
  * @typedef {import('micromark-util-types').HtmlExtension} HtmlExtension
- * @typedef {import('micromark-extension-gfm-strikethrough').Options} Options
- * @typedef {import('micromark-extension-gfm-footnote').HtmlOptions} HtmlOptions
  */
 
 import {
@@ -26,8 +28,8 @@ import {
 } from 'micromark-util-combine-extensions';
 // import {
 //   gfmAutolinkLiteral,
-//   gfmAutolinkLiteralHtml,
-// } from 'micromark-extension-gfm-autolink-literal';
+//   gfmAutolinkLiteralHtml
+// } from 'micromark-extension-gfm-autolink-literal'
 import { gfmFootnote, gfmFootnoteHtml } from 'micromark-extension-gfm-footnote';
 import {
   gfmStrikethrough,
@@ -41,46 +43,45 @@ import {
 } from 'micromark-extension-gfm-task-list-item';
 
 /**
- * Add support for parsing GFM in markdown.
+ * Create an extension for `micromark` to enable GFM syntax.
  *
- * Function that can be called to get a syntax extension for micromark (passed
- * in `extensions`).
- *
- * @param {Options} [options]
+ * @param {Options | null | undefined} [options]
  *   Configuration (optional).
+ *
  *   Passed to `micromark-extens-gfm-strikethrough`.
  * @returns {Extension}
- *   Syntax extension for micromark (passed in `extensions`).
+ *   Extension for `micromark` that can be passed in `extensions` to enable GFM
+ *   syntax.
  */
 export function gfm(options) {
   return combineExtensions([
-    // gfmAutolinkLiteral,
+    // gfmAutolinkLiteral(),
     gfmFootnote(),
     gfmStrikethrough(options),
-    gfmTable,
-    gfmTaskListItem,
+    gfmTable(),
+    gfmTaskListItem(),
   ]);
 }
 
 /**
- * Add support for turning GFM in markdown to HTML.
+ * Create an extension for `micromark` to support GFM when serializing to HTML.
  *
- * Function that can be called to get an HTML extension for micromark (passed
- * in `htmlExtensions`).
- *
- * @param {HtmlOptions} [options]
+ * @param {HtmlOptions | null | undefined} [options]
  *   Configuration (optional).
+ *
  *   Passed to `micromark-extens-gfm-footnote`.
  * @returns {HtmlExtension}
- *   HTML extension for micromark (passed in `htmlExtensions`).
+ *   Extension for `micromark` that can be passed in `htmlExtensions` to
+ *   support GFM when serializing to HTML.
  */
+/* c8 ignore next 10 */
 export function gfmHtml(options) {
   return combineHtmlExtensions([
-    // gfmAutolinkLiteralHtml,
+    // gfmAutolinkLiteralHtml(),
     gfmFootnoteHtml(options),
-    gfmStrikethroughHtml,
-    gfmTableHtml,
-    gfmTagfilterHtml,
-    gfmTaskListItemHtml,
+    gfmStrikethroughHtml(),
+    gfmTableHtml(),
+    gfmTagfilterHtml(),
+    gfmTaskListItemHtml(),
   ]);
 }

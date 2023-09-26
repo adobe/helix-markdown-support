@@ -10,10 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-/**
+/*
 copied from
 https://github.com/syntax-tree/mdast-util-gfm/blob/main/lib/index.js
+*/
 
+/**
  * @typedef {import('mdast-util-from-markdown').Extension} FromMarkdownExtension
  * @typedef {import('mdast-util-to-markdown').Options} ToMarkdownExtension
  */
