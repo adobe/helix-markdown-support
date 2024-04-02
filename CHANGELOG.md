@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/adobe/helix-markdown-support/compare/v7.1.0...v7.1.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/remark-gridtables to v3.0.4 ([#248](https://github.com/adobe/helix-markdown-support/issues/248)) ([e049d0c](https://github.com/adobe/helix-markdown-support/commit/e049d0c158ca9883ca3ecb6312f08e99200ecdbb))
+
 # [7.1.0](https://github.com/adobe/helix-markdown-support/compare/v7.0.0...v7.1.0) (2023-10-02)
 
 
