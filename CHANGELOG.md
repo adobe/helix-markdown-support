@@ -1,3 +1,10 @@
+## [7.1.3](https://github.com/adobe/helix-markdown-support/compare/v7.1.2...v7.1.3) (2024-06-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-to-hast to v13.2.0 ([f444099](https://github.com/adobe/helix-markdown-support/commit/f4440992374fbf4be9f56053924237a56087e2fa))
+
 ## [7.1.2](https://github.com/adobe/helix-markdown-support/compare/v7.1.1...v7.1.2) (2024-04-06)
 
 
