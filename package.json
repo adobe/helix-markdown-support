@@ -78,7 +78,7 @@
     "remark-rehype": "11.1.0",
     "remark-stringify": "11.0.0",
     "semantic-release": "24.0.0",
-    "unified": "11.0.4",
+    "unified": "11.0.5",
     "unist-util-inspect": "8.0.0"
   },
   "lint-staged": {
