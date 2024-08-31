@@ -26,7 +26,7 @@
     "./matter": "./src/matter/index.js"
   },
   "dependencies": {
-    "hast-util-to-html": "9.0.1",
+    "hast-util-to-html": "9.0.2",
     "js-yaml": "4.1.0",
     "mdast-util-gfm-footnote": "2.0.0",
     "mdast-util-gfm-strikethrough": "2.0.0",
