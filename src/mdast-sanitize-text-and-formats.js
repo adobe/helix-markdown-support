@@ -274,5 +274,7 @@ export default function sanitizeTextAndFormats(tree) {
   whitespace(tree);
   cleanup(tree);
   prune(tree);
+  // sort again after cleaning everything
+  sort(tree);
   return tree;
 }
