@@ -1,3 +1,10 @@
+## [7.1.6](https://github.com/adobe/helix-markdown-support/compare/v7.1.5...v7.1.6) (2024-09-27)
+
+
+### Bug Fixes
+
+* ensure format sort order ([#277](https://github.com/adobe/helix-markdown-support/issues/277)) ([71220d1](https://github.com/adobe/helix-markdown-support/commit/71220d1a26e406a6f44d004a3e9aa705d55aa0a1))
+
 ## [7.1.5](https://github.com/adobe/helix-markdown-support/compare/v7.1.4...v7.1.5) (2024-08-31)
 
 
