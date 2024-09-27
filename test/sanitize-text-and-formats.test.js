@@ -411,4 +411,29 @@ describe('sanitize-text Tests', () => {
     renderHtmlFormats(mdast);
     await assertMD(mdast, 'sort-formats.md', [gfm]);
   });
+
+  it('space after link', async () => {
+    const mdast = root([
+      heading(1, text('space after link')),
+      paragraph([
+        emphasis(
+          link(
+            'about:blank',
+            'Title',
+            strong(
+              text('link followed by space'),
+            ),
+          ),
+        ),
+        emphasis(
+          strong(
+            text(' '),
+          ),
+        ),
+      ]),
+    ]);
+    sanitizeTextAndFormats(mdast);
+    renderHtmlFormats(mdast);
+    await assertMD(mdast, 'space-after-link.md', [gfm]);
+  });
 });

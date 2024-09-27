@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "semantic-release-dry": "semantic-release --dry-run --branches $CI_BRANCH",
     "semantic-release": "semantic-release",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
