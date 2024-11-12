@@ -14,7 +14,7 @@ _[](https://www.adobe.com)_
 
 **[Curves on the ipad.](https://www.adobe.com)** The curves are nice.
 
-**[Curves on_the_ ipad. ](https://www.adobe.com)** The curves are nice.
+**[Curves o&#x6E;_&#x74;he_ ipad. ](https://www.adobe.com)** The curves are nice.
 
 Trailing links:[adobe](https://www.adobe.com)\
 \
