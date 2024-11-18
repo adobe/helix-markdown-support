@@ -1,3 +1,10 @@
+## [7.1.8](https://github.com/adobe/helix-markdown-support/compare/v7.1.7...v7.1.8) (2024-11-18)
+
+
+### Bug Fixes
+
+* update package-lock ([4e8f29d](https://github.com/adobe/helix-markdown-support/commit/4e8f29d69ceaf53bff7cec910ed3fea0f89510df))
+
 ## [7.1.7](https://github.com/adobe/helix-markdown-support/compare/v7.1.6...v7.1.7) (2024-11-16)
 
 
