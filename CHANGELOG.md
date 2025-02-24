@@ -1,3 +1,10 @@
+## [7.1.12](https://github.com/adobe/helix-markdown-support/compare/v7.1.11...v7.1.12) (2025-02-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency hast-util-to-html to v9.0.5 ([#298](https://github.com/adobe/helix-markdown-support/issues/298)) ([ee1ac86](https://github.com/adobe/helix-markdown-support/commit/ee1ac86e8968400554b48f4a88c4474d9aba8d28))
+
 ## [7.1.11](https://github.com/adobe/helix-markdown-support/compare/v7.1.10...v7.1.11) (2025-02-10)
 
 
