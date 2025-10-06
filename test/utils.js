@@ -41,7 +41,7 @@ export function mdast2md(mdast, plugins = [], opts = {}) {
   let processor = unified()
     .use(stringify, {
       strong: '*',
-      emphasis: '_',
+      emphasis: '*',
       bullet: '-',
       fence: '`',
       fences: true,
@@ -75,7 +75,7 @@ export async function assertHTML(fixture, plugins, opts) {
     .use(remarkRehype)
     .use(rehypeStringify, {
       strong: '*',
-      emphasis: '_',
+      emphasis: '*',
       bullet: '-',
       fence: '`',
       fences: true,

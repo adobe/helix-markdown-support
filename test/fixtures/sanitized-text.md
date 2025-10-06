@@ -16,7 +16,7 @@ consectetur adipiscing elit.
 
 ## Trims ends in formats
 
-**strong**      _emphasis_      ~~strike~~   what a strong    ending.
+**strong**      *emphasis*      ~~strike~~   what a strong    ending.
 
 ## works with formats and non texts
 

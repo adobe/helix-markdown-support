@@ -1,9 +1,9 @@
 # Sort Formats
 
-~~**_[<u><sub>inner text</sub></u>](about:blank "Title")_**~~
+~~***[<u><sub>inner text</sub></u>](about:blank "Title")***~~
 
-_emphasis~~**delete&#x64;_[<u>important</u>](about:blank "title")_**~~_
+*emphasis~~**delete&#x64;*[<u>important</u>](about:blank "title")***~~*
 
-**_[](about:blank "Empty")_**
+***[](about:blank "Empty")***
 
-**_bold and italic_ only bold**
+***bold and italic* only bold**
