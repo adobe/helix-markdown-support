@@ -1,3 +1,10 @@
+## [7.1.13](https://github.com/adobe/helix-markdown-support/compare/v7.1.12...v7.1.13) (2025-10-06)
+
+
+### Bug Fixes
+
+* use * for emphasis ([#334](https://github.com/adobe/helix-markdown-support/issues/334)) ([2c4c336](https://github.com/adobe/helix-markdown-support/commit/2c4c3369daa205a414f79820590e74be82cdec2c))
+
 ## [7.1.12](https://github.com/adobe/helix-markdown-support/compare/v7.1.11...v7.1.12) (2025-02-24)
 
 
