@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { visit, CONTINUE } from 'unist-util-visit';
-import { asciiPunctuation, markdownSpace, unicodePunctuation } from 'micromark-util-character';
+import { markdownSpace, unicodePunctuation } from 'micromark-util-character';
 
 export function isFormat(type) {
   return type === 'strong'
@@ -95,6 +95,12 @@ function collapse(tree) {
   });
 }
 
+/**
+ * handles whitespace in formats:
+ * - move all whitespaces into the surrounding text
+ *
+ * @param tree
+ */
 function whitespace(tree) {
   visit(tree, (node, index, parent) => {
     const { children: siblings = [] } = parent || {};
@@ -151,20 +157,16 @@ function whitespace(tree) {
         }
       }
 
-      // ensure that text before format has trailing whitespace
+      // ensure that text has surrounding whitespace if both sides are "trapped"
+      // eg: foo**bar**zoo -> foo **bar** zoo
       const prev = siblings[index - 1];
-      if (prev?.type === 'text' && !isSnug(node.type)) {
-        const code = prev.value.charCodeAt(prev.value.length - 1);
-        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
-          prev.value += ' ';
-        }
-      }
-
-      // ensure that text after format has leading whitespace
       const next = siblings[index + 1];
-      if (children.length && next?.type === 'text' && !isSnug(node.type)) {
-        const code = next.value.charCodeAt(0);
-        if (!asciiPunctuation(code) && !markdownSpace(code) && !unicodePunctuation(code)) {
+      if (prev?.type === 'text' && next?.type === 'text' && !isSnug(node.type)) {
+        const ws = (code) => markdownSpace(code) || unicodePunctuation(code);
+        const prevCode = prev.value.charCodeAt(prev.value.length - 1);
+        const nextCode = next.value.charCodeAt(0);
+        if (!ws(prevCode) && !ws(nextCode)) {
+          prev.value += ' ';
           next.value = ` ${next.value}`;
         }
       }

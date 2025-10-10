@@ -228,6 +228,15 @@ describe('sanitize-text Tests', () => {
         ])),
         text('sit amet.'),
       ]),
+      paragraph([
+        text('The '),
+        emphasis(text('super')),
+        text('man is '),
+        strong(text('the')),
+        text('best. and Wonder'),
+        emphasis(text('Woman')),
+        text(' too.'),
+      ]),
     ]);
     sanitizeTextAndFormats(mdast);
     renderHtmlFormats(mdast);
