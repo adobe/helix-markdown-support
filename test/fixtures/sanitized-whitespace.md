@@ -2,9 +2,9 @@
 
 Lorem ipsum **dolor** sit amet.
 
-Lorem ipsum,**dolor** sit amet.
+Lorem ipsum,**dolor**sit amet.
 
-Lorem ipsum **dolor**,sit amet.
+Lorem ipsum**dolor**,sit amet.
 
 Water is H<sub>2</sub>O.
 
@@ -16,19 +16,19 @@ We are very <u>pleased</u> with the outcome.
 
 ## Moves leading whitespace in inner text
 
-Lorem ipsum *dolor* sit amet.
+Lorem ipsum *dolor*sit amet.
 
 ## Moves leading whitespace in inner text of link
 
 *[ **dolor**](https://www.adobe.com "adobe")*
 
-*begin* sit amet.
+*begin*sit amet.
 
 ## Moves trailing whitespace in inner text
 
-Lorem ipsum *dolor* sit amet.
+Lorem ipsum*dolor* sit amet.
 
-Lorem ipsum *dolor.*
+Lorem ipsum*dolor.*
 
 ## Moves enclosing whitespace in inner text
 
@@ -39,3 +39,5 @@ Lorem ipsum ~~dolor~~ sit amet.
 Lorem ipsum ***dolor*** sit amet.
 
 Lorem ipsum ***dolor*** sit amet.
+
+The *super*man is **the**best. and Wonder*Woman* too.
