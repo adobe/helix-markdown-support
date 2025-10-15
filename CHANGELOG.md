@@ -1,3 +1,10 @@
+## [7.1.14](https://github.com/adobe/helix-markdown-support/compare/v7.1.13...v7.1.14) (2025-10-15)
+
+
+### Bug Fixes
+
+* allow snug em and strong ([#337](https://github.com/adobe/helix-markdown-support/issues/337)) ([921bdf4](https://github.com/adobe/helix-markdown-support/commit/921bdf4a4b046abed9d00f4cc1bb91cf6804b5ec))
+
 ## [7.1.13](https://github.com/adobe/helix-markdown-support/compare/v7.1.12...v7.1.13) (2025-10-06)
 
 
