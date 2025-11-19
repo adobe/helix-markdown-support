@@ -127,6 +127,12 @@ describe('sanitize-text Tests', () => {
       paragraph([
         text(''),
       ]),
+      heading(2, text('handles nested strong and emphasis')),
+      paragraph([
+        strong(emphasis(text('title:'))),
+        emphasis(text('Hello World.')),
+        emphasis(text('And more.')),
+      ]),
     ]);
     sanitizeHeading(mdast);
     sanitizeTextAndFormats(mdast);
