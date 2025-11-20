@@ -49,3 +49,9 @@ Hello, world.
 ---
 
 ## removes empty texts
+
+## handles nested strong and emphasis
+
+***title**:Hello World.And more.*
+
+***title*:Hello World.And more.**

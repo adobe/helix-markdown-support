@@ -27,8 +27,8 @@ function isSnug(type) {
 
 const FLOW_SORT_ORDER = [
   'delete',
-  'strong',
   'emphasis',
+  'strong',
   'link',
   'underline',
   'subscript',
