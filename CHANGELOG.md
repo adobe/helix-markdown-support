@@ -1,3 +1,10 @@
+## [7.1.15](https://github.com/adobe/helix-markdown-support/compare/v7.1.14...v7.1.15) (2025-11-20)
+
+
+### Bug Fixes
+
+* trigger release ([944704a](https://github.com/adobe/helix-markdown-support/commit/944704adfb608d92352266e627f898fdd42e8766))
+
 ## [7.1.14](https://github.com/adobe/helix-markdown-support/compare/v7.1.13...v7.1.14) (2025-10-15)
 
 
