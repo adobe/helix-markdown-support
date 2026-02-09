@@ -1,3 +1,10 @@
+## [7.1.18](https://github.com/adobe/helix-markdown-support/compare/v7.1.17...v7.1.18) (2026-02-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency unist-util-visit to v5.1.0 ([#361](https://github.com/adobe/helix-markdown-support/issues/361)) ([91b9794](https://github.com/adobe/helix-markdown-support/commit/91b9794140fde163dac1b69197bb473546289dd4))
+
 ## [7.1.17](https://github.com/adobe/helix-markdown-support/compare/v7.1.16...v7.1.17) (2025-12-08)
 
 
