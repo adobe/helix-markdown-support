@@ -61,7 +61,7 @@
   "devDependencies": {
     "@adobe/eslint-config-helix": "3.0.18",
     "@adobe/remark-gridtables": "3.0.17",
-    "@eslint/config-helpers": "0.5.1",
+    "@eslint/config-helpers": "0.5.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "c8": "10.1.3",
@@ -78,7 +78,7 @@
     "remark-parse": "11.0.0",
     "remark-rehype": "11.1.2",
     "remark-stringify": "11.0.0",
-    "semantic-release": "25.0.2",
+    "semantic-release": "25.0.3",
     "unified": "11.0.5",
     "unist-util-inspect": "8.1.0"
   },
