@@ -67,7 +67,7 @@
     "c8": "11.0.0",
     "eslint": "9.4.0",
     "husky": "9.1.7",
-    "junit-report-builder": "5.1.1",
+    "junit-report-builder": "5.1.2",
     "lint-staged": "16.4.0",
     "mdast-builder": "1.1.1",
     "mocha": "11.7.5",
