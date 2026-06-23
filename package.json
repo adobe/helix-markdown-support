@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "hast-util-to-html": "9.0.5",
-    "js-yaml": "4.1.1",
+    "js-yaml": "4.2.0",
     "mdast-util-gfm-footnote": "2.1.0",
     "mdast-util-gfm-strikethrough": "2.0.0",
     "mdast-util-gfm-table": "2.0.0",
@@ -68,7 +68,7 @@
     "eslint": "9.4.0",
     "husky": "9.1.7",
     "junit-report-builder": "5.1.2",
-    "lint-staged": "17.0.5",
+    "lint-staged": "17.0.7",
     "mdast-builder": "1.1.1",
     "mocha": "11.7.6",
     "mocha-multi-reporters": "1.5.1",
