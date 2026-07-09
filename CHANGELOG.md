@@ -1,3 +1,10 @@
+## [7.1.20](https://github.com/adobe/helix-markdown-support/compare/v7.1.19...v7.1.20) (2026-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update external major (major) ([#391](https://github.com/adobe/helix-markdown-support/issues/391)) ([7f9141a](https://github.com/adobe/helix-markdown-support/commit/7f9141a3d24078b80c5ba66a2893570b8dd94297))
+
 ## [7.1.19](https://github.com/adobe/helix-markdown-support/compare/v7.1.18...v7.1.19) (2026-06-23)
 
 
