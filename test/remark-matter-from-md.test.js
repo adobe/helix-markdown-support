@@ -11,7 +11,7 @@
  */
 /* eslint-env mocha */
 import assert from 'assert';
-import jsYaml from 'js-yaml';
+import { dump } from 'js-yaml';
 import { unified } from 'unified';
 import remark from 'remark-parse';
 import { inspectNoColor as inspect } from 'unist-util-inspect';
@@ -24,7 +24,7 @@ import { remarkMatter } from '../src/matter/index.js';
 
 const yaml = (payload, yamlDump) => ({
   type: 'yaml',
-  value: yamlDump ? jsYaml.dump(payload) : undefined,
+  value: yamlDump ? dump(payload) : undefined,
   payload,
 });
 

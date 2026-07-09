@@ -11,14 +11,14 @@
  */
 
 /* eslint-env mocha */
-import jsYaml from 'js-yaml';
+import { dump } from 'js-yaml';
 import { heading, root, text } from 'mdast-builder';
 import { assertMD } from './utils.js';
 import { remarkMatter } from '../src/matter/index.js';
 
 const yaml = (payload) => ({
   type: 'yaml',
-  value: jsYaml.dump(payload),
+  value: dump(payload),
   payload,
 });
 
