@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import jsYaml from 'js-yaml';
+import { load, dump } from 'js-yaml';
 import { TYPE_YAML } from './types.js';
 
 function open(token) {
@@ -22,9 +22,9 @@ function createClose(options) {
     const data = this.resume();
     const node = this.stack[this.stack.length - 1];
     // todo: avoid double parsing
-    node.payload = jsYaml.load(data);
+    node.payload = load(data);
     if (options.yamlDump) {
-      node.value = jsYaml.dump(node.payload);
+      node.value = dump(node.payload);
     } else {
       delete node.value;
     }

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-use-before-define */
-import jsYaml from 'js-yaml';
+import { load } from 'js-yaml';
 import { codes, types } from 'micromark-util-symbol';
 import { markdownLineEnding, markdownSpace } from 'micromark-util-character';
 import { TYPE_YAML } from './types.js';
@@ -20,7 +20,7 @@ const type = (v) => ((v !== undefined && v !== null) ? v.constructor : v);
 function validYaml(str, errorHandler) {
   // console.log('validate yaml', str);
   try {
-    const payload = jsYaml.load(str);
+    const payload = load(str);
 
     // ensure we only accept YAML objects
     let payloadType = type(payload);
