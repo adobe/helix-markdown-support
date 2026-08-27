@@ -1,3 +1,10 @@
+## [7.1.24](https://github.com/adobe/helix-markdown-support/compare/v7.1.23...v7.1.24) (2026-08-27)
+
+
+### Bug Fixes
+
+* merge overlapping bold/italic (and other) formats regardless of nesting order ([#399](https://github.com/adobe/helix-markdown-support/issues/399)) ([595d969](https://github.com/adobe/helix-markdown-support/commit/595d9696019207463fa810adc2999819b3d5d12b)), closes [adobe/helix-docx2md#814](https://github.com/adobe/helix-docx2md/issues/814) [adobe/helix-word2md#1894](https://github.com/adobe/helix-word2md/issues/1894)
+
 ## [7.1.23](https://github.com/adobe/helix-markdown-support/compare/v7.1.22...v7.1.23) (2026-08-11)
 
 
