@@ -1,3 +1,10 @@
+## [7.1.25](https://github.com/adobe/helix-markdown-support/compare/v7.1.24...v7.1.25) (2026-09-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency js-yaml to v5.3.0 ([#400](https://github.com/adobe/helix-markdown-support/issues/400)) ([94b03a9](https://github.com/adobe/helix-markdown-support/commit/94b03a984df9737f19a4bb7f6e2637468d682c08))
+
 ## [7.1.24](https://github.com/adobe/helix-markdown-support/compare/v7.1.23...v7.1.24) (2026-08-27)
 
 
