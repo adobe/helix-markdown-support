@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-markdown-support",
-  "version": "7.1.26",
+  "version": "7.1.27",
   "description": "Helix Markdown Support",
   "type": "module",
   "scripts": {
