@@ -1,3 +1,10 @@
+## [7.1.28](https://github.com/adobe/helix-markdown-support/compare/v7.1.27...v7.1.28) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-gfm-strikethrough to v2.0.1 ([#411](https://github.com/adobe/helix-markdown-support/issues/411)) ([83e6059](https://github.com/adobe/helix-markdown-support/commit/83e60599b79ae5f3f5bbcc652420effe5c21d51a))
+
 ## [7.1.27](https://github.com/adobe/helix-markdown-support/compare/v7.1.26...v7.1.27) (2026-09-28)
 
 
