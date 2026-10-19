@@ -2,7 +2,7 @@
 
 ~~***[<u><sub>inner text</sub></u>](about:blank "Title")***~~
 
-*emphasis~~**delete&#x64;*[<u>important</u>](about:blank "title")***~~*
+*emphasi&#x73;~~**delete&#x64;_[<u>important</u>](about:blank "title")_**~~*
 
 ***[](about:blank "Empty")***
 
