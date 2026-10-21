@@ -59,7 +59,7 @@
     "node": ">=14"
   },
   "devDependencies": {
-    "@adobe/eslint-config-helix": "3.0.32",
+    "@adobe/eslint-config-helix": "3.0.33",
     "@adobe/remark-gridtables": "3.0.22",
     "@eslint/config-helpers": "0.7.0",
     "@semantic-release/changelog": "7.0.0",
