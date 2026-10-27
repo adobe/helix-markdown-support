@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "hast-util-to-html": "9.0.5",
-    "js-yaml": "5.4.2",
+    "js-yaml": "5.4.3",
     "mdast-util-gfm-footnote": "2.1.0",
     "mdast-util-gfm-strikethrough": "2.0.1",
     "mdast-util-gfm-table": "2.0.0",
