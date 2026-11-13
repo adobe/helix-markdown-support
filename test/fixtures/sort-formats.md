@@ -6,4 +6,4 @@
 
 ***[](about:blank "Empty")***
 
-***bold and italic* only bold**
+**_bold and italic_ only bold**

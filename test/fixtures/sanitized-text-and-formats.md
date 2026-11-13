@@ -52,6 +52,6 @@ Hello, world.
 
 ## handles nested strong and emphasis
 
-***title**:Hello World.And more.*
+*__title__:Hello World.And more.*
 
-***title*:Hello World.And more.**
+**_title_:Hello World.And more.**
